@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace DataBaseManager {
     internal class Program {
         static void Main(string[] args) {
+            Console.WriteLine("ola");
         }
     }
 }
