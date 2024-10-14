@@ -55,6 +55,7 @@
     <Compile Include="Amistad.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
     </Compile>
+    <Compile Include="DAO\UserDAO.cs" />
     <Compile Include="DataBase.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -81,6 +82,7 @@
     <Compile Include="sysdiagrams.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Utils\Constants.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -107,6 +109,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TripasService\TripasService.csproj">
+      <Project>{ae25cc6b-b548-4ca0-8a5c-46e940df6094}</Project>
+      <Name>TripasService</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
