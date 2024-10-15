@@ -56,6 +56,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\DataBaseManager\DataBaseManager.csproj">
+      <Project>{05a1748b-c629-483f-890a-dab8ac3da1b8}</Project>
+      <Name>DataBaseManager</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

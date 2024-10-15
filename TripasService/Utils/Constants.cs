@@ -8,6 +8,5 @@ namespace TripasService.Utils {
     public class Constants {
         public const int SUCESS = 1;
         public const int FAILED = -1;
-
     }
 }
