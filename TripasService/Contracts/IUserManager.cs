@@ -13,10 +13,12 @@ namespace TripasService.Contracts {
         int createAccount(LoginUser user, Profile profile);
 
         [OperationContract]
-        int updateAccount(Profile profile);
+        int updateProfile(Profile profile);
 
         [OperationContract]
         Profile getProfile(string email);
+        [OperationContract]
+        int verifyLogin(LoginUser user);
     }
 
     [DataContract]

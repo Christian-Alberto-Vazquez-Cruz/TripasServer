@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity.Core;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,9 +34,46 @@ namespace DataBaseManager.DAO {
                 }
             }
             catch (EntityException entityException) {
-                Console.WriteLine("Error al intentar registrar el usuario");
+                Console.WriteLine("Error trying to register the user");
             }
             return operationStatus;
         }
+
+    public int validateUser(Login user) {
+            int operationStatus = Constants.FAILED;
+            try {
+                using (tripasEntities db = new tripasEntities()) {
+                    var userExists = db.Login.Any(login => login.correo == user.correo && login.contrasena == user.contrasena);
+                    if (userExists) {
+                        operationStatus = Constants.FOUND_MATCH;
+                    } else {
+                        operationStatus = Constants.NO_MATCHES;
+                    }
+                }
+            } catch (EntityException entityException) { 
+                Console.WriteLine("Error trying to validate user: {0}", entityException.Message);
+            }
+            return operationStatus;
+        }
+
+    public int updateUserProfile(Perfil profile) {
+            int operationStatus = Constants.FAILED;
+            try {
+                using (tripasEntities db = new tripasEntities()) {
+                    var existingProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == profile.idPerfil);
+                    if (existingProfile != null) {
+                        existingProfile.nombre = profile.nombre;
+                        existingProfile.fotoRuta = profile.fotoRuta;
+                        db.SaveChanges();
+                        operationStatus = Constants.SUCESS;
+                    } else {
+                        operationStatus = Constants.NO_MATCHES;
+                    }
+                }
+            } catch (EntityException entittyException) {
+                Console.WriteLine("Error trying to update the user profile {0}, {1}", profile.nombre, entittyException.Message);
+            }
+
+            return operationStatus;
     }
 }
