@@ -18,7 +18,7 @@ namespace TripasService.Services {
             UserDAO dao = new UserDAO();
 
             DataBaseManager.Login newLogin = new DataBaseManager.Login() {
-                contrasena = user.password,
+             contrasena = user.password,
                 correo = user.mail
             };
 
@@ -34,8 +34,28 @@ namespace TripasService.Services {
             throw new NotImplementedException();
         }
 
-        public int updateAccount(Profile profile) {
-            throw new NotImplementedException();
+        public int updateProfile(Profile profile) {
+            UserDAO dao = new UserDAO();
+
+            DataBaseManager.Perfil perfil = new DataBaseManager.Perfil() {
+                idPerfil = profile.idProfile,
+                nombre = profile.userName,
+                fotoRuta = profile.picturePath,
+            };
+            int result = dao.updateUserProfile(perfil);
+            return result;
         }
+
+        public int verifyLogin(LoginUser user) {
+            UserDAO dao = new UserDAO();
+
+            DataBaseManager.Login newLogin = new DataBaseManager.Login() {
+                contrasena = user.password,
+                correo = user.mail
+            };
+
+            int result = dao.validateUser(newLogin);
+            return result;
+        } 
     }
 }
