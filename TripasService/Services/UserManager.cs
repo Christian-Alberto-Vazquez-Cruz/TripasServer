@@ -26,12 +26,31 @@ namespace TripasService.Services {
                 nombre = profile.userName,
             };
 
-            int insertionResult = dao.addUser(newPerfil, newLogin);
+            int insertionResult = dao.addUserDAO(newPerfil, newLogin);
             return insertionResult;
         }
 
-        public Profile getProfile(string email) {
-            throw new NotImplementedException();
+        public Profile getProfile(String mail, String password) {
+            UserDAO dao = new UserDAO();
+            DataBaseManager.Login newLogin = new DataBaseManager.Login() {
+                correo = mail,
+                contrasena = password
+            };
+
+            int loginStatus = dao.validateUserDAO(newLogin);
+            if (loginStatus == Constants.FOUND_MATCH) {
+                Perfil profileDB = dao.getProfileByMail(mail);
+
+                if (profileDB != null) {
+                    Profile profile = new Profile() {
+                        idProfile = profileDB.idPerfil,
+                        userName = profileDB.nombre,
+                        picturePath = profileDB.fotoRuta,
+                    };
+                    return profile;
+                }
+            }
+            return null;
         }
 
         public int updateProfile(Profile profile) {
@@ -42,11 +61,12 @@ namespace TripasService.Services {
                 nombre = profile.userName,
                 fotoRuta = profile.picturePath,
             };
-            int result = dao.updateUserProfile(perfil);
+            int result = dao.updateUserProfileDAO(perfil);
             return result;
         }
 
-        public int verifyLogin(LoginUser user) {
+        // Decidir si utilizar este o getProfile que hace todo
+          public int verifyLogin(LoginUser user) {
             UserDAO dao = new UserDAO();
 
             DataBaseManager.Login newLogin = new DataBaseManager.Login() {
@@ -54,7 +74,7 @@ namespace TripasService.Services {
                 correo = user.mail
             };
 
-            int result = dao.validateUser(newLogin);
+            int result = dao.validateUserDAO(newLogin);
             return result;
         } 
     }
