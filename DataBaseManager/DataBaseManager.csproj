@@ -55,6 +55,7 @@
     <Compile Include="Amistad.cs">
       <DependentUpon>DataBase.tt</DependentUpon>
     </Compile>
+    <Compile Include="DAO\FriendsDAO.cs" />
     <Compile Include="DAO\UserDAO.cs" />
     <Compile Include="DataBase.Context.cs">
       <AutoGen>True</AutoGen>

@@ -16,7 +16,7 @@ namespace TripasService.Contracts {
         int updateProfile(Profile profile);
 
         [OperationContract]
-        Profile getProfile(string email);
+        Profile getProfile(String email, String password);
         [OperationContract]
         int verifyLogin(LoginUser user);
     }

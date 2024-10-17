@@ -11,7 +11,7 @@ using DataBaseManager.Utils;
 
 namespace DataBaseManager.DAO {
     public class UserDAO {
-        public int addUser(Perfil profile, Login user) {
+        public int addUserDAO(Perfil profile, Login user) {
             int operationStatus = Constants.FAILED;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -34,12 +34,12 @@ namespace DataBaseManager.DAO {
                 }
             }
             catch (EntityException entityException) {
-                Console.WriteLine("Error trying to register the user");
+                Console.WriteLine("Error trying to register the user {0}", entityException.Message);
             }
             return operationStatus;
         }
 
-    public int validateUser(Login user) {
+    public int validateUserDAO(Login user) {
             int operationStatus = Constants.FAILED;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -56,7 +56,7 @@ namespace DataBaseManager.DAO {
             return operationStatus;
         }
 
-    public int updateUserProfile(Perfil profile) {
+        public int updateUserProfileDAO(Perfil profile) {
             int operationStatus = Constants.FAILED;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -66,14 +66,31 @@ namespace DataBaseManager.DAO {
                         existingProfile.fotoRuta = profile.fotoRuta;
                         db.SaveChanges();
                         operationStatus = Constants.SUCESS;
-                    } else {
+                    }
+                    else {
                         operationStatus = Constants.NO_MATCHES;
                     }
                 }
-            } catch (EntityException entittyException) {
+            }
+            catch (EntityException entittyException) {
                 Console.WriteLine("Error trying to update the user profile {0}, {1}", profile.nombre, entittyException.Message);
             }
-
             return operationStatus;
+        }
+
+        public Perfil getProfileByMail (String mail) {
+            Perfil userProfile = null;
+            try {
+                using (tripasEntities db = new tripasEntities()) {
+                    var login = db.Login.FirstOrDefault(l => l.correo == mail);
+                    if (login != null) {
+                        userProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == login.idUsuario);
+                    }
+                }
+            } catch (EntityException entityException) {
+                Console.WriteLine("Error trying to get the Profile {0}", entityException.Message);
+            }
+            return userProfile;
+        }
     }
 }
