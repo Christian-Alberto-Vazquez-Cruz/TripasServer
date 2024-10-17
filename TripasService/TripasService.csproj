@@ -38,6 +38,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,13 +48,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contracts\ICharService.cs" />
+    <Compile Include="Contracts\IFriendsManager.cs" />
+    <Compile Include="Contracts\IUserManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ChatService.cs" />
+    <Compile Include="Services\FriendsManager.cs" />
+    <Compile Include="Services\UserManager.cs" />
+    <Compile Include="Utils\Constants.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\DataBaseManager\DataBaseManager.csproj">
+      <Project>{05a1748b-c629-483f-890a-dab8ac3da1b8}</Project>
+      <Name>DataBaseManager</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
