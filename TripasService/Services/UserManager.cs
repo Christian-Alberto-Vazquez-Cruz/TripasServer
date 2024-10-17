@@ -13,7 +13,7 @@ using TripasService.Utils;
 
 namespace TripasService.Services {
     [ServiceBehavior]
-    public partial class TripasGameService : IUserManager {
+    public partial class TripasGameService :IUserManager {
         public int createAccount(LoginUser user, Profile profile) {
             UserDAO dao = new UserDAO();
 
@@ -32,25 +32,25 @@ namespace TripasService.Services {
 
         public Profile getProfile(String mail, String password) {
             UserDAO dao = new UserDAO();
-            DataBaseManager.Login newLogin = new DataBaseManager.Login() {
+            DataBaseManager.Login loginDetails = new DataBaseManager.Login() {
                 correo = mail,
                 contrasena = password
             };
 
-            int loginStatus = dao.validateUserDAO(newLogin);
+            int loginStatus = dao.validateUserDAO(loginDetails);
             if (loginStatus == Constants.FOUND_MATCH) {
                 Perfil profileDB = dao.getProfileByMail(mail);
 
-                if (profileDB != null) {
-                    Profile profile = new Profile() {
-                        idProfile = profileDB.idPerfil,
-                        userName = profileDB.nombre,
-                        picturePath = profileDB.fotoRuta,
-                    };
-                    return profile;
-                }
+                Profile profile = new Profile() {
+                    idProfile = profileDB.idPerfil,
+                    userName = profileDB.nombre,
+                    picturePath = profileDB.fotoRuta,
+                };
+                return profile;
             }
-            return null;
+            else {
+                return null;
+            }
         }
 
         public int updateProfile(Profile profile) {
