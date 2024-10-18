@@ -11,5 +11,6 @@ namespace TripasService.Utils {
         public const int FAILED = -1;
         public const int NO_MATCHES = -1;
         public const int FOUND_MATCH = 1;
+        public const int MAX_MESSAGES = 50;
     }
 }

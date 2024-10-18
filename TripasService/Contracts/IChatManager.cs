@@ -8,36 +8,49 @@ using System.Threading.Tasks;
 
 namespace TripasService.Contracts {
 
-    [ServiceContract(CallbackContract = typeof(IChatManagerCallBack))]
-    public interface IChatManager {
-        //No es oneway porque el cliente podría requerir un acuse de recibido o error en su transmisión
-        [OperationContract]
-        void sendMessage(Message message);
 
-        [OperationContract]
-        void connectToLobby(int roomId, string username);
+    namespace TripasService.Contracts {
 
-        [OperationContract]
-        void leaveLobby(string roomId, string username);
+        [ServiceContract(CallbackContract = typeof(IChatManagerCallBack))]
+        public interface IChatManager {
+            [OperationContract]
+            void sendMessage(string userName, Message message);
 
+            [OperationContract]
+            void connectToLobby(string userName);
+
+            [OperationContract]
+            void leaveLobby(string userName);
+
+            [OperationContract]
+            List<Message> getMessageHistory();
+        }
+
+        public interface IChatManagerCallBack {
+            [OperationContract(IsOneWay = true)]
+            void broadcastMessage(Message message);
+        }
+
+        [DataContract]
+        public class Message {
+            [DataMember]
+            public DateTime timeStamp { get; set; } = DateTime.Now;
+
+            [DataMember]
+            public string chatMessage { get; set; }
+
+            [DataMember]
+            public string userName { get; set; }
+
+            public Message(string chatMessage, DateTime timeStamp, string userName) {
+                this.chatMessage = chatMessage;
+                this.timeStamp = timeStamp;
+                this.userName = userName;
+            }
+
+            public override string ToString() {
+                return $"{timeStamp.ToLocalTime()} {userName}: {chatMessage}";
+            }
+        }
     }
-
-    public interface IChatManagerCallBack {
-        [OperationContract(IsOneWay = true)]
-        void broadcastMessage(Message message);
-
-    }
-
-    [DataContract]
-    public class Message {
-        [DataMember]
-        public DateTime timeStamp { get; set; } = DateTime.Now;
-
-        [DataMember]
-        public string chatMessage { get; set; }
-
-        [DataMember]
-        public string userName { get; set; }
-    }
-
 }
