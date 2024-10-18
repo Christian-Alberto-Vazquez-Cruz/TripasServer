@@ -8,30 +8,27 @@ using System.Threading.Tasks;
 
 namespace TripasService.Contracts {
 
+    [ServiceContract(CallbackContract = typeof(IChatManagerCallBack))]
+    public interface IChatManager {
+        [OperationContract]
+        void sendMessage(string userName, Message message);
 
-    namespace TripasService.Contracts {
+        [OperationContract]
+        void connectToLobby(string userName);
 
-        [ServiceContract(CallbackContract = typeof(IChatManagerCallBack))]
-        public interface IChatManager {
-            [OperationContract]
-            void sendMessage(string userName, Message message);
+        [OperationContract]
+        void leaveLobby(string userName);
 
-            [OperationContract]
-            void connectToLobby(string userName);
+        [OperationContract]
+        List<Message> getMessageHistory();
+    }
 
-            [OperationContract]
-            void leaveLobby(string userName);
+    public interface IChatManagerCallBack {
+        [OperationContract(IsOneWay = true)]
+        void broadcastMessage(Message message);
+    }
 
-            [OperationContract]
-            List<Message> getMessageHistory();
-        }
-
-        public interface IChatManagerCallBack {
-            [OperationContract(IsOneWay = true)]
-            void broadcastMessage(Message message);
-        }
-
-        [DataContract]
+    [DataContract]
         public class Message {
             [DataMember]
             public DateTime timeStamp { get; set; } = DateTime.Now;
@@ -53,4 +50,3 @@ namespace TripasService.Contracts {
             }
         }
     }
-}
