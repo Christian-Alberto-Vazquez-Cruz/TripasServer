@@ -6,10 +6,12 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using TripasService.Contracts;
+using TripasService.Contracts.TripasService.Contracts;
 
 namespace TripasService.Services {
     public partial class TripasGameService : IChatManager {
 
+        private const int maxMessages = 50;
         private Queue<Message> messageHistory = new Queue<Message>();
         private Dictionary<string, IChatManagerCallBack> connectedUsers = new Dictionary<string, IChatManagerCallBack>();
 
@@ -47,7 +49,7 @@ namespace TripasService.Services {
         }
 
         private void AddMessage(Message message) {
-            if (messageHistory.Count >= Constants.MAX_MESSAGES) {
+            if (messageHistory.Count >= maxMessages) {
                 messageHistory.Dequeue();
             }
             messageHistory.Enqueue(message);
