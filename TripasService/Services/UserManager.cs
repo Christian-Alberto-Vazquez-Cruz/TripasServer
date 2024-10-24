@@ -13,12 +13,12 @@ using TripasService.Utils;
 
 namespace TripasService.Services {
     [ServiceBehavior]
-    public partial class TripasGameService :IUserManager {
+    public partial class TripasGameService : IUserManager {
         public int createAccount(LoginUser user, Profile profile) {
             UserDAO dao = new UserDAO();
 
             DataBaseManager.Login newLogin = new DataBaseManager.Login() {
-             contrasena = user.password,
+                contrasena = user.password,
                 correo = user.mail
             };
 
@@ -66,7 +66,7 @@ namespace TripasService.Services {
         }
 
         // Decidir si utilizar este o getProfile que hace todo
-          public int verifyLogin(LoginUser user) {
+        public int verifyLogin(LoginUser user) {
             UserDAO dao = new UserDAO();
 
             DataBaseManager.Login newLogin = new DataBaseManager.Login() {
@@ -76,6 +76,24 @@ namespace TripasService.Services {
 
             int result = dao.validateUserDAO(newLogin);
             return result;
-        } 
+        }
+
+        public int getProfileId(string userName) {
+            UserDAO dao = new UserDAO();
+            int result = dao.getProfileIdDAO(userName);
+            if (result == Constants.NO_MATCHES) {
+                ProfileNotFoundFault profileNotFound = new ProfileNotFoundFault();
+                profileNotFound.errorMessage = $"Couldn't find a profile that matches {userName} name";
+                throw new FaultException<ProfileNotFoundFault>(profileNotFound);
+                //throw new FaultException<ProfileNotFoundFault>(new ProfileNotFoundFault($"Couldn't find a profile that matches {userName} name"));
+            }
+            return result;
+        }
+
+        public bool isEmailRegistered(string email) {
+            UserDAO dao = new UserDAO();
+            bool isRegistered = dao.isEmailRegisteredDAO(email);
+            return isRegistered;
+        }
     }
 }
