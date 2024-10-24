@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tripasHost", "tripasHost\tr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TripasService", "TripasService\TripasService.csproj", "{AE25CC6B-B548-4CA0-8A5C-46E940DF6094}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataBaseManager", "DataBaseManager\DataBaseManager.csproj", "{05A1748B-C629-483F-890A-DAB8AC3DA1B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataBaseManager", "DataBaseManager\DataBaseManager.csproj", "{0D8C92EB-D320-4767-8FA5-23C18596CAFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{AE25CC6B-B548-4CA0-8A5C-46E940DF6094}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE25CC6B-B548-4CA0-8A5C-46E940DF6094}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE25CC6B-B548-4CA0-8A5C-46E940DF6094}.Release|Any CPU.Build.0 = Release|Any CPU
-		{05A1748B-C629-483F-890A-DAB8AC3DA1B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{05A1748B-C629-483F-890A-DAB8AC3DA1B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{05A1748B-C629-483F-890A-DAB8AC3DA1B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{05A1748B-C629-483F-890A-DAB8AC3DA1B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D8C92EB-D320-4767-8FA5-23C18596CAFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D8C92EB-D320-4767-8FA5-23C18596CAFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D8C92EB-D320-4767-8FA5-23C18596CAFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D8C92EB-D320-4767-8FA5-23C18596CAFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
