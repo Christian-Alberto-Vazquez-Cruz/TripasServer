@@ -16,9 +16,6 @@ namespace TripasService.Services {
 
         private static Dictionary<string, string> verificationCodesCreateAccount = new Dictionary<string, string>();
         public int sendVerificationCodeRegister(string emailReceiver) {
-            if (!verifyEmailRegistration(emailReceiver)) {
-                return Constants.NO_MATCHES;
-            }
 
             int operationResult = Constants.FAILED;
             string code = generateCode();

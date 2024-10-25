@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Contracts\IChatManager.cs" />
     <Compile Include="Contracts\IFriendsManager.cs" />
+    <Compile Include="Contracts\ILeaderboardManager.cs" />
     <Compile Include="Contracts\IPasswordRecoveryManager.cs" />
     <Compile Include="Contracts\IUserManager.cs" />
     <Compile Include="Contracts\IEmailVerificationManager.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="Services\ChatManager.cs" />
     <Compile Include="Services\FriendsManager.cs" />
     <Compile Include="Services\EmailVerificationManager.cs" />
+    <Compile Include="Services\LeaderboardManager.cs" />
     <Compile Include="Services\PasswordRecoveryManager.cs" />
     <Compile Include="Services\UserManager.cs" />
     <Compile Include="Utils\CodesGeneratorHelper.cs" />
