@@ -1,0 +1,15 @@
+﻿C:\Users\cv419\source\repos\TripasServer\DataBaseManager\Amistad.cs
+C:\Users\cv419\source\repos\TripasServer\DataBaseManager\DAO\FriendsDAO.cs
+C:\Users\cv419\source\repos\TripasServer\DataBaseManager\DAO\UserDAO.cs
+C:\Users\cv419\source\repos\TripasServer\DataBaseManager\Login.cs
+C:\Users\cv419\source\repos\TripasServer\DataBaseManager\Perfil.cs
+C:\Users\cv419\source\repos\TripasServer\DataBaseManager\Program.cs
+C:\Users\cv419\source\repos\TripasServer\DataBaseManager\Properties\AssemblyInfo.cs
+C:\Users\cv419\source\repos\TripasServer\DataBaseManager\sysdiagrams.cs
+C:\Users\cv419\source\repos\TripasServer\DataBaseManager\Utils\Constants.cs
+C:\Users\cv419\source\repos\TripasServer\DataBaseManager\tripasDB.Context.tt
+C:\Users\cv419\source\repos\TripasServer\DataBaseManager\tripasDB.tt
+C:\Users\cv419\source\repos\TripasServer\DataBaseManager\tripasDB.edmx
+C:\Users\cv419\source\repos\TripasServer\DataBaseManager\App.config
+C:\Users\cv419\source\repos\TripasServer\DataBaseManager\packages.config
+C:\Users\cv419\source\repos\TripasServer\DataBaseManager\tripasDB.edmx.diagram

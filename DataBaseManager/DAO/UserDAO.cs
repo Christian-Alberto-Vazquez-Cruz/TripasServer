@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity.Core;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net.NetworkInformation;
 using System.Runtime;
 using System.Text;
@@ -32,8 +33,7 @@ namespace DataBaseManager.DAO {
                     db.SaveChanges();
                     operationStatus = Constants.SUCCESS;
                 }
-            }
-            catch (EntityException entityException) {
+            } catch (EntityException entityException) {
                 Console.WriteLine($"Error trying to register the user with {user.correo} mail, {profile.idPerfil} idProfile. {entityException.Message}");
             }
             return operationStatus;
@@ -46,13 +46,11 @@ namespace DataBaseManager.DAO {
                     var userExists = db.Login.Any(login => login.correo == user.correo && login.contrasena == user.contrasena);
                     if (userExists) {
                         operationStatus = Constants.FOUND_MATCH;
-                    }
-                    else {
+                    } else {
                         operationStatus = Constants.NO_MATCHES;
                     }
                 }
-            }
-            catch (EntityException entityException) {
+            } catch (EntityException entityException) {
                 Console.WriteLine($"Error trying to validate user: {user.idUsuario} {user.correo}, {entityException.Message}");
             }
             return operationStatus;
@@ -68,13 +66,11 @@ namespace DataBaseManager.DAO {
                         existingProfile.fotoRuta = profile.fotoRuta;
                         db.SaveChanges();
                         operationStatus = Constants.SUCCESS;
-                    }
-                    else {
+                    } else {
                         operationStatus = Constants.NO_MATCHES;
                     }
                 }
-            }
-            catch (EntityException entittyException) {
+            } catch (EntityException entittyException) {
                 Console.WriteLine($"Error trying to update the user profile {profile.nombre}, {entittyException.Message}");
             }
             return operationStatus;
@@ -89,12 +85,11 @@ namespace DataBaseManager.DAO {
                         userProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == userLogin.idUsuario);
                     }
                 }
-            }
-            catch (EntityException entityException) {
+            } catch (EntityException entityException) {
                 Console.WriteLine($"Error trying to get the Profile with {mail} mail, {entityException.Message}");
             }
             return userProfile;
-        } 
+        }
 
         public int getProfileIdDAO(string userName) {
             int profileId = Constants.NO_MATCHES;
@@ -102,8 +97,7 @@ namespace DataBaseManager.DAO {
                 using (tripasEntities db = new tripasEntities()) {
                     profileId = db.Perfil.Where(perfil => perfil.nombre == userName).Select(perfil => perfil.idPerfil).FirstOrDefault();
                 }
-            }
-            catch (EntityException entityException) {
+            } catch (EntityException entityException) {
                 Console.WriteLine($"Error trying to get the user id with {userName} username, {entityException.Message}");
             }
             return profileId;
@@ -115,8 +109,7 @@ namespace DataBaseManager.DAO {
                 using (tripasEntities db = new tripasEntities()) {
                     emailExists = db.Login.Any(login => login.correo == mail);
                 }
-            }
-            catch (EntityException entityException) {
+            } catch (EntityException entityException) {
                 Console.WriteLine($"Error checking if the email is already registered {entityException.Message}");
             }
             return emailExists;
@@ -150,13 +143,11 @@ namespace DataBaseManager.DAO {
                         existingProfile.fotoRuta = newProfilePic;
                         db.SaveChanges();
                         operationStatus = Constants.SUCCESS;
-                    }
-                    else {
+                    } else {
                         operationStatus = Constants.NO_MATCHES;
                     }
                 }
-            }
-            catch (EntityException entityException) {
+            } catch (EntityException entityException) {
                 Console.WriteLine($"Error trying to update the user profile PIC with {idProfile} id, {entityException.Message}");
             }
             return operationStatus;
@@ -177,6 +168,19 @@ namespace DataBaseManager.DAO {
                 Console.WriteLine($"Error trying to update the login password with {mail} mail, {entityException.Message}");
             }
             return operationStatus;
+        }
+
+        public List<Perfil> getHighestScoresDAO() {
+            List<Perfil> bestPlayersList = new List<Perfil>();
+            try {
+                using (tripasEntities db = new tripasEntities()) {
+                    var profiles = db.Perfil.OrderByDescending(perfil => perfil.puntaje).Take(Constants.HOW_MANY_SCORES).ToList();
+                    bestPlayersList = profiles;
+                }
+            } catch (EntityException entityException) {
+                Console.WriteLine($"Error trying to retrieve the highest score players {entityException.Message}");
+            }
+            return bestPlayersList;
         }
     }
 }

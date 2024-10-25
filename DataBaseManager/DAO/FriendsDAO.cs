@@ -23,7 +23,7 @@ namespace DataBaseManager.DAO {
                 }
             }
             catch (EntityException entityException) {
-                Console.WriteLine("Error trying to register the friendship {0}", entityException.Message);
+                Console.WriteLine($"Error trying to register the friendship {entityException.Message}");
             }
             return operationStatus;
         }
@@ -69,7 +69,7 @@ namespace DataBaseManager.DAO {
                 }
             }
             catch (EntityException entityException) {
-                Console.WriteLine("Unable to delete friendship " + entityException.Message);
+                Console.WriteLine($"Unable to delete friendship, {entityException.Message}");
             }
             return operationStatus;
         }
@@ -88,7 +88,7 @@ namespace DataBaseManager.DAO {
                 }
             }
             catch (EntityException entityException) {
-                Console.WriteLine("Error trying to retrieve the friend list {0}", entityException.Message);
+                Console.WriteLine($"Error trying to retrieve the friend list {entityException.Message}");
             }
             return friendList;
         }

@@ -1,0 +1,4 @@
+﻿C:\Users\cv419\source\repos\TripasServer\tripasHost\Program.cs
+C:\Users\cv419\source\repos\TripasServer\tripasHost\Properties\AssemblyInfo.cs
+C:\Users\cv419\source\repos\TripasServer\tripasHost\App.config
+C:\Users\cv419\source\repos\TripasServer\tripasHost\packages.config

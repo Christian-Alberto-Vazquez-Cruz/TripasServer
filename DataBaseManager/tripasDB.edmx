@@ -27,7 +27,7 @@
           </Key>
           <Property Name="idPerfil" Type="int" Nullable="false" />
           <Property Name="nombre" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="puntaje" Type="int" />
+          <Property Name="puntaje" Type="int" Nullable="false" />
           <Property Name="fotoRuta" Type="varchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
@@ -123,7 +123,7 @@
           </Key>
           <Property Name="idPerfil" Type="Int32" Nullable="false" />
           <Property Name="nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="puntaje" Type="Int32" />
+          <Property Name="puntaje" Type="Int32" Nullable="false" />
           <Property Name="fotoRuta" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Amistad" Relationship="Self.FK_Amistad_JugadorDos" FromRole="Perfil" ToRole="Amistad" />
           <NavigationProperty Name="Amistad1" Relationship="Self.FK_Amistad_JugadorUno" FromRole="Perfil" ToRole="Amistad" />

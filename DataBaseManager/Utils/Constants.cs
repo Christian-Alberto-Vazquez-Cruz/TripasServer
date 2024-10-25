@@ -12,5 +12,6 @@ namespace DataBaseManager.Utils {
         public const string INITIAL_PIC_PATH = "";
         public const int NO_MATCHES = -1;
         public const int FOUND_MATCH = 1;
+        public const int HOW_MANY_SCORES = 10;
     }
 }

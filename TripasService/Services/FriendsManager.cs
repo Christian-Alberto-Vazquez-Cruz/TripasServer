@@ -30,8 +30,9 @@ namespace TripasService.Services {
             foreach (var friend in friendProfiles) {
                 Profile profile = new Profile() {
                     idProfile = friend.idPerfil,
-                    userName = friend.nombre
-                    //picturePath = friend.fotoRuta ¿Are we going to show the profile pic? 
+                    userName = friend.nombre,
+                    score = friend.puntaje,
+                    picturePath = friend.fotoRuta //¿Are we going to show the profile pic? 
                 };
                 friendList.Add(profile);
             }
