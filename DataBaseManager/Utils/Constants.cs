@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataBaseManager.Utils {
     public class Constants {
-        public const int SUCCSESS = 1;
+        public const int SUCCESS = 1;
         public const int FAILED = -1;
         public const int INITIAL_SCORE = 0;
         public const string INITIAL_PIC_PATH = "";

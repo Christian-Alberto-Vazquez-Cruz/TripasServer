@@ -16,15 +16,23 @@ namespace TripasService.Contracts {
         int updateProfile(Profile profile);
 
         [OperationContract]
-        Profile getProfile(String email, String password);
+        Profile getProfile(String mail, String password);
         [OperationContract]
         int verifyLogin(LoginUser user);
 
         [OperationContract]
         [FaultContract(typeof(ProfileNotFoundFault))]
         int getProfileId(string userName);
+
         [OperationContract]
-        bool isEmailRegistered (string email);
+        bool isEmailRegistered (string mail);
+
+        [OperationContract]
+        int updateProfileName(int idProfile, string newProfileName);
+
+        [OperationContract]
+        int updateProfilePic(int idProfile, string newProfilePic);
+
     }
 
     [DataContract]

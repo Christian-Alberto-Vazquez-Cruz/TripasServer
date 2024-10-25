@@ -39,6 +39,8 @@ namespace TripasService.Services {
         }
 
         public int deleteFriendship(string userName1, string userName2) {
+
+
             FriendsDAO friends = new FriendsDAO();
             int result = friends.deleteFriendsDAO(userName1, userName2);
             return result;

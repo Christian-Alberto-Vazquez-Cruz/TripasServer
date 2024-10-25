@@ -30,11 +30,11 @@ namespace DataBaseManager.DAO {
                     };
                     db.Perfil.Add(newUserProfile);
                     db.SaveChanges();
-                    operationStatus = Constants.SUCCSESS;
+                    operationStatus = Constants.SUCCESS;
                 }
             }
             catch (EntityException entityException) {
-                Console.WriteLine("Error trying to register the user {0}", entityException.Message);
+                Console.WriteLine($"Error trying to register the user with {user.correo} mail, {profile.idPerfil} idProfile. {entityException.Message}");
             }
             return operationStatus;
         }
@@ -53,7 +53,7 @@ namespace DataBaseManager.DAO {
                 }
             }
             catch (EntityException entityException) {
-                Console.WriteLine("Error trying to validate user: {0}", entityException.Message);
+                Console.WriteLine($"Error trying to validate user: {user.idUsuario} {user.correo}, {entityException.Message}");
             }
             return operationStatus;
         }
@@ -67,7 +67,7 @@ namespace DataBaseManager.DAO {
                         existingProfile.nombre = profile.nombre;
                         existingProfile.fotoRuta = profile.fotoRuta;
                         db.SaveChanges();
-                        operationStatus = Constants.SUCCSESS;
+                        operationStatus = Constants.SUCCESS;
                     }
                     else {
                         operationStatus = Constants.NO_MATCHES;
@@ -75,7 +75,7 @@ namespace DataBaseManager.DAO {
                 }
             }
             catch (EntityException entittyException) {
-                Console.WriteLine("Error trying to update the user profile {0}, {1}", profile.nombre, entittyException.Message);
+                Console.WriteLine($"Error trying to update the user profile {profile.nombre}, {entittyException.Message}");
             }
             return operationStatus;
         }
@@ -91,20 +91,20 @@ namespace DataBaseManager.DAO {
                 }
             }
             catch (EntityException entityException) {
-                Console.WriteLine("Error trying to get the Profile {0}", entityException.Message);
+                Console.WriteLine($"Error trying to get the Profile with {mail} mail, {entityException.Message}");
             }
             return userProfile;
-        }
+        } 
 
         public int getProfileIdDAO(string userName) {
             int profileId = Constants.NO_MATCHES;
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    profileId = db.Perfil.Where(u => u.nombre == userName).Select(u => u.idPerfil).FirstOrDefault();
+                    profileId = db.Perfil.Where(perfil => perfil.nombre == userName).Select(perfil => perfil.idPerfil).FirstOrDefault();
                 }
             }
             catch (EntityException entityException) {
-                Console.WriteLine("Error trying to get the user id with username {0}", entityException.Message);
+                Console.WriteLine($"Error trying to get the user id with {userName} username, {entityException.Message}");
             }
             return profileId;
         }
@@ -117,9 +117,66 @@ namespace DataBaseManager.DAO {
                 }
             }
             catch (EntityException entityException) {
-                Console.WriteLine("Error checking if the email is already registered {0}", entityException.Message);
+                Console.WriteLine($"Error checking if the email is already registered {entityException.Message}");
             }
             return emailExists;
+        }
+
+        public int updateProfileNameDAO(int idProfile, string newProfileName) {
+            int operationStatus = Constants.FAILED;
+            try {
+                using (tripasEntities db = new tripasEntities()) {
+                    var existingProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == idProfile);
+                    if (existingProfile != null) {
+                        existingProfile.nombre = newProfileName;
+                        db.SaveChanges();
+                        operationStatus = Constants.SUCCESS;
+                    } else {
+                        operationStatus = Constants.NO_MATCHES;
+                    }
+                }
+            } catch (EntityException entityException) {
+                Console.WriteLine($"Error trying to update the user profile NAME with {idProfile} id, {entityException.Message}");
+            }
+            return operationStatus;
+        }
+
+        public int updateProfilePicDAO(int idProfile, string newProfilePic) {
+            int operationStatus = Constants.FAILED;
+            try {
+                using (tripasEntities db = new tripasEntities()) {
+                    var existingProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == idProfile);
+                    if (existingProfile != null) {
+                        existingProfile.fotoRuta = newProfilePic;
+                        db.SaveChanges();
+                        operationStatus = Constants.SUCCESS;
+                    }
+                    else {
+                        operationStatus = Constants.NO_MATCHES;
+                    }
+                }
+            }
+            catch (EntityException entityException) {
+                Console.WriteLine($"Error trying to update the user profile PIC with {idProfile} id, {entityException.Message}");
+            }
+            return operationStatus;
+        }
+
+        public int updateLoginPasswordDAO(string mail, string newPassword) {
+            int operationStatus = Constants.FAILED;
+            try {
+                using (tripasEntities db = new tripasEntities()) {
+                    var existingLogin = db.Login.FirstOrDefault(login => login.correo == mail);
+                    if (existingLogin != null) {
+                        existingLogin.contrasena = newPassword;
+                    } else {
+                        operationStatus = Constants.NO_MATCHES;
+                    }
+                }
+            } catch (EntityException entityException) {
+                Console.WriteLine($"Error trying to update the login password with {mail} mail, {entityException.Message}");
+            }
+            return operationStatus;
         }
     }
 }
