@@ -1,18 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TripasService.Contracts {
     [ServiceContract]
-    public interface IEmailVerificationManager {
+    public interface IPasswordRecoveryManager {
         [OperationContract]
-        int sendVerificationCodeRegister(string email);
+        int SendRecoveryCode(string email);
 
         [OperationContract]
-        bool verifyCode(string email, string code);
+        bool VerifyRecoveryCode(string email, string code);
+
+        [OperationContract]
+        int UpdatePassword(string email, string newPassword);
     }
 }

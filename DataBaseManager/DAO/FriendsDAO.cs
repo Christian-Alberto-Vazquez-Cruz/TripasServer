@@ -19,7 +19,7 @@ namespace DataBaseManager.DAO {
 
                     db.Amistad.Add(newFriendship);
                     db.SaveChanges();
-                    operationStatus = Constants.SUCCSESS;
+                    operationStatus = Constants.SUCCESS;
                 }
             }
             catch (EntityException entityException) {
@@ -40,7 +40,7 @@ namespace DataBaseManager.DAO {
                         // Si se encontró la amistad, eliminarla
                         db.Amistad.Remove(friendshipToDelete);
                         db.SaveChanges();
-                        operationStatus = Constants.SUCCSESS;
+                        operationStatus = Constants.SUCCESS;
                     }
                 }
             }
@@ -63,7 +63,7 @@ namespace DataBaseManager.DAO {
                         if (friendshipToDelete != null) {
                             db.Amistad.Remove(friendshipToDelete);
                             db.SaveChanges();
-                            operationStatus = Constants.SUCCSESS;
+                            operationStatus = Constants.SUCCESS;
                         }
                     }
                 }

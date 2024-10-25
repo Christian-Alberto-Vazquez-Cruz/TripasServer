@@ -1,4 +1,4 @@
-﻿using DataBaseManager.Utils;
+﻿using TripasService.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,24 +9,31 @@ using TripasService.Contracts;
 using System.Net;
 using System.Net.Mail;
 using System.Net.NetworkInformation;
+using DataBaseManager.DAO;
 
 namespace TripasService.Services {
     public partial class TripasGameService : IEmailVerificationManager {
 
-        private static Dictionary<string, string> verificationCodes = new Dictionary<string, string>();
-        public int sendVerificationCode(string emailReceiver) {
+        private static Dictionary<string, string> verificationCodesCreateAccount = new Dictionary<string, string>();
+        public int sendVerificationCodeRegister(string emailReceiver) {
+            if (!verifyEmailRegistration(emailReceiver)) {
+                return Constants.NO_MATCHES;
+            }
+
             int operationResult = Constants.FAILED;
-            string code = generateVerificationCode();
-            if (verificationCodes.ContainsKey(emailReceiver)) {
-                verificationCodes[emailReceiver] = code;  
+            string code = generateCode();
+            if (verificationCodesCreateAccount.ContainsKey(emailReceiver)) {
+                verificationCodesCreateAccount[emailReceiver] = code;  
             }
             else {
-                verificationCodes.Add(emailReceiver, code);
+                verificationCodesCreateAccount.Add(emailReceiver, code);
+                StartVerificationCodeTimer(emailReceiver);
+
                 string emailSender = "servicetripas@gmail.com";
                 string emailPassword = "fxllpkrxfgnzbpvy";
                 string displayName = "Verification-Code Tripas Game";
                 try {
-                    string emailBody = generateEmailBody(code);
+                    string emailBody = this.emailBodyRegister(code);
                     MailMessage mailMessage = new MailMessage();
                     mailMessage.From = new MailAddress(emailSender, displayName);
                     mailMessage.To.Add(emailReceiver);
@@ -40,36 +47,28 @@ namespace TripasService.Services {
                     smtpClient.EnableSsl = true;
 
                     smtpClient.Send(mailMessage);
-                    operationResult = Constants.SUCCSESS;
+                    operationResult = Constants.SUCCESS;
                 }
-                catch (Exception ex) {
-                    Console.WriteLine("Unable to send the mail "+ex.ToString());
+                catch (SmtpException smtpException) {
+                    Console.WriteLine("Unable to send the mail "+smtpException.ToString());
                 }
 
             }
             return operationResult;
-
         }
 
         public bool verifyCode(string email, string code) {
-            if (verificationCodes.TryGetValue(email, out string storedCode)) {
-                return storedCode.Equals(code);
-            } else {
-                return false;
-            }
-        }
-        private string generateVerificationCode() {
-            using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider()) {
-                byte[] randomBytes = new byte[4];
-                rng.GetBytes(randomBytes);
-                int code = BitConverter.ToInt32(randomBytes, 0) % 1000000; // 6 digits
-                code = Math.Abs(code);
-                string codeString = code.ToString("D6");
-                return codeString;
-            }
+            bool result = false;
+            if (verificationCodesCreateAccount.TryGetValue(email, out string storedCode)) {
+                if (storedCode.Equals(code)) {
+                    verificationCodesCreateAccount.Remove(email);
+                    result = true; 
+                }
+            } 
+            return result; 
         }
 
-        private string generateEmailBody(string code) {
+        private string emailBodyRegister(string code) {
             return $@"
                 <html>
                 <body>
@@ -84,5 +83,26 @@ namespace TripasService.Services {
                 </body>
                 </html>";
         }
+
+        private bool verifyCodeUniqueness(string code) {
+            return verificationCodesCreateAccount.ContainsValue(code);
+        }
+
+        private string generateCode() {
+            string code;
+            do {
+                code = CodesGeneratorHelper.GenerateVerificationCode();
+            } while (verifyCodeUniqueness(code));
+            return code;
+        }
+
+        private void StartVerificationCodeTimer(string email) {
+            Task.Run(async () => {
+                await Task.Delay(60000); 
+                verificationCodesCreateAccount.Remove(email);
+                Console.WriteLine($"El código de verificación para {email} ha sido eliminado después de 60 segundos.");
+            });
+        }
+
     }
 }

@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 using TripasService.Contracts;
 using TripasService.Utils;
 
-
-
 namespace TripasService.Services {
     [ServiceBehavior]
     public partial class TripasGameService : IUserManager {
@@ -94,6 +92,18 @@ namespace TripasService.Services {
             UserDAO dao = new UserDAO();
             bool isRegistered = dao.isEmailRegisteredDAO(email);
             return isRegistered;
+        }
+
+        public int updateProfileName(int idProfile, string newProfileName) {
+            UserDAO dao = new UserDAO();
+            int result = dao.updateProfileNameDAO(idProfile, newProfileName);
+            return result;
+        }
+
+        public int updateProfilePic(int idProfile, string newProfilePic) {
+            UserDAO dao = new UserDAO();
+            int result = dao.updateProfilePicDAO(idProfile, newProfilePic);
+            return result;
         }
     }
 }
