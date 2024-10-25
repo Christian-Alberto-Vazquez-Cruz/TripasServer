@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace TripasService.Utils {
     public class Constants {
-        public const int SUCESS = 1;
+        public const int SUCCESS = 1;
         public const int FAILED = -1;
         public const int NO_MATCHES = -1;
         public const int FOUND_MATCH = 1;
+        public const int MAX_MESSAGES = 50;
     }
 }

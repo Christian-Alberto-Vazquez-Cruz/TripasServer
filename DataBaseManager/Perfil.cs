@@ -18,16 +18,18 @@ namespace DataBaseManager
         public Perfil()
         {
             this.Amistad = new HashSet<Amistad>();
+            this.Amistad1 = new HashSet<Amistad>();
         }
     
         public int idPerfil { get; set; }
         public string nombre { get; set; }
-        public Nullable<int> puntaje { get; set; }
+        public int puntaje { get; set; }
         public string fotoRuta { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Amistad> Amistad { get; set; }
-        public virtual Amistad Amistad1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Amistad> Amistad1 { get; set; }
         public virtual Login Login { get; set; }
     }
 }
