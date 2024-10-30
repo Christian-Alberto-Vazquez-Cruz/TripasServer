@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using TripasService.Enums;
 
 namespace TripasService.Contracts {
     [ServiceContract]
@@ -16,9 +17,7 @@ namespace TripasService.Contracts {
         int updateProfile(Profile profile);
 
         [OperationContract]
-        Profile getProfile(String mail, String password);
-        [OperationContract]
-        int verifyLogin(LoginUser user);
+        int verifyLogin(string mail, string password);
 
         [OperationContract]
         [FaultContract(typeof(ProfileNotFoundFault))]
@@ -33,6 +32,9 @@ namespace TripasService.Contracts {
         [OperationContract]
         int updateProfilePic(int idProfile, string newProfilePic);
 
+        [OperationContract]
+        Profile getProfileByMail(string mail);
+
     }
 
     [DataContract]
@@ -45,6 +47,8 @@ namespace TripasService.Contracts {
         public int score { get; set; }
         [DataMember]
         public string picturePath { get; set; }
+        [DataMember]
+        public GaneEnums.PlayerStatus status { get; set; }
     }
 
     [DataContract]

@@ -54,6 +54,7 @@
     <Compile Include="Contracts\IPasswordRecoveryManager.cs" />
     <Compile Include="Contracts\IUserManager.cs" />
     <Compile Include="Contracts\IEmailVerificationManager.cs" />
+    <Compile Include="Enums\GameEnums.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ChatManager.cs" />
     <Compile Include="Services\FriendsManager.cs" />

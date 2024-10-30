@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TripasService.Contracts;
 using TripasService.Utils;
+using TripasService.Enums;
 
 namespace TripasService.Services {
     [ServiceBehavior]
@@ -28,29 +29,6 @@ namespace TripasService.Services {
             return insertionResult;
         }
 
-        public Profile getProfile(String mail, String password) {
-            UserDAO dao = new UserDAO();
-            DataBaseManager.Login loginDetails = new DataBaseManager.Login() {
-                correo = mail,
-                contrasena = password
-            };
-
-            int loginStatus = dao.validateUserDAO(loginDetails);
-            if (loginStatus == Constants.FOUND_MATCH) {
-                Perfil profileDB = dao.getProfileByMail(mail);
-
-                Profile profile = new Profile() {
-                    idProfile = profileDB.idPerfil,
-                    userName = profileDB.nombre,
-                    picturePath = profileDB.fotoRuta,
-                };
-                return profile;
-            }
-            else {
-                return null;
-            }
-        }
-
         public int updateProfile(Profile profile) {
             UserDAO dao = new UserDAO();
 
@@ -64,16 +42,22 @@ namespace TripasService.Services {
         }
 
         // Decidir si utilizar este o getProfile que hace todo
-        public int verifyLogin(LoginUser user) {
+        public int verifyLogin(string mail, string password) {
             UserDAO dao = new UserDAO();
-
-            DataBaseManager.Login newLogin = new DataBaseManager.Login() {
-                contrasena = user.password,
-                correo = user.mail
-            };
-
-            int result = dao.validateUserDAO(newLogin);
+            int result = dao.validateUserDAO(password, mail);
             return result;
+        }
+
+        public Profile getProfileByMail(string mail) {
+            UserDAO dao = new UserDAO();
+            Perfil profileDB = dao.getProfileByMailDAO(mail);
+            Profile profile = new Profile() {
+                idProfile = profileDB.idPerfil,
+                userName = profileDB.nombre,
+                picturePath = profileDB.fotoRuta,
+                status = GaneEnums.PlayerStatus.Online
+            };
+            return profile;
         }
 
         public int getProfileId(string userName) {
@@ -105,5 +89,6 @@ namespace TripasService.Services {
             int result = dao.updateProfilePicDAO(idProfile, newProfilePic);
             return result;
         }
+
     }
 }

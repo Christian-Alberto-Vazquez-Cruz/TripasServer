@@ -39,11 +39,13 @@ namespace DataBaseManager.DAO {
             return operationStatus;
         }
 
-        public int validateUserDAO(Login user) {
+        public int validateUserDAO(string password, string mail) {
             int operationStatus = Constants.FAILED;
+
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    var userExists = db.Login.Any(login => login.correo == user.correo && login.contrasena == user.contrasena);
+                    var userExists = db.Login.Any(login => login.correo == mail && login.contrasena == password);
+
                     if (userExists) {
                         operationStatus = Constants.FOUND_MATCH;
                     } else {
@@ -51,8 +53,9 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (EntityException entityException) {
-                Console.WriteLine($"Error trying to validate user: {user.idUsuario} {user.correo}, {entityException.Message}");
+                Console.WriteLine($"Error trying to validate user: {mail}, {entityException.Message}");
             }
+
             return operationStatus;
         }
 
@@ -76,7 +79,7 @@ namespace DataBaseManager.DAO {
             return operationStatus;
         }
 
-        public Perfil getProfileByMail(String mail) {
+        public Perfil getProfileByMailDAO(String mail) {
             Perfil userProfile = null;
             try {
                 using (tripasEntities db = new tripasEntities()) {
