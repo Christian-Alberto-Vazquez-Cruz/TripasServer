@@ -1,12 +1,15 @@
 ﻿C:\Users\cv419\source\repos\TripasServer\TripasService\Contracts\IChatManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Contracts\IFriendsManager.cs
+C:\Users\cv419\source\repos\TripasServer\TripasService\Contracts\ILeaderboardManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Contracts\IPasswordRecoveryManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Contracts\IUserManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Contracts\IEmailVerificationManager.cs
+C:\Users\cv419\source\repos\TripasServer\TripasService\Enums\GameEnums.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Properties\AssemblyInfo.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Services\ChatManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Services\FriendsManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Services\EmailVerificationManager.cs
+C:\Users\cv419\source\repos\TripasServer\TripasService\Services\LeaderboardManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Services\PasswordRecoveryManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Services\UserManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Utils\CodesGeneratorHelper.cs

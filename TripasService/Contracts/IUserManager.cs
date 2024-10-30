@@ -14,7 +14,7 @@ namespace TripasService.Contracts {
         int createAccount(LoginUser user, Profile profile);
 
         [OperationContract]
-        int updateProfile(Profile profile);
+        int updateProfile(int idProfile, string newUsername, string newPic);
 
         [OperationContract]
         int verifyLogin(string mail, string password);

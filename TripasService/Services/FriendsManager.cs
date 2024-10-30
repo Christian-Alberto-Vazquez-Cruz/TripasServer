@@ -10,21 +10,16 @@ using TripasService.Contracts;
 namespace TripasService.Services {
     public partial class TripasGameService : IFriendsManager {
         public int addFriend(int idProfile1, int idProfile2) {
-            FriendsDAO friendsDAO = new FriendsDAO();
-            int result = friendsDAO.strikeUpFriendshipDAO(idProfile1, idProfile2);
+            int result = FriendsDAO.strikeUpFriendshipDAO(idProfile1, idProfile2);
             return result;
         }
-
-        //¿Not useful anymore?
         public int deleteFriend(int idProfile1, int idProfile2) {
-            FriendsDAO friendsDAO = new FriendsDAO();
-            int result = friendsDAO.deleteFriendshipDAO(idProfile1, idProfile2);
+            int result = FriendsDAO.deleteFriendshipDAO(idProfile1, idProfile2);
             return result;
         }
 
         public List<Profile> getFriends(int idProfile) {
-            FriendsDAO friendsDAO = new FriendsDAO();
-            List<Perfil> friendProfiles = friendsDAO.getFriendsDAO(idProfile);
+            List<Perfil> friendProfiles = FriendsDAO.getFriendsDAO(idProfile);
             List<Profile> friendList = new List<Profile>();
 
             foreach (var friend in friendProfiles) {
@@ -39,11 +34,9 @@ namespace TripasService.Services {
             return friendList;
         }
 
+        //¿Not useful anymore?
         public int deleteFriendship(string userName1, string userName2) {
-
-
-            FriendsDAO friends = new FriendsDAO();
-            int result = friends.deleteFriendsDAO(userName1, userName2);
+            int result = FriendsDAO.deleteFriendsDAO(userName1, userName2);
             return result;
         }
     }
