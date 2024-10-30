@@ -14,7 +14,6 @@ namespace TripasService.Services {
     [ServiceBehavior]
     public partial class TripasGameService : IUserManager {
         public int createAccount(LoginUser user, Profile profile) {
-            UserDAO dao = new UserDAO();
 
             DataBaseManager.Login newLogin = new DataBaseManager.Login() {
                 contrasena = user.password,
@@ -25,32 +24,22 @@ namespace TripasService.Services {
                 nombre = profile.userName,
             };
 
-            int insertionResult = dao.addUserDAO(newPerfil, newLogin);
+            int insertionResult = UserDAO.addUserDAO(newPerfil, newLogin);
             return insertionResult;
         }
 
-        public int updateProfile(Profile profile) {
-            UserDAO dao = new UserDAO();
-
-            DataBaseManager.Perfil perfil = new DataBaseManager.Perfil() {
-                idPerfil = profile.idProfile,
-                nombre = profile.userName,
-                fotoRuta = profile.picturePath,
-            };
-            int result = dao.updateUserProfileDAO(perfil);
+        public int updateProfile(int idProfile, string newUsername, string newPic) {
+            int result = UserDAO.updateUserProfileDAO(idProfile, newUsername, newPic);
             return result;
         }
 
-        // Decidir si utilizar este o getProfile que hace todo
         public int verifyLogin(string mail, string password) {
-            UserDAO dao = new UserDAO();
-            int result = dao.validateUserDAO(password, mail);
+            int result = UserDAO.validateUserDAO(password, mail);
             return result;
         }
 
         public Profile getProfileByMail(string mail) {
-            UserDAO dao = new UserDAO();
-            Perfil profileDB = dao.getProfileByMailDAO(mail);
+            Perfil profileDB = UserDAO.getProfileByMailDAO(mail);
             Profile profile = new Profile() {
                 idProfile = profileDB.idPerfil,
                 userName = profileDB.nombre,
@@ -61,8 +50,7 @@ namespace TripasService.Services {
         }
 
         public int getProfileId(string userName) {
-            UserDAO dao = new UserDAO();
-            int result = dao.getProfileIdDAO(userName);
+            int result = UserDAO.getProfileIdDAO(userName);
             if (result == Constants.NO_MATCHES) {
                 ProfileNotFoundFault profileNotFound = new ProfileNotFoundFault();
                 profileNotFound.errorMessage = $"Couldn't find a profile that matches {userName} name";
@@ -73,20 +61,17 @@ namespace TripasService.Services {
         }
 
         public bool isEmailRegistered(string email) {
-            UserDAO dao = new UserDAO();
-            bool isRegistered = dao.isEmailRegisteredDAO(email);
+            bool isRegistered = UserDAO.isEmailRegisteredDAO(email);
             return isRegistered;
         }
 
         public int updateProfileName(int idProfile, string newProfileName) {
-            UserDAO dao = new UserDAO();
-            int result = dao.updateProfileNameDAO(idProfile, newProfileName);
+            int result = UserDAO.updateProfileNameDAO(idProfile, newProfileName);
             return result;
         }
 
         public int updateProfilePic(int idProfile, string newProfilePic) {
-            UserDAO dao = new UserDAO();
-            int result = dao.updateProfilePicDAO(idProfile, newProfilePic);
+            int result = UserDAO.updateProfilePicDAO(idProfile, newProfilePic);
             return result;
         }
 
