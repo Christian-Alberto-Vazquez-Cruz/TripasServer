@@ -39,11 +39,11 @@ namespace TripasService.Services {
                 };
 
                 smtpClient.Send(mailMessage);
-                return Constants.SUCCESS;
+                return Constants.SUCCESSFUL_OPERATION;
             }
             catch (SmtpException smtpException) {
                 Console.WriteLine("Unable to send the mail: " + smtpException.ToString());
-                return Constants.FAILED;
+                return Constants.FAILED_OPERATION;
             }
         }
 

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TripasService.Contracts;
 using TripasService.Utils;
-using TripasService.Enums;
+
 
 namespace TripasService.Services {
     [ServiceBehavior]
@@ -44,7 +44,6 @@ namespace TripasService.Services {
                 idProfile = profileDB.idPerfil,
                 userName = profileDB.nombre,
                 picturePath = profileDB.fotoRuta,
-                status = GaneEnums.PlayerStatus.Online
             };
             return profile;
         }

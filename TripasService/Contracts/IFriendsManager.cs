@@ -15,7 +15,7 @@ namespace TripasService.Contracts {
         int deleteFriend(int idProfile1, int idProfile2);
         [OperationContract]
         int deleteFriendship(string userName1, string userName2);
-        [OperationContract]
+        [OperationContract] 
         List<Profile> getFriends(int idProfile);
 
     }
