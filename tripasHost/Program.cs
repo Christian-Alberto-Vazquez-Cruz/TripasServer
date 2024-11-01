@@ -16,7 +16,7 @@ namespace tripasHost {
                 TripasGameService service = new TripasGameService();
                 string emailTest = "teemotatewaki@hotmail.com";
                 int result = service.sendVerificationCodeRegister(emailTest);
-                if (result == Constants.SUCCESS) {
+                if (result == Constants.SUCCESSFUL_OPERATION) {
                     Console.WriteLine("Successfuly sent the verification code");
                     // Simular entrada de usuario con el código generado
                     Console.Write("Enter the verification code: ");

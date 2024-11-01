@@ -15,6 +15,6 @@ namespace TripasService.Contracts {
         bool VerifyRecoveryCode(string email, string code);
 
         [OperationContract]
-        int UpdatePassword(string email, string newPassword);  //Tener más seguridad. Dame el password anterior, el nuevo password
+        int UpdatePassword(string email, string newPassword);  
     }
 }

@@ -48,7 +48,9 @@ namespace TripasService.Contracts {
         [DataMember]
         public string picturePath { get; set; }
         [DataMember]
-        public GaneEnums.PlayerStatus status { get; set; }
+        public GameEnums.PlayerStatus status { get; set; }
+
+
     }
 
     [DataContract]

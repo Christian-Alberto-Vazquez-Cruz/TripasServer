@@ -14,7 +14,7 @@ using DataBaseManager.Utils;
 namespace DataBaseManager.DAO {
     public static class UserDAO {
         public static int addUserDAO(Perfil profile, Login user) {
-            int operationStatus = Constants.FAILED;
+            int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     Login newUserLogin = new Login {
@@ -32,7 +32,7 @@ namespace DataBaseManager.DAO {
                     };
                     db.Perfil.Add(newUserProfile);
                     db.SaveChanges();
-                    operationStatus = Constants.SUCCESS;
+                    operationStatus = Constants.SUCCESSFUL_OPERATION;
                 }
             } catch (EntityException entityException) {
                 Console.WriteLine($"Error trying to register the user with {user.correo} mail, {profile.idPerfil} idProfile. {entityException.Message}");
@@ -41,7 +41,7 @@ namespace DataBaseManager.DAO {
         }
 
         public static int validateUserDAO(string password, string mail) {
-            int operationStatus = Constants.FAILED;
+            int operationStatus = Constants.FAILED_OPERATION;
 
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -61,7 +61,7 @@ namespace DataBaseManager.DAO {
         }
 
         public static int updateUserProfileDAO(int idProfile, string newUsername, string newPic) {
-            int operationStatus = Constants.FAILED;
+            int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     var existingProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == idProfile);
@@ -69,7 +69,7 @@ namespace DataBaseManager.DAO {
                         existingProfile.nombre = newUsername;
                         existingProfile.fotoRuta = newPic;
                         db.SaveChanges();
-                        operationStatus = Constants.SUCCESS;
+                        operationStatus = Constants.SUCCESSFUL_OPERATION;
                     } else {
                         operationStatus = Constants.NO_MATCHES;
                     }
@@ -120,14 +120,14 @@ namespace DataBaseManager.DAO {
         }
 
         public static int updateProfileNameDAO(int idProfile, string newProfileName) {
-            int operationStatus = Constants.FAILED;
+            int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     var existingProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == idProfile);
                     if (existingProfile != null) {
                         existingProfile.nombre = newProfileName;
                         db.SaveChanges();
-                        operationStatus = Constants.SUCCESS;
+                        operationStatus = Constants.SUCCESSFUL_OPERATION;
                     } else {
                         operationStatus = Constants.NO_MATCHES;
                     }
@@ -139,14 +139,14 @@ namespace DataBaseManager.DAO {
         }
 
         public static int updateProfilePicDAO(int idProfile, string newProfilePic) {
-            int operationStatus = Constants.FAILED;
+            int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     var existingProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == idProfile);
                     if (existingProfile != null) {
                         existingProfile.fotoRuta = newProfilePic;
                         db.SaveChanges();
-                        operationStatus = Constants.SUCCESS;
+                        operationStatus = Constants.SUCCESSFUL_OPERATION;
                     } else {
                         operationStatus = Constants.NO_MATCHES;
                     }
@@ -158,12 +158,14 @@ namespace DataBaseManager.DAO {
         }
 
         public static int updateLoginPasswordDAO(string mail, string newPassword) {
-            int operationStatus = Constants.FAILED;
+            int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     var existingLogin = db.Login.FirstOrDefault(login => login.correo == mail);
                     if (existingLogin != null) {
                         existingLogin.contrasena = newPassword;
+                        db.SaveChanges();
+                        operationStatus = Constants.SUCCESSFUL_OPERATION;
                     } else {
                         operationStatus = Constants.NO_MATCHES;
                     }

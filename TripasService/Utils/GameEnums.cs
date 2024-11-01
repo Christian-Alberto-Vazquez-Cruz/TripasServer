@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TripasService.Enums {
-    public static class GaneEnums {
+namespace TripasService.Utils {
+    public static class GameEnums {
         public enum PlayerStatus {
             Offline,
             Online,

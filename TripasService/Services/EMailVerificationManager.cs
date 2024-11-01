@@ -17,7 +17,7 @@ namespace TripasService.Services {
         private static Dictionary<string, string> verificationCodesCreateAccount = new Dictionary<string, string>();
         public int sendVerificationCodeRegister(string emailReceiver) {
 
-            int operationResult = Constants.FAILED;
+            int operationResult = Constants.FAILED_OPERATION;
             string code = generateCode();
             if (verificationCodesCreateAccount.ContainsKey(emailReceiver)) {
                 verificationCodesCreateAccount[emailReceiver] = code;  
@@ -44,7 +44,7 @@ namespace TripasService.Services {
                     smtpClient.EnableSsl = true;
 
                     smtpClient.Send(mailMessage);
-                    operationResult = Constants.SUCCESS;
+                    operationResult = Constants.SUCCESSFUL_OPERATION;
                 }
                 catch (SmtpException smtpException) {
                     Console.WriteLine("Unable to send the mail "+smtpException.ToString());
