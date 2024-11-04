@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
-using TripasService.Enums;
+using TripasService.Utils;
 
 namespace TripasService.Contracts {
     [ServiceContract]
