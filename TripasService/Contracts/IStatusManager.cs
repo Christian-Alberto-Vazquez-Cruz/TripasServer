@@ -6,7 +6,6 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using TripasService.Services;
-using TripasService.Enums;
 
 namespace TripasService.Contracts {
     [ServiceContract]

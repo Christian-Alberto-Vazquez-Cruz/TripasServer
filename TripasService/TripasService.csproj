@@ -51,6 +51,7 @@
     <Compile Include="Contracts\IChatManager.cs" />
     <Compile Include="Contracts\IFriendsManager.cs" />
     <Compile Include="Contracts\ILeaderboardManager.cs" />
+    <Compile Include="Contracts\ILobbyManager.cs" />
     <Compile Include="Contracts\IPasswordRecoveryManager.cs" />
     <Compile Include="Contracts\IStatusManager.cs" />
     <Compile Include="Contracts\IUserManager.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Services\FriendsManager.cs" />
     <Compile Include="Services\EmailVerificationManager.cs" />
     <Compile Include="Services\LeaderboardManager.cs" />
+    <Compile Include="Services\LobbyManager.cs" />
     <Compile Include="Services\PasswordRecoveryManager.cs" />
     <Compile Include="Services\StatusManager.cs" />
     <Compile Include="Services\UserManager.cs" />
@@ -76,6 +78,8 @@
       <Name>DataBaseManager</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Logic\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
