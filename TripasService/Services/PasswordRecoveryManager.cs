@@ -58,7 +58,7 @@ namespace TripasService.Services {
         }
 
         public int UpdatePassword(string email, string newPassword) {
-            int result = UserDAO.updateLoginPasswordDAO(email, newPassword);   
+            int result = UserDAO.UpdateLoginPasswordDAO(email, newPassword);   
             return result; 
         }
 
@@ -87,7 +87,7 @@ namespace TripasService.Services {
 
         private bool verifyEmailRegistration(string email) {
             bool result = false;
-            if (UserDAO.isEmailRegisteredDAO(email)) {
+            if (UserDAO.IsEmailRegisteredDAO(email)) {
                 result = true;
             }
             return result;

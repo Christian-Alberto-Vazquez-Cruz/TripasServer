@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataBaseManager.DAO {
     public static class FriendsDAO {
-        public static int strikeUpFriendshipDAO(int idProfile1, int idProfile2) {
+        public static int StrikeUpFriendshipDAO(int idProfile1, int idProfile2) {
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -29,7 +29,7 @@ namespace DataBaseManager.DAO {
         }
 
         //Not useful anymore?
-        public static int deleteFriendshipDAO(int idProfile1, int idProfile2) {
+        public static int DeleteFriendshipDAO(int idProfile1, int idProfile2) {
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -50,7 +50,7 @@ namespace DataBaseManager.DAO {
             return operationStatus;
         }
 
-        public static int deleteFriendsDAO(string userName1, string userName2) {
+        public static int DeleteFriendsDAO(string userName1, string userName2) {
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -76,7 +76,7 @@ namespace DataBaseManager.DAO {
 
 
 
-        public static List<Perfil> getFriendsDAO(int idProfile) {
+        public static List<Perfil> GetFriendsDAO(int idProfile) {
             List<Perfil> friendList = new List<Perfil>();
 
             try {

@@ -11,29 +11,29 @@ namespace TripasService.Contracts {
     [ServiceContract]
     public interface IUserManager {
         [OperationContract]
-        int createAccount(LoginUser user, Profile profile);
+        int CreateAccount(LoginUser user, Profile profile);
 
         [OperationContract]
-        int updateProfile(int idProfile, string newUsername, string newPic);
+        int UpdateProfile(int idProfile, string newUsername, string newPic);
 
         [OperationContract]
-        int verifyLogin(string mail, string password);
+        int VerifyLogin(string mail, string password);
 
         [OperationContract]
         [FaultContract(typeof(ProfileNotFoundFault))]
-        int getProfileId(string userName);
+        int GetProfileId(string userName);
 
         [OperationContract]
-        bool isEmailRegistered (string mail);
+        bool IsEmailRegistered (string mail);
 
         [OperationContract]
-        int updateProfileName(int idProfile, string newProfileName);
+        int UpdateProfileName(int idProfile, string newProfileName);
 
         [OperationContract]
-        int updateProfilePic(int idProfile, string newProfilePic);
+        int UpdateProfilePic(int idProfile, string newProfilePic);
 
         [OperationContract]
-        Profile getProfileByMail(string mail);
+        Profile GetProfileByMail(string mail);
 
     }
 
