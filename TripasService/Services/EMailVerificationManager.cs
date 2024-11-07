@@ -15,7 +15,7 @@ namespace TripasService.Services {
     public partial class TripasGameService : IEmailVerificationManager {
 
         private static Dictionary<string, string> verificationCodesCreateAccount = new Dictionary<string, string>();
-        public int sendVerificationCodeRegister(string emailReceiver) {
+        public int SendVerificationCodeRegister(string emailReceiver) {
 
             int operationResult = Constants.FAILED_OPERATION;
             string code = generateCode();
@@ -54,7 +54,7 @@ namespace TripasService.Services {
             return operationResult;
         }
 
-        public bool verifyCode(string email, string code) {
+        public bool VerifyCode(string email, string code) {
             bool result = false;
             if (verificationCodesCreateAccount.TryGetValue(email, out string storedCode)) {
                 if (storedCode.Equals(code)) {

@@ -10,22 +10,21 @@ namespace TripasService.Contracts {
 
     [ServiceContract(CallbackContract = typeof(IChatManagerCallBack))]
     public interface IChatManager {
-        [OperationContract]
-        void sendMessage(string userName, Message message);
+        [OperationContract(IsOneWay = true)]
+        void SendMessage(string userName, Message message);
 
-        [OperationContract]
-        void connectToLobby(string userName);
+        [OperationContract(IsOneWay = true)]
+        void ConnectToChat(string userName);
 
-        [OperationContract]
-        void leaveLobby(string userName);
+        [OperationContract(IsOneWay = true)]
+        void LeaveChat(string userName);
 
-        [OperationContract]
-        List<Message> getMessageHistory();
     }
-
+    [ServiceContract]
     public interface IChatManagerCallBack {
         [OperationContract(IsOneWay = true)]
-        void broadcastMessage(Message message);
+        void BroadcastMessage(Message message);
+      
     }
 
     [DataContract]
