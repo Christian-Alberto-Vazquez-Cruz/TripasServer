@@ -22,7 +22,7 @@ namespace TripasService.Contracts {
     }
     [ServiceContract]
     public interface IChatManagerCallBack {
-        [OperationContract(IsOneWay = true)]
+        [OperationContract]
         void BroadcastMessage(Message message);
       
     }

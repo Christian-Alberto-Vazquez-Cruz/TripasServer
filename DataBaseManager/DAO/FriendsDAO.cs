@@ -37,7 +37,6 @@ namespace DataBaseManager.DAO {
                     a.idJugadorUno == idProfile1 && a.idJugadorDos == idProfile2);
 
                     if (friendshipToDelete != null) {
-                        // Si se encontró la amistad, eliminarla
                         db.Amistad.Remove(friendshipToDelete);
                         db.SaveChanges();
                         operationStatus = Constants.SUCCESSFUL_OPERATION;
