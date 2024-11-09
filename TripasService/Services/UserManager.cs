@@ -11,7 +11,7 @@ using TripasService.Utils;
 
 
 namespace TripasService.Services {
-    [ServiceBehavior]
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single)]
     public partial class TripasGameService : IUserManager {
         public int CreateAccount(LoginUser user, Profile profile) {
 

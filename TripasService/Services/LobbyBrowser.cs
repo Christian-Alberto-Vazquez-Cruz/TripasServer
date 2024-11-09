@@ -29,9 +29,6 @@ namespace TripasService.Services {
 
             var newLobby = new Lobby(code, gameName, nodeCount, owner);
             if (lobbies.TryAdd(code, newLobby)) {
-                //ESTO HACÍA ANTES
-                //ILobbyManagerCallback callback = OperationContext.Current.GetCallbackChannel<ILobbyManagerCallback>();
-                //lobbyPlayerCallback[owner.userName] = callback;
                 return code;
             }
             return null;

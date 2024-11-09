@@ -97,7 +97,6 @@ namespace TripasService.Services {
             Task.Run(async () => {
                 await Task.Delay(60000); 
                 verificationCodesCreateAccount.Remove(email);
-                Console.WriteLine($"El código de verificación para {email} ha sido eliminado después de 60 segundos.");
             });
         }
 
