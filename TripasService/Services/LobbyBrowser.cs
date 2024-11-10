@@ -21,13 +21,13 @@ namespace TripasService.Services {
             }
             return false;
         }
-        public string CreateLobby(string gameName, int nodeCount, Profile owner) {
+        public string CreateLobby(string gameName, int nodeCount, Profile host) {
             string code;
             do {
                 code = CodesGeneratorHelper.GenerateLobbyCode();
             } while (lobbies.ContainsKey(code));
 
-            var newLobby = new Lobby(code, gameName, nodeCount, owner);
+            var newLobby = new Lobby(code, gameName, nodeCount, host);
             if (lobbies.TryAdd(code, newLobby)) {
                 return code;
             }
