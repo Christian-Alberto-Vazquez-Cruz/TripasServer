@@ -16,6 +16,9 @@ namespace TripasService.Contracts {
         [OperationContract(IsOneWay = true)] 
         void LeaveLobby(string code, int playerId);
 
+        [OperationContract]
+        bool ConnectPlayerToLobby(string code, int playerId);
+
     }
 
     [ServiceContract]
@@ -26,6 +29,8 @@ namespace TripasService.Contracts {
         void HostLeftCallback();
         [OperationContract]
         void GuestLeftCallback();
+        [OperationContract]
+        void GuestJoinedCallback(string guestName);
     }
 
 }
