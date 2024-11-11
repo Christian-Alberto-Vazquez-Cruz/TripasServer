@@ -10,9 +10,9 @@ namespace TripasService.Contracts {
     [ServiceContract]
     public interface IEmailVerificationManager {
         [OperationContract]
-        int sendVerificationCodeRegister(string email);
+        int SendVerificationCodeRegister(string email);
 
         [OperationContract]
-        bool verifyCode(string email, string code);
+        bool VerifyCode(string email, string code);
     }
 }

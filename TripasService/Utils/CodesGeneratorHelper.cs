@@ -17,5 +17,9 @@ namespace TripasService.Utils {
                 return codeString;
             }
         }
+
+        public static string GenerateLobbyCode() {
+            return Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper();
+        }
     }
 }

@@ -15,9 +15,9 @@ namespace TripasService.Services {
     public partial class TripasGameService : IEmailVerificationManager {
 
         private static Dictionary<string, string> verificationCodesCreateAccount = new Dictionary<string, string>();
-        public int sendVerificationCodeRegister(string emailReceiver) {
+        public int SendVerificationCodeRegister(string emailReceiver) {
 
-            int operationResult = Constants.FAILED;
+            int operationResult = Constants.FAILED_OPERATION;
             string code = generateCode();
             if (verificationCodesCreateAccount.ContainsKey(emailReceiver)) {
                 verificationCodesCreateAccount[emailReceiver] = code;  
@@ -44,7 +44,7 @@ namespace TripasService.Services {
                     smtpClient.EnableSsl = true;
 
                     smtpClient.Send(mailMessage);
-                    operationResult = Constants.SUCCESS;
+                    operationResult = Constants.SUCCESSFUL_OPERATION;
                 }
                 catch (SmtpException smtpException) {
                     Console.WriteLine("Unable to send the mail "+smtpException.ToString());
@@ -54,7 +54,7 @@ namespace TripasService.Services {
             return operationResult;
         }
 
-        public bool verifyCode(string email, string code) {
+        public bool VerifyCode(string email, string code) {
             bool result = false;
             if (verificationCodesCreateAccount.TryGetValue(email, out string storedCode)) {
                 if (storedCode.Equals(code)) {
@@ -97,7 +97,6 @@ namespace TripasService.Services {
             Task.Run(async () => {
                 await Task.Delay(60000); 
                 verificationCodesCreateAccount.Remove(email);
-                Console.WriteLine($"El código de verificación para {email} ha sido eliminado después de 60 segundos.");
             });
         }
 

@@ -39,11 +39,11 @@ namespace TripasService.Services {
                 };
 
                 smtpClient.Send(mailMessage);
-                return Constants.SUCCESS;
+                return Constants.SUCCESSFUL_OPERATION;
             }
             catch (SmtpException smtpException) {
                 Console.WriteLine("Unable to send the mail: " + smtpException.ToString());
-                return Constants.FAILED;
+                return Constants.FAILED_OPERATION;
             }
         }
 
@@ -58,8 +58,7 @@ namespace TripasService.Services {
         }
 
         public int UpdatePassword(string email, string newPassword) {
-            UserDAO userDAO = new UserDAO();
-            int result = userDAO.updateLoginPasswordDAO(email, newPassword);   
+            int result = UserDAO.UpdateLoginPasswordDAO(email, newPassword);   
             return result; 
         }
 
@@ -88,8 +87,7 @@ namespace TripasService.Services {
 
         private bool verifyEmailRegistration(string email) {
             bool result = false;
-            UserDAO userDAO = new UserDAO();
-            if (userDAO.isEmailRegisteredDAO(email)) {
+            if (UserDAO.IsEmailRegisteredDAO(email)) {
                 result = true;
             }
             return result;

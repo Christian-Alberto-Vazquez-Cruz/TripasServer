@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 using TripasService.Contracts;
 using TripasService.Utils;
 
+
 namespace TripasService.Services {
-    [ServiceBehavior]
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single)]
     public partial class TripasGameService : IUserManager {
-        public int createAccount(LoginUser user, Profile profile) {
-            UserDAO dao = new UserDAO();
+        public int CreateAccount(LoginUser user, Profile profile) {
 
             DataBaseManager.Login newLogin = new DataBaseManager.Login() {
                 contrasena = user.password,
@@ -24,61 +24,32 @@ namespace TripasService.Services {
                 nombre = profile.userName,
             };
 
-            int insertionResult = dao.addUserDAO(newPerfil, newLogin);
+            int insertionResult = UserDAO.AddUserDAO(newPerfil, newLogin);
             return insertionResult;
         }
 
-        public Profile getProfile(String mail, String password) {
-            UserDAO dao = new UserDAO();
-            DataBaseManager.Login loginDetails = new DataBaseManager.Login() {
-                correo = mail,
-                contrasena = password
-            };
-
-            int loginStatus = dao.validateUserDAO(loginDetails);
-            if (loginStatus == Constants.FOUND_MATCH) {
-                Perfil profileDB = dao.getProfileByMail(mail);
-
-                Profile profile = new Profile() {
-                    idProfile = profileDB.idPerfil,
-                    userName = profileDB.nombre,
-                    picturePath = profileDB.fotoRuta,
-                };
-                return profile;
-            }
-            else {
-                return null;
-            }
-        }
-
-        public int updateProfile(Profile profile) {
-            UserDAO dao = new UserDAO();
-
-            DataBaseManager.Perfil perfil = new DataBaseManager.Perfil() {
-                idPerfil = profile.idProfile,
-                nombre = profile.userName,
-                fotoRuta = profile.picturePath,
-            };
-            int result = dao.updateUserProfileDAO(perfil);
+        public int UpdateProfile(int idProfile, string newUsername, string newPic) {
+            int result = UserDAO.UpdateUserProfileDAO(idProfile, newUsername, newPic);
             return result;
         }
 
-        // Decidir si utilizar este o getProfile que hace todo
-        public int verifyLogin(LoginUser user) {
-            UserDAO dao = new UserDAO();
-
-            DataBaseManager.Login newLogin = new DataBaseManager.Login() {
-                contrasena = user.password,
-                correo = user.mail
-            };
-
-            int result = dao.validateUserDAO(newLogin);
+        public int VerifyLogin(string mail, string password) {
+            int result = UserDAO.ValidateUserDAO(password, mail);
             return result;
         }
 
-        public int getProfileId(string userName) {
-            UserDAO dao = new UserDAO();
-            int result = dao.getProfileIdDAO(userName);
+        public Profile GetProfileByMail(string mail) {
+            Perfil profileDB = UserDAO.GetProfileByMailDAO(mail);
+            Profile profile = new Profile() {
+                idProfile = profileDB.idPerfil,
+                userName = profileDB.nombre,
+                picturePath = profileDB.fotoRuta,
+            };
+            return profile;
+        }
+
+        public int GetProfileId(string userName) {
+            int result = UserDAO.GetProfileIdDAO(userName);
             if (result == Constants.NO_MATCHES) {
                 ProfileNotFoundFault profileNotFound = new ProfileNotFoundFault();
                 profileNotFound.errorMessage = $"Couldn't find a profile that matches {userName} name";
@@ -88,22 +59,20 @@ namespace TripasService.Services {
             return result;
         }
 
-        public bool isEmailRegistered(string email) {
-            UserDAO dao = new UserDAO();
-            bool isRegistered = dao.isEmailRegisteredDAO(email);
+        public bool IsEmailRegistered(string email) {
+            bool isRegistered = UserDAO.IsEmailRegisteredDAO(email);
             return isRegistered;
         }
 
-        public int updateProfileName(int idProfile, string newProfileName) {
-            UserDAO dao = new UserDAO();
-            int result = dao.updateProfileNameDAO(idProfile, newProfileName);
+        public int UpdateProfileName(int idProfile, string newProfileName) {
+            int result = UserDAO.UpdateProfileNameDAO(idProfile, newProfileName);
             return result;
         }
 
-        public int updateProfilePic(int idProfile, string newProfilePic) {
-            UserDAO dao = new UserDAO();
-            int result = dao.updateProfilePicDAO(idProfile, newProfilePic);
+        public int UpdateProfilePic(int idProfile, string newProfilePic) {
+            int result = UserDAO.UpdateProfilePicDAO(idProfile, newProfilePic);
             return result;
         }
+
     }
 }

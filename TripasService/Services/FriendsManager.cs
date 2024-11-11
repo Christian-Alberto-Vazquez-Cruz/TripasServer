@@ -9,22 +9,17 @@ using TripasService.Contracts;
 
 namespace TripasService.Services {
     public partial class TripasGameService : IFriendsManager {
-        public int addFriend(int idProfile1, int idProfile2) {
-            FriendsDAO friendsDAO = new FriendsDAO();
-            int result = friendsDAO.strikeUpFriendshipDAO(idProfile1, idProfile2);
+        public int AddFriend(int idProfile1, int idProfile2) {
+            int result = FriendsDAO.StrikeUpFriendshipDAO(idProfile1, idProfile2);
+            return result;
+        }
+        public int DeleteFriend(int idProfile1, int idProfile2) {
+            int result = FriendsDAO.DeleteFriendshipDAO(idProfile1, idProfile2);
             return result;
         }
 
-        //¿Not useful anymore?
-        public int deleteFriend(int idProfile1, int idProfile2) {
-            FriendsDAO friendsDAO = new FriendsDAO();
-            int result = friendsDAO.deleteFriendshipDAO(idProfile1, idProfile2);
-            return result;
-        }
-
-        public List<Profile> getFriends(int idProfile) {
-            FriendsDAO friendsDAO = new FriendsDAO();
-            List<Perfil> friendProfiles = friendsDAO.getFriendsDAO(idProfile);
+        public List<Profile> GetFriends(int idProfile) {
+            List<Perfil> friendProfiles = FriendsDAO.GetFriendsDAO(idProfile);
             List<Profile> friendList = new List<Profile>();
 
             foreach (var friend in friendProfiles) {
@@ -39,11 +34,9 @@ namespace TripasService.Services {
             return friendList;
         }
 
-        public int deleteFriendship(string userName1, string userName2) {
-
-
-            FriendsDAO friends = new FriendsDAO();
-            int result = friends.deleteFriendsDAO(userName1, userName2);
+        //¿Not useful anymore?
+        public int DeleteFriendship(string userName1, string userName2) {
+            int result = FriendsDAO.DeleteFriendsDAO(userName1, userName2);
             return result;
         }
     }

@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataBaseManager {
-    public class Program {
-        static void Main(string[] args) {
-        }
+namespace TripasTests.Services {
+    internal class UserManagerShould {
     }
 }

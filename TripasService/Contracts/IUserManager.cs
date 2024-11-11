@@ -5,33 +5,35 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using TripasService.Utils;
 
 namespace TripasService.Contracts {
     [ServiceContract]
     public interface IUserManager {
         [OperationContract]
-        int createAccount(LoginUser user, Profile profile);
+        int CreateAccount(LoginUser user, Profile profile);
 
         [OperationContract]
-        int updateProfile(Profile profile);
+        int UpdateProfile(int idProfile, string newUsername, string newPic);
 
         [OperationContract]
-        Profile getProfile(String mail, String password);
-        [OperationContract]
-        int verifyLogin(LoginUser user);
+        int VerifyLogin(string mail, string password);
 
         [OperationContract]
         [FaultContract(typeof(ProfileNotFoundFault))]
-        int getProfileId(string userName);
+        int GetProfileId(string userName);
 
         [OperationContract]
-        bool isEmailRegistered (string mail);
+        bool IsEmailRegistered (string mail);
 
         [OperationContract]
-        int updateProfileName(int idProfile, string newProfileName);
+        int UpdateProfileName(int idProfile, string newProfileName);
 
         [OperationContract]
-        int updateProfilePic(int idProfile, string newProfilePic);
+        int UpdateProfilePic(int idProfile, string newProfilePic);
+
+        [OperationContract]
+        Profile GetProfileByMail(string mail);
 
     }
 
@@ -45,6 +47,10 @@ namespace TripasService.Contracts {
         public int score { get; set; }
         [DataMember]
         public string picturePath { get; set; }
+        [DataMember]
+        public GameEnums.PlayerStatus status { get; set; }
+
+
     }
 
     [DataContract]

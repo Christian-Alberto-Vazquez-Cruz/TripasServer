@@ -1,20 +1,23 @@
 ﻿using System;
+using TripasService.Utils;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
+using TripasService.Services;
 
 namespace TripasService.Contracts {
     [ServiceContract]
-    public interface IPasswordRecoveryManager {
+    public interface IStatusManager {
         [OperationContract]
-        int SendRecoveryCode(string email);
+        bool SetPlayerStatus(int idProfile, GameEnums.PlayerStatus status);
 
         [OperationContract]
-        bool VerifyRecoveryCode(string email, string code);
+        GameEnums.PlayerStatus GetPlayerStatus(int idProfile);
 
         [OperationContract]
-        int UpdatePassword(string email, string newPassword);  
-    }
+        int DisconnectPlayer(int idProfile);
+
+    } 
 }

@@ -9,9 +9,8 @@ using TripasService.Contracts;
 
 namespace TripasService.Services {
     partial class TripasGameService : ILeaderboardManager {
-        public List<Profile> getHighestScores() {
-            UserDAO userDAO = new UserDAO();
-            List<Perfil> highestScoreProfiles = userDAO.getHighestScoresDAO();
+        public List<Profile> GetHighestScores() {
+            List<Perfil> highestScoreProfiles = UserDAO.GetHighestScoresDAO();
             List<Profile> highestScoresList = new List<Profile>();
 
             foreach (var profileData in highestScoreProfiles) {

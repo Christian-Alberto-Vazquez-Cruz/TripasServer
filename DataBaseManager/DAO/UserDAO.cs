@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net.NetworkInformation;
@@ -11,9 +12,9 @@ using DataBaseManager.Utils;
 
 
 namespace DataBaseManager.DAO {
-    public class UserDAO {
-        public int addUserDAO(Perfil profile, Login user) {
-            int operationStatus = Constants.FAILED;
+    public static class UserDAO {
+        public static int AddUserDAO(Perfil profile, Login user) {
+            int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     Login newUserLogin = new Login {
@@ -31,7 +32,7 @@ namespace DataBaseManager.DAO {
                     };
                     db.Perfil.Add(newUserProfile);
                     db.SaveChanges();
-                    operationStatus = Constants.SUCCESS;
+                    operationStatus = Constants.SUCCESSFUL_OPERATION;
                 }
             } catch (EntityException entityException) {
                 Console.WriteLine($"Error trying to register the user with {user.correo} mail, {profile.idPerfil} idProfile. {entityException.Message}");
@@ -39,11 +40,13 @@ namespace DataBaseManager.DAO {
             return operationStatus;
         }
 
-        public int validateUserDAO(Login user) {
-            int operationStatus = Constants.FAILED;
+        public static int ValidateUserDAO(string password, string mail) {
+            int operationStatus = Constants.FAILED_OPERATION;
+
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    var userExists = db.Login.Any(login => login.correo == user.correo && login.contrasena == user.contrasena);
+                    var userExists = db.Login.Any(login => login.correo == mail && login.contrasena == password);
+
                     if (userExists) {
                         operationStatus = Constants.FOUND_MATCH;
                     } else {
@@ -51,32 +54,33 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (EntityException entityException) {
-                Console.WriteLine($"Error trying to validate user: {user.idUsuario} {user.correo}, {entityException.Message}");
+                Console.WriteLine($"Error trying to validate user: {mail}, {entityException.Message}");
             }
+
             return operationStatus;
         }
 
-        public int updateUserProfileDAO(Perfil profile) {
-            int operationStatus = Constants.FAILED;
+        public static int UpdateUserProfileDAO(int idProfile, string newUsername, string newPic) {
+            int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    var existingProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == profile.idPerfil);
+                    var existingProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == idProfile);
                     if (existingProfile != null) {
-                        existingProfile.nombre = profile.nombre;
-                        existingProfile.fotoRuta = profile.fotoRuta;
+                        existingProfile.nombre = newUsername;
+                        existingProfile.fotoRuta = newPic;
                         db.SaveChanges();
-                        operationStatus = Constants.SUCCESS;
+                        operationStatus = Constants.SUCCESSFUL_OPERATION;
                     } else {
                         operationStatus = Constants.NO_MATCHES;
                     }
                 }
             } catch (EntityException entittyException) {
-                Console.WriteLine($"Error trying to update the user profile {profile.nombre}, {entittyException.Message}");
+                Console.WriteLine($"Error trying to update the user profile with {idProfile} id, {entittyException.Message}");
             }
             return operationStatus;
         }
 
-        public Perfil getProfileByMail(String mail) {
+        public static Perfil GetProfileByMailDAO(String mail) {
             Perfil userProfile = null;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -91,7 +95,7 @@ namespace DataBaseManager.DAO {
             return userProfile;
         }
 
-        public int getProfileIdDAO(string userName) {
+        public static int GetProfileIdDAO(string userName) {
             int profileId = Constants.NO_MATCHES;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -103,7 +107,7 @@ namespace DataBaseManager.DAO {
             return profileId;
         }
 
-        public bool isEmailRegisteredDAO(string mail) {
+        public static bool IsEmailRegisteredDAO(string mail) {
             bool emailExists = false;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -115,15 +119,15 @@ namespace DataBaseManager.DAO {
             return emailExists;
         }
 
-        public int updateProfileNameDAO(int idProfile, string newProfileName) {
-            int operationStatus = Constants.FAILED;
+        public static int UpdateProfileNameDAO(int idProfile, string newProfileName) {
+            int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     var existingProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == idProfile);
                     if (existingProfile != null) {
                         existingProfile.nombre = newProfileName;
                         db.SaveChanges();
-                        operationStatus = Constants.SUCCESS;
+                        operationStatus = Constants.SUCCESSFUL_OPERATION;
                     } else {
                         operationStatus = Constants.NO_MATCHES;
                     }
@@ -134,15 +138,15 @@ namespace DataBaseManager.DAO {
             return operationStatus;
         }
 
-        public int updateProfilePicDAO(int idProfile, string newProfilePic) {
-            int operationStatus = Constants.FAILED;
+        public static int UpdateProfilePicDAO(int idProfile, string newProfilePic) {
+            int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     var existingProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == idProfile);
                     if (existingProfile != null) {
                         existingProfile.fotoRuta = newProfilePic;
                         db.SaveChanges();
-                        operationStatus = Constants.SUCCESS;
+                        operationStatus = Constants.SUCCESSFUL_OPERATION;
                     } else {
                         operationStatus = Constants.NO_MATCHES;
                     }
@@ -153,13 +157,15 @@ namespace DataBaseManager.DAO {
             return operationStatus;
         }
 
-        public int updateLoginPasswordDAO(string mail, string newPassword) {
-            int operationStatus = Constants.FAILED;
+        public static int UpdateLoginPasswordDAO(string mail, string newPassword) {
+            int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     var existingLogin = db.Login.FirstOrDefault(login => login.correo == mail);
                     if (existingLogin != null) {
                         existingLogin.contrasena = newPassword;
+                        db.SaveChanges();
+                        operationStatus = Constants.SUCCESSFUL_OPERATION;
                     } else {
                         operationStatus = Constants.NO_MATCHES;
                     }
@@ -170,7 +176,7 @@ namespace DataBaseManager.DAO {
             return operationStatus;
         }
 
-        public List<Perfil> getHighestScoresDAO() {
+        public static List<Perfil> GetHighestScoresDAO() {
             List<Perfil> bestPlayersList = new List<Perfil>();
             try {
                 using (tripasEntities db = new tripasEntities()) {
