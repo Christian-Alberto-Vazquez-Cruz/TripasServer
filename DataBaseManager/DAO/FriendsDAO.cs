@@ -49,32 +49,6 @@ namespace DataBaseManager.DAO {
             return operationStatus;
         }
 
-        public static int DeleteFriendsDAO(string userName1, string userName2) {
-            int operationStatus = Constants.FAILED_OPERATION;
-            try {
-                using (tripasEntities db = new tripasEntities()) {
-                    var profile1 = db.Perfil.FirstOrDefault(profile => profile.nombre == userName1);
-                    var profile2 = db.Perfil.FirstOrDefault(profile => profile.nombre == userName2);
-                    if (profile1 != null && profile2 != null) {
-                        var friendshipToDelete = db.Amistad.FirstOrDefault(perfil =>
-                         perfil.idJugadorUno == profile1.idPerfil && perfil.idJugadorDos == profile2.idPerfil);
-
-                        if (friendshipToDelete != null) {
-                            db.Amistad.Remove(friendshipToDelete);
-                            db.SaveChanges();
-                            operationStatus = Constants.SUCCESSFUL_OPERATION;
-                        }
-                    }
-                }
-            }
-            catch (EntityException entityException) {
-                Console.WriteLine($"Unable to delete friendship, {entityException.Message}");
-            }
-            return operationStatus;
-        }
-
-
-
         public static List<Perfil> GetFriendsDAO(int idProfile) {
             List<Perfil> friendList = new List<Perfil>();
 

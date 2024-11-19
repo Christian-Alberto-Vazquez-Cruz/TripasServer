@@ -15,7 +15,7 @@ namespace TripasService.Services {
         private bool TryNotifyCallback(string userName, Action<ILobbyManagerCallback> callbackAction) {
             if (lobbyPlayerCallback.TryGetValue(userName, out var callback)) {
                 try {
-                    // Verificar si el canal está vivo
+                    // Verificar si el canal está vivox|
                     if (((ICommunicationObject)callback).State == CommunicationState.Opened) {
                         callbackAction(callback);
                         return true;

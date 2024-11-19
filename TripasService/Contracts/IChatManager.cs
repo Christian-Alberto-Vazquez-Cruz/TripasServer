@@ -38,12 +38,15 @@ namespace TripasService.Contracts {
         [DataMember]
         public string userName { get; set; }
 
-        public Message(string chatMessage, DateTime timeStamp, string userName) {
+       public Message(string chatMessage, DateTime timeStamp, string userName) {
             this.chatMessage = chatMessage;
             this.timeStamp = timeStamp;
             this.userName = userName;
         }
 
+        public Message() {
+
+        }
         public override string ToString() {
             return $"{timeStamp.ToLocalTime()} {userName}: {chatMessage}";
         }
