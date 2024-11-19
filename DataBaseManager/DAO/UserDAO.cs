@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core;
+using System.Data.Entity.Infrastructure;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -45,7 +46,7 @@ namespace DataBaseManager.DAO {
 
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    var userExists = db.Login.Any(login => login.correo == mail && login.contrasena == password);
+                    bool userExists = db.Login.Any(login => login.correo == mail && login.contrasena == password);
 
                     if (userExists) {
                         operationStatus = Constants.FOUND_MATCH;
@@ -99,10 +100,10 @@ namespace DataBaseManager.DAO {
             int profileId = Constants.NO_MATCHES;
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    profileId = db.Perfil.Where(perfil => perfil.nombre == userName).Select(perfil => perfil.idPerfil).FirstOrDefault();
+                    profileId = db.Perfil.Where(u => u.nombre == userName).Select(u => u.idPerfil).FirstOrDefault();
                 }
             } catch (EntityException entityException) {
-                Console.WriteLine($"Error trying to get the user id with {userName} username, {entityException.Message}");
+                Console.WriteLine("Error trying to get the user id with username {0}", entityException.Message);
             }
             return profileId;
         }
@@ -117,44 +118,6 @@ namespace DataBaseManager.DAO {
                 Console.WriteLine($"Error checking if the email is already registered {entityException.Message}");
             }
             return emailExists;
-        }
-
-        public static int UpdateProfileNameDAO(int idProfile, string newProfileName) {
-            int operationStatus = Constants.FAILED_OPERATION;
-            try {
-                using (tripasEntities db = new tripasEntities()) {
-                    var existingProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == idProfile);
-                    if (existingProfile != null) {
-                        existingProfile.nombre = newProfileName;
-                        db.SaveChanges();
-                        operationStatus = Constants.SUCCESSFUL_OPERATION;
-                    } else {
-                        operationStatus = Constants.NO_MATCHES;
-                    }
-                }
-            } catch (EntityException entityException) {
-                Console.WriteLine($"Error trying to update the user profile NAME with {idProfile} id, {entityException.Message}");
-            }
-            return operationStatus;
-        }
-
-        public static int UpdateProfilePicDAO(int idProfile, string newProfilePic) {
-            int operationStatus = Constants.FAILED_OPERATION;
-            try {
-                using (tripasEntities db = new tripasEntities()) {
-                    var existingProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == idProfile);
-                    if (existingProfile != null) {
-                        existingProfile.fotoRuta = newProfilePic;
-                        db.SaveChanges();
-                        operationStatus = Constants.SUCCESSFUL_OPERATION;
-                    } else {
-                        operationStatus = Constants.NO_MATCHES;
-                    }
-                }
-            } catch (EntityException entityException) {
-                Console.WriteLine($"Error trying to update the user profile PIC with {idProfile} id, {entityException.Message}");
-            }
-            return operationStatus;
         }
 
         public static int UpdateLoginPasswordDAO(string mail, string newPassword) {
@@ -187,6 +150,28 @@ namespace DataBaseManager.DAO {
                 Console.WriteLine($"Error trying to retrieve the highest score players {entityException.Message}");
             }
             return bestPlayersList;
+        }
+
+        public static int DeleteUserDAO(string email) {
+            int operationStatus = Constants.FAILED_OPERATION;
+            try {
+                using (tripasEntities db = new tripasEntities()) {
+                    Login userLogin = db.Login.FirstOrDefault(login => login.correo == email);
+                    if (userLogin != null) {
+                        Perfil userProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == userLogin.idUsuario);
+
+                        if (userProfile != null) {
+                            db.Perfil.Remove(userProfile);
+                        }
+                        db.Login.Remove(userLogin);
+                        db.SaveChanges();
+                        operationStatus = Constants.SUCCESSFUL_OPERATION;
+                    }
+                }
+            } catch (EntityException entityException) {
+                Console.WriteLine($"Error trying to delete the user with email {email}, {entityException.Message}");
+            }
+            return operationStatus;
         }
     }
 }

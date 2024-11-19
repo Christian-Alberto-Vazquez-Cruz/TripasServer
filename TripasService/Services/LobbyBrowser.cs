@@ -15,12 +15,15 @@ namespace TripasService.Services {
         }
 
         public bool JoinLobby(string code, Profile guest) {
+            bool result = false;
             if (lobbies.TryGetValue(code, out var lobby) && lobby.HasSpace) {
                 lobby.Players["PlayerTwo"] = guest;
-                return true;
+                result = true;
             }
-            return false;
+            return result;
         }
+
+        //AQUÍ SE DEBE INICIALIZAR UNA CADENA VACÍA. ¿CÓMO SE HACE?
         public string CreateLobby(string gameName, int nodeCount, Profile host) {
             string code;
             do {
@@ -34,7 +37,9 @@ namespace TripasService.Services {
             return null;
         }
         public Lobby GetLobbyByCode(string code) {
-            lobbies.TryGetValue(code, out Lobby lobby);
+            if (!lobbies.TryGetValue(code, out Lobby lobby)) {
+                throw new KeyNotFoundException($"Lobby with code '{code}' not found.");
+            }
             return lobby;
         }
     }

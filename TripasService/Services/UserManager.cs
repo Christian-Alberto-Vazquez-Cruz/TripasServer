@@ -47,15 +47,8 @@ namespace TripasService.Services {
             };
             return profile;
         }
-
         public int GetProfileId(string userName) {
             int result = UserDAO.GetProfileIdDAO(userName);
-            if (result == Constants.NO_MATCHES) {
-                ProfileNotFoundFault profileNotFound = new ProfileNotFoundFault();
-                profileNotFound.errorMessage = $"Couldn't find a profile that matches {userName} name";
-                throw new FaultException<ProfileNotFoundFault>(profileNotFound);
-                //throw new FaultException<ProfileNotFoundFault>(new ProfileNotFoundFault($"Couldn't find a profile that matches {userName} name"));
-            }
             return result;
         }
 
@@ -63,16 +56,5 @@ namespace TripasService.Services {
             bool isRegistered = UserDAO.IsEmailRegisteredDAO(email);
             return isRegistered;
         }
-
-        public int UpdateProfileName(int idProfile, string newProfileName) {
-            int result = UserDAO.UpdateProfileNameDAO(idProfile, newProfileName);
-            return result;
-        }
-
-        public int UpdateProfilePic(int idProfile, string newProfilePic) {
-            int result = UserDAO.UpdateProfilePicDAO(idProfile, newProfilePic);
-            return result;
-        }
-
     }
 }
