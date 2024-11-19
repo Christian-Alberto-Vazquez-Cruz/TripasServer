@@ -61,14 +61,14 @@ namespace DataBaseManager.DAO {
             return operationStatus;
         }
 
-        public static int UpdateUserProfileDAO(int idProfile, string newUsername, string newPic) {
+        public static int UpdateUserProfileDAO(int idProfile, string newUsername, string newPicPath) {
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    var existingProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == idProfile);
+                    Perfil existingProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == idProfile);
                     if (existingProfile != null) {
                         existingProfile.nombre = newUsername;
-                        existingProfile.fotoRuta = newPic;
+                        existingProfile.fotoRuta = newPicPath;
                         db.SaveChanges();
                         operationStatus = Constants.SUCCESSFUL_OPERATION;
                     } else {
@@ -80,14 +80,21 @@ namespace DataBaseManager.DAO {
             }
             return operationStatus;
         }
-
+   
+        //Comprueba si Login no es nulo, después si Perfil no es nulo
         public static Perfil GetProfileByMailDAO(String mail) {
-            Perfil userProfile = null;
+            Perfil userProfile = new Perfil {
+                idPerfil = Constants.NO_MATCHES
+            };
+
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    var userLogin = db.Login.FirstOrDefault(login => login.correo == mail);
+                    Login userLogin = db.Login.FirstOrDefault(login => login.correo == mail);
                     if (userLogin != null) {
-                        userProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == userLogin.idUsuario);
+                        Perfil foundProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == userLogin.idUsuario);
+                        if (foundProfile != null) {
+                            userProfile = foundProfile;
+                        }
                     }
                 }
             } catch (EntityException entityException) {

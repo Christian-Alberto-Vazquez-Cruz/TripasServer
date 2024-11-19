@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace TripasTests.DAO {
@@ -20,7 +21,7 @@ namespace TripasTests.DAO {
             DataBaseManager.Perfil testPerfil = new DataBaseManager.Perfil() {
                 nombre = "Pedrinho",
                 puntaje = 0,
-                fotoRuta = "/Images/Profiles/imageProfile1.png"
+                fotoRuta = Constants.INITIAL_PIC_PATH
             };
 
             int userAdded = Constants.SUCCESSFUL_OPERATION;
@@ -53,6 +54,8 @@ namespace TripasTests.DAO {
 
             int userDoesntExist = Constants.NO_MATCHES;
             int result = DataBaseManager.DAO.UserDAO.ValidateUserDAO(password, email);
+
+            Assert.Equal(userDoesntExist, result);    
         }
 
         //[FACT] ¿Flujo donde lanza EntityException?
@@ -61,11 +64,11 @@ namespace TripasTests.DAO {
         public void UpdateUserProfile() {
             //¿Agregar usuario?
             int id = 4;
-            string ruta = Constants.INITIAL_PIC_PATH;
-            string newUsername = "Matador";
+            string newPicPath = "";
+            string newUsername = "Nombre";
 
             int userUpdated = Constants.SUCCESSFUL_OPERATION;
-            int result = DataBaseManager.DAO.UserDAO.UpdateUserProfileDAO(id, ruta, newUsername);   
+            int result = DataBaseManager.DAO.UserDAO.UpdateUserProfileDAO(id, newUsername, newPicPath);
 
             Assert.Equal(userUpdated, result);  
 
@@ -76,13 +79,40 @@ namespace TripasTests.DAO {
         public void UpdateUserProfileNotFound() {
             //¿Eliminar usuario si existe?
             int id = 115;
-            string ruta = Constants.INITIAL_PIC_PATH;
-            string newUsername = "Matador";
+            string newPicPath = Constants.INITIAL_PIC_PATH;
+            string newUsername = "Nombre";
 
             int userNotFound = Constants.NO_MATCHES;
-            int result = DataBaseManager.DAO.UserDAO.UpdateUserProfileDAO(id, ruta, newUsername);
+            int result = DataBaseManager.DAO.UserDAO.UpdateUserProfileDAO(id, newUsername, newPicPath);
 
             Assert.Equal(userNotFound, result);
+        }
+
+        [Fact]
+        public void GetProfileByMail() {
+
+            string testEmail = "test@gmail.com";
+            DataBaseManager.Login testLogin = new DataBaseManager.Login {
+                idUsuario = 2000,
+                correo = testEmail,
+                contrasena = "MiContrasena1!"
+            };
+
+            DataBaseManager.Perfil testPerfil = new DataBaseManager.Perfil {
+                idPerfil = 2000,
+                nombre = "TestUser",
+                puntaje = 0,
+                fotoRuta = Constants.INITIAL_PIC_PATH
+            };
+
+            DataBaseManager.DAO.UserDAO.AddUserDAO(testPerfil, testLogin);
+
+            DataBaseManager.Perfil expectedProfile = testPerfil;
+            DataBaseManager.Perfil result = DataBaseManager.DAO.UserDAO.GetProfileByMailDAO(testEmail);
+
+            Assert.Equal(expectedProfile, result);
+
+            DataBaseManager.DAO.UserDAO.DeleteUserDAO(testLogin.correo);
         }
     }
 }
