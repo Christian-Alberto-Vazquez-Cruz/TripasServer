@@ -27,12 +27,6 @@ namespace TripasService.Contracts {
         bool IsEmailRegistered (string mail);
 
         [OperationContract]
-        int UpdateProfileName(int idProfile, string newProfileName);
-
-        [OperationContract]
-        int UpdateProfilePic(int idProfile, string newProfilePic);
-
-        [OperationContract]
         Profile GetProfileByMail(string mail);
 
     }
