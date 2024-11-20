@@ -24,6 +24,7 @@ namespace TripasService.Services {
             // Intenta añadir el usuario al lobby
             if (lobbyUsers.TryAdd(userName, callback)) {
                 Console.WriteLine($"{userName} se ha conectado al chat en el lobby {lobbyCode}");
+
                 BroadcastMessageToLobby(new Message($"{userName} se ha unido al lobby.", DateTime.Now, userName), lobbyCode);
             } else {
                 Console.WriteLine($"Usuario {userName} ya se encuentra conectado en el lobby {lobbyCode}.");
@@ -35,7 +36,7 @@ namespace TripasService.Services {
             // Intenta obtener el diccionario de usuarios del lobby y eliminar al usuario
             if (connectedUsersByLobby.TryGetValue(lobbyCode, out var lobbyUsers) &&
                 lobbyUsers.TryRemove(userName, out _)) {
-
+                
                 // Notifica a los demás usuarios que alguien ha abandonado el lobby
                 BroadcastMessageToLobby(new Message($"User {userName} abandonó el lobby.", DateTime.Now, userName), lobbyCode);
 
@@ -49,6 +50,7 @@ namespace TripasService.Services {
         // Método para enviar un mensaje en el chat
         public void SendMessage(string userName, Message message, string lobbyCode) {
             message.timeStamp = DateTime.Now;
+
             if (connectedUsersByLobby.TryGetValue(lobbyCode, out var lobbyUsers) &&
                 lobbyUsers.ContainsKey(userName)) {
                 BroadcastMessageToLobby(message, lobbyCode);
@@ -57,8 +59,21 @@ namespace TripasService.Services {
             }
         }
 
-        // Método privado para difundir un mensaje a todos los usuarios de un lobby
-        private void BroadcastMessageToLobby(Message message, string lobbyCode) {
+        //¿Mantengo el parámetro de userName o elimino userName de message?
+        /*public void SendMessage(Message message, string lobbyCode) {
+            message.timeStamp = DateTime.Now;
+
+            if (connectedUsersByLobby.TryGetValue(lobbyCode, out var lobbyUsers)) {
+                // Solo transmite el mensaje si el remitente está en el lobby
+                if (lobbyUsers.ContainsKey(message.UserName)) {
+                    BroadcastMessageToLobby(message, lobbyCode);
+                } else {
+                    Log($"User {message.UserName} no está conectado en el lobby {lobbyCode}.");
+                }
+            }*/
+
+            // Método privado para difundir un mensaje a todos los usuarios de un lobby
+            private void BroadcastMessageToLobby(Message message, string lobbyCode) {
             Console.WriteLine($"Broadcasting message to lobby {lobbyCode}: {message}");
 
             if (connectedUsersByLobby.TryGetValue(lobbyCode, out var lobbyUsers)) {
@@ -72,7 +87,7 @@ namespace TripasService.Services {
                         if (disconnectedUser != null) {
                             lobbyUsers.TryRemove(disconnectedUser, out _);
                             Console.WriteLine($"Excepción durante el broadcast para {disconnectedUser} en el lobby {lobbyCode}: {exception.Message}");
-                        }
+                        }   
                     }
                 }
             }

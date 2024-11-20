@@ -34,11 +34,6 @@ namespace TripasService.Services {
             return friendList;
         }
 
-        //¿Not useful anymore?
-        public int DeleteFriendship(string userName1, string userName2) {
-            int result = FriendsDAO.DeleteFriendsDAO(userName1, userName2);
-            return result;
-        }
     }
 }
     
