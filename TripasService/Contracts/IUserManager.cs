@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.Text;
 using System.Threading.Tasks;
 using TripasService.Utils;
+using TripasService.Logic;
 
 namespace TripasService.Contracts {
     [ServiceContract]
@@ -17,35 +18,26 @@ namespace TripasService.Contracts {
         int UpdateProfile(int idProfile, string newUsername, string newPic);
 
         [OperationContract]
-        int VerifyLogin(string mail, string password);
+        int VerifyLogin(string email, string password);
 
         [OperationContract]
         [FaultContract(typeof(ProfileNotFoundFault))]
-        int GetProfileId(string userName);
+        int GetProfileId(string username);
 
         [OperationContract]
-        bool IsEmailRegistered (string mail);
+        int IsEmailRegistered (string email);
 
         [OperationContract]
-        Profile GetProfileByMail(string mail);
+        int IsNameRegistered(string username);
+
+        [OperationContract]
+        Profile GetProfileByMail(string email);
+
+        [OperationContract]
+        string GetPicPath(string username);
 
     }
 
-    [DataContract]
-    public class Profile {
-        [DataMember]
-        public int idProfile { get; set; }
-        [DataMember]
-        public string userName { get; set; }
-        [DataMember]
-        public int score { get; set; }
-        [DataMember]
-        public string picturePath { get; set; }
-        [DataMember]
-        public GameEnums.PlayerStatus status { get; set; }
-
-
-    }
 
     [DataContract]
     public class LoginUser {

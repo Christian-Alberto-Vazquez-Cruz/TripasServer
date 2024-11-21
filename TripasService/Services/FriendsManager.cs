@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TripasService.Contracts;
+using TripasService.Logic;
 
 namespace TripasService.Services {
     public partial class TripasGameService : IFriendsManager {
@@ -33,7 +34,6 @@ namespace TripasService.Services {
             }
             return friendList;
         }
-
     }
 }
     

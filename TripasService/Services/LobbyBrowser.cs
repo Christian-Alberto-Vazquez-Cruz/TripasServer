@@ -24,13 +24,13 @@ namespace TripasService.Services {
         }
 
         //AQUÍ SE DEBE INICIALIZAR UNA CADENA VACÍA. ¿CÓMO SE HACE?
-        public string CreateLobby(string gameName, int nodeCount, Profile host) {
+        public string CreateLobby(string gameName, int nodeCount, Profile owner, TimeSpan duration) {
             string code;
             do {
                 code = CodesGeneratorHelper.GenerateLobbyCode();
             } while (lobbies.ContainsKey(code));
 
-            var newLobby = new Lobby(code, gameName, nodeCount, host);
+            var newLobby = new Lobby(code, gameName, nodeCount, owner, duration);
             if (lobbies.TryAdd(code, newLobby)) {
                 return code;
             }

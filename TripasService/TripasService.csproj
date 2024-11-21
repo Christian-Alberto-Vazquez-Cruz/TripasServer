@@ -53,11 +53,16 @@
     <Compile Include="Contracts\ILeaderboardManager.cs" />
     <Compile Include="Contracts\ILobbyBrowser.cs" />
     <Compile Include="Contracts\ILobbyManager.cs" />
+    <Compile Include="Contracts\IMatchCreator.cs" />
+    <Compile Include="Contracts\IMatchManager.cs" />
     <Compile Include="Contracts\IPasswordRecoveryManager.cs" />
     <Compile Include="Contracts\IStatusManager.cs" />
     <Compile Include="Contracts\IUserManager.cs" />
     <Compile Include="Contracts\IEmailVerificationManager.cs" />
     <Compile Include="Logic\Lobby.cs" />
+    <Compile Include="Logic\Match.cs" />
+    <Compile Include="Logic\Node.cs" />
+    <Compile Include="Logic\Profile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ChatManager.cs" />
     <Compile Include="Services\FriendsManager.cs" />

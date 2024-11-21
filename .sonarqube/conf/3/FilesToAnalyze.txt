@@ -1,0 +1,22 @@
+﻿C:\Users\cv419\source\repos\TripasServer\TripasTests\DAO\UserDAOShould.cs
+C:\Users\cv419\source\repos\TripasServer\TripasTests\UnitTest1.cs
+C:\Users\cv419\source\repos\TripasServer\TripasTests\Properties\AssemblyInfo.cs
+C:\Users\cv419\source\repos\TripasServer\TripasTests\app.config
+C:\Users\cv419\source\repos\TripasServer\TripasTests\Connected Services\ProxyTripas\item.xsd
+C:\Users\cv419\source\repos\TripasServer\TripasTests\Connected Services\ProxyTripas\item1.xsd
+C:\Users\cv419\source\repos\TripasServer\TripasTests\Connected Services\ProxyTripas\item2.xsd
+C:\Users\cv419\source\repos\TripasServer\TripasTests\Connected Services\ProxyTripas\item3.xsd
+C:\Users\cv419\source\repos\TripasServer\TripasTests\Connected Services\ProxyTripas\item4.xsd
+C:\Users\cv419\source\repos\TripasServer\TripasTests\Connected Services\ProxyTripas\item5.xsd
+C:\Users\cv419\source\repos\TripasServer\TripasTests\Connected Services\ProxyTripas\TripasGameService.wsdl
+C:\Users\cv419\source\repos\TripasServer\TripasTests\Connected Services\ProxyTripas\TripasTests.ProxyTripas.GameEnumsPlayerStatus.datasource
+C:\Users\cv419\source\repos\TripasServer\TripasTests\Connected Services\ProxyTripas\TripasTests.ProxyTripas.Lobby.datasource
+C:\Users\cv419\source\repos\TripasServer\TripasTests\Connected Services\ProxyTripas\TripasTests.ProxyTripas.Profile.datasource
+C:\Users\cv419\source\repos\TripasServer\TripasTests\Connected Services\ProxyTripas\item.disco
+C:\Users\cv419\source\repos\TripasServer\TripasTests\Connected Services\ProxyTripas\configuration91.svcinfo
+C:\Users\cv419\source\repos\TripasServer\TripasTests\Connected Services\ProxyTripas\configuration.svcinfo
+C:\Users\cv419\source\repos\TripasServer\TripasTests\Connected Services\ProxyTripas\Reference.svcmap
+C:\Users\cv419\.nuget\packages\xunit.runner.visualstudio\2.4.1\build\_common\xunit.runner.visualstudio.testadapter.dll
+C:\Users\cv419\.nuget\packages\xunit.runner.visualstudio\2.4.1\build\_common\xunit.runner.reporters.net452.dll
+C:\Users\cv419\.nuget\packages\xunit.runner.visualstudio\2.4.1\build\_common\xunit.runner.utility.net452.dll
+C:\Users\cv419\.nuget\packages\xunit.runner.visualstudio\2.4.1\build\_common\xunit.abstractions.dll
