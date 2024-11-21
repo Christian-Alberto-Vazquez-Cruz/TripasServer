@@ -56,6 +56,7 @@
       <DependentUpon>tripasDB.tt</DependentUpon>
     </Compile>
     <Compile Include="DAO\FriendsDAO.cs" />
+    <Compile Include="DAO\LeaderboardDAO.cs" />
     <Compile Include="DAO\UserDAO.cs" />
     <Compile Include="Login.cs">
       <DependentUpon>tripasDB.tt</DependentUpon>

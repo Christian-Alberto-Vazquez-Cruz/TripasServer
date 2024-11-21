@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TripasService.Contracts;
+using TripasService.Logic;
 
 namespace TripasService.Services {
     public partial class TripasGameService : IFriendsManager {
@@ -27,13 +28,12 @@ namespace TripasService.Services {
                     idProfile = friend.idPerfil,
                     userName = friend.nombre,
                     score = friend.puntaje,
-                    picturePath = friend.fotoRuta //¿Are we going to show the profile pic? 
+                    picturePath = friend.fotoRuta //¿Se mostrará la foto? Probablemente no
                 };
                 friendList.Add(profile);
             }
             return friendList;
         }
-
     }
 }
     

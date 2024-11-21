@@ -115,16 +115,56 @@ namespace DataBaseManager.DAO {
             return profileId;
         }
 
-        public static bool IsEmailRegisteredDAO(string mail) {
-            bool emailExists = false;
+        public static string GetPicPathByName(string username) {
+            string picPath = Constants.FAILED_OPERATION.ToString();
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    emailExists = db.Login.Any(login => login.correo == mail);
+                    Perfil userProfile = db.Perfil.FirstOrDefault(perfil => perfil.nombre == username);
+
+                    if (userProfile != null) {
+                        picPath = userProfile.fotoRuta;
+                    } else {
+                        picPath = Constants.NO_MATCHES.ToString(); 
+                    }
+                }
+            } catch (EntityException entityException) {
+                Console.WriteLine($"Error trying to get the profile picture path for username {username}: {entityException.Message}");
+            }
+
+            return picPath;
+        }
+
+        public static int IsEmailRegisteredDAO(string mail) {
+            int operationStatus = Constants.FAILED_OPERATION;
+
+            try {
+                using (tripasEntities db = new tripasEntities()) {
+                    if (db.Login.Any(login => login.correo == mail)) {
+                        operationStatus = Constants.FOUND_MATCH;
+                    } else {
+                        operationStatus = Constants.NO_MATCHES;
+                    }
                 }
             } catch (EntityException entityException) {
                 Console.WriteLine($"Error checking if the email is already registered {entityException.Message}");
             }
-            return emailExists;
+            return operationStatus;
+        }
+
+        public static int IsNameRegistered(string username) {
+            int operationStatus = Constants.FAILED_OPERATION;
+            try {
+                using (tripasEntities db = new tripasEntities()) {
+                    if (db.Perfil.Any(profile => profile.nombre == username)) {
+                        operationStatus = Constants.FOUND_MATCH;
+                    } else {
+                        operationStatus = Constants.NO_MATCHES;
+                    }
+                }
+            } catch (EntityException entityException) {
+                Console.WriteLine($"Error checking if the email is already registered {entityException.Message}");
+            }
+            return operationStatus;
         }
 
         public static int UpdateLoginPasswordDAO(string mail, string newPassword) {
@@ -144,19 +184,6 @@ namespace DataBaseManager.DAO {
                 Console.WriteLine($"Error trying to update the login password with {mail} mail, {entityException.Message}");
             }
             return operationStatus;
-        }
-
-        public static List<Perfil> GetHighestScoresDAO() {
-            List<Perfil> bestPlayersList = new List<Perfil>();
-            try {
-                using (tripasEntities db = new tripasEntities()) {
-                    var profiles = db.Perfil.OrderByDescending(perfil => perfil.puntaje).Take(Constants.HOW_MANY_SCORES).ToList();
-                    bestPlayersList = profiles;
-                }
-            } catch (EntityException entityException) {
-                Console.WriteLine($"Error trying to retrieve the highest score players {entityException.Message}");
-            }
-            return bestPlayersList;
         }
 
         public static int DeleteUserDAO(string email) {

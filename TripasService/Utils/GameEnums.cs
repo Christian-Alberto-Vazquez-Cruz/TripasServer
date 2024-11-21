@@ -17,5 +17,10 @@ namespace TripasService.Utils {
             Closed,
             InProgress
         }
+
+        public enum NodeStatus {
+            Free,
+            Occupied,
+        }
     }
 }

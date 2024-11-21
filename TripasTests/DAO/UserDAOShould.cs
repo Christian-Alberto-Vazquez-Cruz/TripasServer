@@ -1,4 +1,5 @@
-﻿using DataBaseManager.Utils;
+﻿using DataBaseManager.DAO;
+using DataBaseManager.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -88,7 +89,7 @@ namespace TripasTests.DAO {
             Assert.Equal(userNotFound, result);
         }
 
-        [Fact]
+        /*[Fact]
         public void GetProfileByMail() {
 
             string testEmail = "test@gmail.com";
@@ -113,6 +114,64 @@ namespace TripasTests.DAO {
             Assert.Equal(expectedProfile, result);
 
             DataBaseManager.DAO.UserDAO.DeleteUserDAO(testLogin.correo);
+        }*/
+
+        [Fact] //¿Se debería insertar un nuevo Login y luego borrarlo? 
+        public void IsEmailRegistered() {
+            string testEmail = "a@gmail.com";
+            int result = UserDAO.IsEmailRegisteredDAO(testEmail);
+
+            int emailRegistered = Constants.FOUND_MATCH;
+            Assert.Equal(emailRegistered, result);
         }
+
+        [Fact]
+        public void IsEmailNotRegistered() {
+            string testEmail = "lkq@gmail.com";
+            int result = UserDAO.IsEmailRegisteredDAO(testEmail);
+
+            int emailNotRegistered = Constants.NO_MATCHES;
+            Assert.Equal(emailNotRegistered, result);
+        }
+
+        [Fact]
+        public void IsEmailRegisteredNull() {
+            string testEmail = null;
+            int result = UserDAO.IsEmailRegisteredDAO(testEmail);
+
+            int failedOperation = Constants.FAILED_OPERATION;
+            Assert.Equal(failedOperation, result);
+        }
+
+        //[Fact] IsEmailRegisteredEntityException ¿Qué hago sin Mocks?
+
+        [Fact]
+        public void IsUsernameRegistered() {
+            string testUsername = "zetazeta";
+            int result = UserDAO.IsNameRegistered(testUsername);
+
+            int usernameRegistered = Constants.FOUND_MATCH;
+            Assert.Equal(usernameRegistered, result);
+        }
+
+        [Fact]
+        public void IsUsernameNotRegistered() {
+            string testUsername = "Sefirot";
+            int result = UserDAO.IsNameRegistered(testUsername);
+
+            int usernameNotRegistered = Constants.NO_MATCHES;
+            Assert.Equal(usernameNotRegistered, result);
+        }
+
+        [Fact]
+        public void IsUsernameRegisteredNull() { //En el anterior se hizo un if (string.IsNullOrEmpty(mail)) ¿Aquí igual o no? 
+                                                 // ¿Y si se maneja en el método que expone el contrato y no en el DAO?
+            string testUsername = null;
+            int result = UserDAO.IsNameRegistered(testUsername);
+
+            Assert.Equal(Constants.FAILED_OPERATION, result);
+        }
+
+        //[Fact] IsUsernameRegisteredEntityException ¿Qué hago sin Mocks?
     }
 }

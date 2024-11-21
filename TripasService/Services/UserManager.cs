@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using TripasService.Contracts;
 using TripasService.Utils;
+using TripasService.Logic;
+using System.Net.NetworkInformation;
+using System.Runtime.Remoting.Messaging;
 
 
 namespace TripasService.Services {
@@ -52,9 +55,24 @@ namespace TripasService.Services {
             return result;
         }
 
-        public bool IsEmailRegistered(string email) {
-            bool isRegistered = UserDAO.IsEmailRegisteredDAO(email);
+        public int IsEmailRegistered(string email) {
+            int isRegistered = UserDAO.IsEmailRegisteredDAO(email);
             return isRegistered;
+        }
+
+
+        //===> AQUÍ SE ESTÁ EMPLEANDO LA VERIFICACIÓN DE NO NULOS 
+        public int IsNameRegistered(string username) {
+            int isRegistered = Constants.FAILED_OPERATION;
+            if (!string.IsNullOrEmpty(username)) {
+               isRegistered = UserDAO.IsNameRegistered(username);
+            }
+            return isRegistered;
+        }
+
+        public string GetPicPath(string username) {
+            string result = UserDAO.GetPicPathByName(username);
+            return result;
         }
     }
 }
