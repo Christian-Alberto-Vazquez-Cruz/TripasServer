@@ -11,13 +11,11 @@ namespace TripasService.Services {
     public partial class TripasGameService : ILobbyManager {
         private static ConcurrentDictionary<string, Lobby> lobbies = new ConcurrentDictionary<string, Lobby>();
         private static ConcurrentDictionary<string, ILobbyManagerCallback> lobbyPlayerCallback = new ConcurrentDictionary<string, ILobbyManagerCallback>();
-        private static ConcurrentDictionary<string, Match> activeMatches = new ConcurrentDictionary<string, Match>();
-
 
         private bool TryNotifyCallback(string userName, Action<ILobbyManagerCallback> callbackAction) {
             if (lobbyPlayerCallback.TryGetValue(userName, out var callback)) {
                 try {
-                    // Verificar si el canal está vivox|
+                    // Verificar si el canal está vivo
                     if (((ICommunicationObject)callback).State == CommunicationState.Opened) {
                         callbackAction(callback);
                         return true;

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -9,7 +10,7 @@ namespace TripasService.Logic {
     [DataContract]
     public class Match {
         [DataMember]
-        public string Code { get; set; } // Código único de la partida, tal vez el mismo que el Lobby
+        public string Code { get; set; } 
 
         [DataMember]
         public string GameName { get; set; }
@@ -25,6 +26,13 @@ namespace TripasService.Logic {
 
         [DataMember]
         public int CurrentTurn { get; set; } // Para indicar de quién es el turno
+
+        [DataMember]
+        public List<Trace> Traces { get; set; } = new List<Trace>();
+
+        public void AddTrace(Trace trace) {
+            Traces.Add(trace);
+        }
 
         public Match(string code, string gameName, int nodeCount, Dictionary<string, Profile> players) {
             Code = code;

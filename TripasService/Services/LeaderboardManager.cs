@@ -19,7 +19,7 @@ namespace TripasService.Services {
                     idProfile = profileData.idPerfil,
                     userName = profileData.nombre,
                     score = profileData.puntaje,
-                    picturePath = profileData.fotoRuta //¿Are we going to show the profile pic? 
+                    picturePath = profileData.fotoRuta //¿Se mostrará la foto?
                 };
                 highestScoresList.Add(profile);
             }
