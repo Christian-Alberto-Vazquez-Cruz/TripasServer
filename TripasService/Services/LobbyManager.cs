@@ -11,6 +11,8 @@ namespace TripasService.Services {
     public partial class TripasGameService : ILobbyManager {
         private static ConcurrentDictionary<string, Lobby> lobbies = new ConcurrentDictionary<string, Lobby>();
         private static ConcurrentDictionary<string, ILobbyManagerCallback> lobbyPlayerCallback = new ConcurrentDictionary<string, ILobbyManagerCallback>();
+        private static ConcurrentDictionary<string, Match> activeMatches = new ConcurrentDictionary<string, Match>();
+
 
         private bool TryNotifyCallback(string userName, Action<ILobbyManagerCallback> callbackAction) {
             if (lobbyPlayerCallback.TryGetValue(userName, out var callback)) {
@@ -91,6 +93,59 @@ namespace TripasService.Services {
             }
             return false;   
         }
+        public void StartMatch(string code) {
+            if (!lobbies.TryGetValue(code, out var lobby)) {
+                Console.WriteLine($"Lobby con código {code} no encontrado.");
+                return;
+            }
+
+            if (!lobby.Players.TryGetValue("PlayerOne", out var host)) {
+                Console.WriteLine($"El lobby {code} no tiene un anfitrión válido.");
+                return;
+            }
+
+            // Validar que el que inicia la partida sea el propietario
+            var callback = OperationContext.Current.GetCallbackChannel<ILobbyManagerCallback>();
+            if (!lobbyPlayerCallback.TryGetValue(host.userName, out var hostCallback) || hostCallback != callback) {
+                Console.WriteLine("Solo el anfitrión puede iniciar la partida.");
+                return;
+            }
+
+            if (!lobby.Players.TryGetValue("PlayerTwo", out var guest)) {
+                Console.WriteLine($"El lobby {code} no tiene suficientes jugadores para iniciar la partida.");
+                return;
+            }
+
+            // Crear la partida
+            var match = new Match(
+                code,
+                lobby.GameName,
+                lobby.NodeCount,
+                new Dictionary<string, Profile>
+                {
+            { "PlayerOne", host },
+            { "PlayerTwo", guest }
+                }
+            );
+
+            match.StartGame();
+
+            // Registrar la partida en el sistema
+            if (!activeMatches.TryAdd(code, match)) {
+                Console.WriteLine($"No se pudo registrar la partida con código {code}. Verificar duplicados.");
+                return;
+            }
+
+            // Eliminar el lobby, ya que ahora está en una partida activa
+            if (!lobbies.TryRemove(code, out _)) {
+                Console.WriteLine($"No se pudo eliminar el lobby {code} después de iniciar la partida.");
+            }
+
+            // Notificar a ambos jugadores que la partida ha comenzado
+            TryNotifyCallback(host.userName,cb => cb.GameStarted());
+            TryNotifyCallback(guest.userName, cb => cb.GameStarted());
+        }
+
 
         public bool DeleteLobby(string code) {
             return lobbies.TryRemove(code, out _);

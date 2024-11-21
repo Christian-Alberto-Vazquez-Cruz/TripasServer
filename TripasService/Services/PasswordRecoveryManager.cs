@@ -12,9 +12,11 @@ namespace TripasService.Services {
         private static Dictionary<string, string> recoveryCodes = new Dictionary<string, string>();
 
         public int SendRecoveryCode(string emailReceiver) {
-            if (!verifyEmailRegistration(emailReceiver)) {
+            if (verifyEmailRegistration(emailReceiver) == Constants.NO_MATCHES) {
                 return Constants.NO_MATCHES;
             }
+
+            //AQUÍ FALTA VERIFICAR CUANDO VERIFYEMAL ES IGUAL A CONSTANTS.FAILED_OPERATION;
 
             string code = CodesGeneratorHelper.GenerateVerificationCode();
             recoveryCodes[emailReceiver] = code;  
@@ -85,11 +87,8 @@ namespace TripasService.Services {
             });
         }
 
-        private bool verifyEmailRegistration(string email) {
-            bool result = false;
-            if (UserDAO.IsEmailRegisteredDAO(email)) {
-                result = true;
-            }
+        private int verifyEmailRegistration(string email) {
+            int result = UserDAO.IsEmailRegisteredDAO(email);
             return result;
         }
 
