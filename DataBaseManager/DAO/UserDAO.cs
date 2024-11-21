@@ -80,7 +80,7 @@ namespace DataBaseManager.DAO {
             }
             return operationStatus;
         }
-   
+
         //Comprueba si Login no es nulo, después si Perfil no es nulo
         public static Perfil GetProfileByMailDAO(String mail) {
             Perfil userProfile = new Perfil {

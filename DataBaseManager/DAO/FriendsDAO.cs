@@ -21,8 +21,7 @@ namespace DataBaseManager.DAO {
                     db.SaveChanges();
                     operationStatus = Constants.SUCCESSFUL_OPERATION;
                 }
-            }
-            catch (EntityException entityException) {
+            } catch (EntityException entityException) {
                 Console.WriteLine($"Error trying to register the friendship {entityException.Message}");
             }
             return operationStatus;
@@ -42,8 +41,7 @@ namespace DataBaseManager.DAO {
                         operationStatus = Constants.SUCCESSFUL_OPERATION;
                     }
                 }
-            }
-            catch (EntityException entityException) {
+            } catch (EntityException entityException) {
                 Console.WriteLine(entityException.Message);
             }
             return operationStatus;
@@ -60,8 +58,7 @@ namespace DataBaseManager.DAO {
                                    select profile).ToList();
                     friendList = friends;
                 }
-            }
-            catch (EntityException entityException) {
+            } catch (EntityException entityException) {
                 Console.WriteLine($"Error trying to retrieve the friend list {entityException.Message}");
             }
             return friendList;

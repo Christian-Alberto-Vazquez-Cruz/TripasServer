@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0D8C92EB-D320-4767-8FA5-23C18596CAFF}</ProjectGuid>
+    <ProjectGuid>{8EDFB12F-8FE4-4A72-9F92-A34C60536193}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>DataBaseManager</RootNamespace>
     <AssemblyName>DataBaseManager</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DataBaseManager {
-    public class Program {
+    internal class Program {
         static void Main(string[] args) {
         }
     }
