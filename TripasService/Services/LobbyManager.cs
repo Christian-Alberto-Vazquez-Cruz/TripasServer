@@ -102,19 +102,12 @@ namespace TripasService.Services {
                 return;
             }
 
-            // Validar que el que inicia la partida sea el propietario
-            var callback = OperationContext.Current.GetCallbackChannel<ILobbyManagerCallback>();
-            if (!lobbyPlayerCallback.TryGetValue(host.userName, out var hostCallback) || hostCallback != callback) {
-                Console.WriteLine("Solo el anfitrión puede iniciar la partida.");
-                return;
-            }
-
             if (!lobby.Players.TryGetValue("PlayerTwo", out var guest)) {
                 Console.WriteLine($"El lobby {code} no tiene suficientes jugadores para iniciar la partida.");
                 return;
             }
 
-            // Crear la partida
+            // Crear la partida usando las mismas claves del lobby
             var match = new Match(
                 code,
                 lobby.GameName,
@@ -135,12 +128,14 @@ namespace TripasService.Services {
             }
 
             // Eliminar el lobby, ya que ahora está en una partida activa
-            if (!lobbies.TryRemove(code, out _)) {
-                Console.WriteLine($"No se pudo eliminar el lobby {code} después de iniciar la partida.");
-            }
+            lobbies.TryRemove(code, out _);
 
             // Notificar a ambos jugadores que la partida ha comenzado
-            TryNotifyCallback(host.userName,cb => cb.GameStarted());
+            NotifyPlayersMatchStarted(host, guest);
+        }
+
+        private void NotifyPlayersMatchStarted(Profile host, Profile guest) {
+            TryNotifyCallback(host.userName, cb => cb.GameStarted());
             TryNotifyCallback(guest.userName, cb => cb.GameStarted());
         }
 

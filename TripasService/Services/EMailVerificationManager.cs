@@ -15,16 +15,16 @@ namespace TripasService.Services {
     public partial class TripasGameService : IEmailVerificationManager {
 
         private static Dictionary<string, string> verificationCodesCreateAccount = new Dictionary<string, string>();
-        public int SendVerificationCodeRegister(string emailReceiver) {
+        public int SendVerificationCodeRegister(string email) {
 
             int operationResult = Constants.FAILED_OPERATION;
             string code = generateCode();
-            if (verificationCodesCreateAccount.ContainsKey(emailReceiver)) {
-                verificationCodesCreateAccount[emailReceiver] = code;  
+            if (verificationCodesCreateAccount.ContainsKey(email)) {
+                verificationCodesCreateAccount[email] = code;  
             }
             else {
-                verificationCodesCreateAccount.Add(emailReceiver, code);
-                StartVerificationCodeTimer(emailReceiver);
+                verificationCodesCreateAccount.Add(email, code);
+                StartVerificationCodeTimer(email);
 
                 string emailSender = "servicetripas@gmail.com";
                 string emailPassword = "fxllpkrxfgnzbpvy";
@@ -33,7 +33,7 @@ namespace TripasService.Services {
                     string emailBody = this.emailBodyRegister(code);
                     MailMessage mailMessage = new MailMessage();
                     mailMessage.From = new MailAddress(emailSender, displayName);
-                    mailMessage.To.Add(emailReceiver);
+                    mailMessage.To.Add(email);
 
                     mailMessage.Subject = "Your verification code";
                     mailMessage.Body = emailBody;

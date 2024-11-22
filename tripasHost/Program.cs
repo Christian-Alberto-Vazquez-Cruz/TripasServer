@@ -8,7 +8,7 @@ using TripasService.Services;
 using TripasService.Utils;
 
 namespace tripasHost {
-    internal class Program {
+    public class Program {
         static void Main(string[] args) {
             using (ServiceHost host = new ServiceHost(typeof(TripasService.Services.TripasGameService))) {
                 host.Open();

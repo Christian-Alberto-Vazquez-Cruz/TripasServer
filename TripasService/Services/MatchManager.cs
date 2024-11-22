@@ -15,25 +15,36 @@ namespace TripasService.Services {
         private static ConcurrentDictionary<string, IMatchManagerCallback> matchPlayerCallback = new ConcurrentDictionary<string, IMatchManagerCallback>();
 
         public bool RegisterPlayerCallback(string matchCode, string username) {
-            if (!activeMatches.ContainsKey(matchCode)) return false;
+            if (!activeMatches.TryGetValue(matchCode, out var match)) return false;
 
             var callback = OperationContext.Current.GetCallbackChannel<IMatchManagerCallback>();
-            return matchPlayerCallback.TryAdd(username, callback);
-        }
 
+            // Verificar si el usuario pertenece a la partida
+            if (match.Players.Values.Any(player => player.userName == username)) {
+                return matchPlayerCallback.TryAdd(username, callback);
+            }
+
+            Console.WriteLine($"El jugador {username} no pertenece a la partida {matchCode}.");
+            return false;
+        }
         public bool RegisterTrace(string matchCode, Trace trace) {
-            if (!activeMatches.ContainsKey(matchCode))
-                return false;
+            if (!activeMatches.TryGetValue(matchCode, out var match)) return false;
 
             // Agregar el trazo a la partida
-            activeMatches[matchCode].AddTrace(trace);
+            match.AddTrace(trace);
 
-            // Notificar a los otros jugadores del trazo
-            foreach (string playerName in activeMatches[matchCode].Players.Keys) {
-                if (playerName != trace.Player && matchPlayerCallback.ContainsKey(playerName)) {
-                    matchPlayerCallback[playerName].TraceReceived(trace);
+            // Notificar al jugador contrario
+            foreach (var player in match.Players.Values) {
+                if (player.userName != trace.Player && matchPlayerCallback.TryGetValue(player.userName, out var callback)) {
+                    try {
+                        callback.TraceReceived(trace);
+                    } catch (Exception ex) {
+                        Console.WriteLine($"Error al notificar al jugador {player.userName}: {ex.Message}");
+                        matchPlayerCallback.TryRemove(player.userName, out _); // Eliminar callback inválido
+                    }
                 }
             }
+
             return true;
         }
 
