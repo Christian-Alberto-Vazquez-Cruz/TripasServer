@@ -22,14 +22,14 @@ namespace TripasService.Logic {
 
         // Coordenadas del trazo para dibujo
         [DataMember]
-        public List<Point> TracePoints { get; set; } = new List<Point>();
+        public List<TracePoint> TracePoints { get; set; } = new List<TracePoint>();
 
         // Color del trazo
         [DataMember]
         public string Color { get; set; }
+        
+        public Trace() {
 
-        // Grosor del trazo
-        [DataMember]
-        public double Thickness { get; set; }
+        }
     }
 }

@@ -10,24 +10,19 @@ using static TripasService.Utils.GameEnums;
 namespace TripasService.Logic {
     [DataContract]
     public class Node {
-        // Identificador único del nodo
+
         [DataMember]
         public string Id { get; set; }
 
-        // Coordenadas del nodo (útil para renderizado gráfico)
+ 
         [DataMember]
         public double X { get; set; }
 
         [DataMember]
         public double Y { get; set; }
 
-        // Estado del nodo (ocupado, libre, etc.)
         [DataMember]
         public GameEnums.NodeStatus Status { get; set; }
-
-        // Jugador que controla este nodo (si aplica)
-        [DataMember]
-        public Profile Owner { get; set; }
 
         // Constructor completo
         public Node(string id, double x, double y, GameEnums.NodeStatus status = GameEnums.NodeStatus.Free) {
@@ -43,11 +38,6 @@ namespace TripasService.Logic {
             Status = GameEnums.NodeStatus.Free;
         }
 
-        // Método para cambiar el estado del nodo
-        public void ChangeOwnership(Profile newOwner) {
-            Owner = newOwner;
-            Status = newOwner != null ? NodeStatus.Occupied : NodeStatus.Free;
-        }
 
         // Método para verificar si dos nodos están conectados
         public bool IsConnectedTo(Node otherNode) {

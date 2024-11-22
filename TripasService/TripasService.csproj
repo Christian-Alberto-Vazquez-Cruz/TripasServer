@@ -61,7 +61,7 @@
     <Compile Include="Logic\Lobby.cs" />
     <Compile Include="Logic\Match.cs" />
     <Compile Include="Logic\Node.cs" />
-    <Compile Include="Logic\Point.cs" />
+    <Compile Include="Logic\TracePoint.cs" />
     <Compile Include="Logic\Profile.cs" />
     <Compile Include="Logic\Trace.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
