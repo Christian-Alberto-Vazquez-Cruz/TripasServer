@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace TripasService.Logic {
     [DataContract]
-    public class Point {
+    public class TracePoint {
         [DataMember]
         public double X { get; set; }
 
         [DataMember]
         public double Y { get; set; }
 
-        public Point(double x, double y) {
+        public TracePoint(double x, double y) {
             X = x;
             Y = y;
         }

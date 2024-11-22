@@ -3,11 +3,17 @@ C:\Users\cv419\source\repos\TripasServer\TripasService\Contracts\IFriendsManager
 C:\Users\cv419\source\repos\TripasServer\TripasService\Contracts\ILeaderboardManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Contracts\ILobbyBrowser.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Contracts\ILobbyManager.cs
+C:\Users\cv419\source\repos\TripasServer\TripasService\Contracts\IMatchManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Contracts\IPasswordRecoveryManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Contracts\IStatusManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Contracts\IUserManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Contracts\IEmailVerificationManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Logic\Lobby.cs
+C:\Users\cv419\source\repos\TripasServer\TripasService\Logic\Match.cs
+C:\Users\cv419\source\repos\TripasServer\TripasService\Logic\Node.cs
+C:\Users\cv419\source\repos\TripasServer\TripasService\Logic\Point.cs
+C:\Users\cv419\source\repos\TripasServer\TripasService\Logic\Profile.cs
+C:\Users\cv419\source\repos\TripasServer\TripasService\Logic\Trace.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Properties\AssemblyInfo.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Services\ChatManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Services\FriendsManager.cs
@@ -15,6 +21,7 @@ C:\Users\cv419\source\repos\TripasServer\TripasService\Services\EmailVerificatio
 C:\Users\cv419\source\repos\TripasServer\TripasService\Services\LeaderboardManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Services\LobbyBrowser.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Services\LobbyManager.cs
+C:\Users\cv419\source\repos\TripasServer\TripasService\Services\MatchManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Services\PasswordRecoveryManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Services\StatusManager.cs
 C:\Users\cv419\source\repos\TripasServer\TripasService\Services\UserManager.cs

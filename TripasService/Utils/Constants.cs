@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TripasService.Utils {
-    public class Constants {
+    public static class Constants {
         public const int SUCCESSFUL_OPERATION = 1;
         public const int FAILED_OPERATION = -1;
         public const int NO_MATCHES = -2; 

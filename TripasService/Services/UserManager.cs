@@ -41,8 +41,8 @@ namespace TripasService.Services {
             return result;
         }
 
-        public Profile GetProfileByMail(string mail) {
-            Perfil profileDB = UserDAO.GetProfileByMailDAO(mail);
+        public Profile GetProfileByMail(string email) {
+            Perfil profileDB = UserDAO.GetProfileByMailDAO(email);
             Profile profile = new Profile() {
                 idProfile = profileDB.idPerfil,
                 userName = profileDB.nombre,

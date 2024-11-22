@@ -11,16 +11,16 @@ namespace TripasService.Services {
     public partial class TripasGameService : IPasswordRecoveryManager {
         private static Dictionary<string, string> recoveryCodes = new Dictionary<string, string>();
 
-        public int SendRecoveryCode(string emailReceiver) {
-            if (verifyEmailRegistration(emailReceiver) == Constants.NO_MATCHES) {
+        public int SendRecoveryCode(string email) {
+            if (verifyEmailRegistration(email) == Constants.NO_MATCHES) {
                 return Constants.NO_MATCHES;
             }
 
             //AQUÍ FALTA VERIFICAR CUANDO VERIFYEMAL ES IGUAL A CONSTANTS.FAILED_OPERATION;
 
             string code = CodesGeneratorHelper.GenerateVerificationCode();
-            recoveryCodes[emailReceiver] = code;  
-            StartRecoveryCodeTimer(emailReceiver);
+            recoveryCodes[email] = code;  
+            StartRecoveryCodeTimer(email);
 
             string emailSender = "servicetripas@gmail.com";
             string emailPassword = "fxllpkrxfgnzbpvy";
@@ -33,7 +33,7 @@ namespace TripasService.Services {
                     Body = emailBody,
                     IsBodyHtml = true
                 };
-                mailMessage.To.Add(emailReceiver);
+                mailMessage.To.Add(email);
 
                 SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587) {
                     Credentials = new NetworkCredential(emailSender, emailPassword),

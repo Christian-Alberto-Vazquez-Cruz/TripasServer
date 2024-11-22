@@ -19,7 +19,10 @@ namespace TripasService.Logic {
         public int NodeCount { get; set; }
 
         [DataMember]
-        public Dictionary<string, Profile> Players { get; set; } = new Dictionary<string, Profile>();
+        public Dictionary<string, Profile> Players { get; set; } = new Dictionary<string, Profile> {
+            { "PlayerOne", null },
+            { "PlayerTwo", null }
+        };
 
         [DataMember]
         public string Status { get; set; } // Estado de la partida: En progreso, Finalizado, Pausado, etc.

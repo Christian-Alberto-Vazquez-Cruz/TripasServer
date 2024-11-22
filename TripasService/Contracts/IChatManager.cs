@@ -30,7 +30,7 @@ namespace TripasService.Contracts {
     [DataContract]
     public class Message {
         [DataMember]
-        public DateTime timeStamp { get; set; } = DateTime.Now;
+        public DateTime timeStamp { get; set; } 
 
         [DataMember]
         public string chatMessage { get; set; }
