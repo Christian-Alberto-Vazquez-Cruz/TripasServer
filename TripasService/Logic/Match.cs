@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TripasService.Logic {
     [DataContract]
     public class Match {
 
         [DataMember]
-        public string Code { get; set; } 
+        public string Code { get; set; }
 
         [DataMember]
         public string GameName { get; set; }
@@ -26,10 +23,10 @@ namespace TripasService.Logic {
         };
 
         [DataMember]
-        public string Status { get; set; } 
+        public string Status { get; set; }
 
         [DataMember]
-        public int CurrentTurn { get; set; } 
+        public int CurrentTurn { get; set; }
 
         [DataMember]
         public List<Trace> Traces { get; set; } = new List<Trace>();
@@ -39,6 +36,15 @@ namespace TripasService.Logic {
 
         [DataMember]
         public Dictionary<string, string> NodePairs { get; private set; } = new Dictionary<string, string>();
+
+        // Lista predefinida de coordenadas válidas para ecenario cat
+        private static readonly List<(double X, double Y)> ValidCoordinates = new List<(double, double)> {
+            (175, 48),(235, 50),(140, 60),(100, 80),(175, 80),(270, 90),(355, 105),(130, 115),(52, 145),
+            (150, 143),(200, 145),(250, 130),(280, 130),(325, 125),(380, 130),(440, 125),(90, 155),(55, 180),(140, 180),
+            (155, 175),(215, 180),(270, 155),(300, 175),(350, 180),(380, 160),(405, 155),(445, 175),(100, 200),(60, 225),
+            (140, 225),(180, 230),(250, 250),(270, 215),(320, 210),(370, 220),(410, 205),(460, 200),(450, 245),(510, 245),
+            (40, 260),(100, 260),(175, 275),(200, 290),(325, 275),(480, 250),(360, 300),(330, 310),(60, 295),(280, 300),
+        };
 
         public void AddTrace(Trace trace) {
             Traces.Add(trace);
@@ -57,7 +63,6 @@ namespace TripasService.Logic {
             return new Dictionary<string, string>(NodePairs);
         }
 
-
         public void StartGame() {
             GenerateNodes();
             PairNodes();
@@ -72,29 +77,23 @@ namespace TripasService.Logic {
 
         private void GenerateNodes() {
             var random = new Random();
-            double canvasWidth = 848; // Ancho del área útil
-            double canvasHeight = 555; // Alto del área útil
 
-            for (int i = 0; i < NodeCount; i++) {
+            // Seleccionar aleatoriamente las coordenadas necesarias para los nodos
+            var selectedCoordinates = ValidCoordinates
+                .OrderBy(_ => random.Next())
+                .Take(NodeCount)
+                .ToList();
+
+            for (int i = 0; i < selectedCoordinates.Count; i++) {
+                var (x, y) = selectedCoordinates[i];
                 var node = new Node {
                     Id = $"Node-{i}",
-                    X = random.NextDouble() * canvasWidth,
-                    Y = random.NextDouble() * canvasHeight
+                    X = x,
+                    Y = y
                 };
                 Nodes[node.Id] = node;
             }
         }
-
-        /*private void PairNodes() {
-            var nodeIds = Nodes.Keys.ToList();
-            var random = new Random();
-            nodeIds = nodeIds.OrderBy(_ => random.Next()).ToList(); // Mezclar nodos aleatoriamente
-
-            for (int i = 0; i < nodeIds.Count - 1; i += 2) {
-                NodePairs[nodeIds[i]] = nodeIds[i + 1];
-                NodePairs[nodeIds[i + 1]] = nodeIds[i];
-            }
-        }*/
 
         private void PairNodes() {
             var nodeIds = Nodes.Keys.ToList();
@@ -123,7 +122,7 @@ namespace TripasService.Logic {
             NodeCount = nodeCount;
             Players = players;
             Status = "InProgress";
-            CurrentTurn = 0; 
+            CurrentTurn = 0;
         }
     }
 }

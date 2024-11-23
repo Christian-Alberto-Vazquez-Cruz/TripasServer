@@ -13,6 +13,8 @@ namespace TripasService.Services {
 
         private static ConcurrentDictionary<string, Match> activeMatches = new ConcurrentDictionary<string, Match>();
         private static ConcurrentDictionary<string, IMatchManagerCallback> matchPlayerCallback = new ConcurrentDictionary<string, IMatchManagerCallback>();
+        private readonly Dictionary<string, Match> matches = new Dictionary<string, Match>();
+
 
         public List<Node> GetNodes(string matchCode) {
             if (!activeMatches.TryGetValue(matchCode, out var match)) return null;
@@ -56,6 +58,22 @@ namespace TripasService.Services {
 
             return true;
         }
+
+        /*
+        public void NotifyInfraction(string matchCode, string playerName) {
+            if (!matches.ContainsKey(matchCode)) return;
+
+            var match = matches[matchCode];
+
+            // Notificar al jugador contrario que ha ganado
+            var winner = match.Players.FirstOrDefault(p => p != playerName);
+            if (winner != null) {
+                match.Callbacks[winner]?.MatchEnded(matchCode, winner);
+            }
+
+            // Notificar al jugador que cometió la infracción
+            match.Callbacks[playerName]?.MatchEnded(matchCode, winner);
+        }*/
 
 
     }
