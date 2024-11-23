@@ -43,6 +43,11 @@ namespace TripasService.Services {
         public bool RegisterTrace(string matchCode, Trace trace) {
             if (!activeMatches.TryGetValue(matchCode, out var match)) return false;
 
+            if (!match.IsPlayerTurn(trace.Player)) {
+                Console.WriteLine($"El jugador {trace.Player} intentó dibujar fuera de su turno.");
+                return false; // El jugador no está en turno.
+            }
+
             match.AddTrace(trace);
 
             foreach (var player in match.Players.Values) {
@@ -51,13 +56,16 @@ namespace TripasService.Services {
                         callback.TraceReceived(trace);
                     } catch (Exception ex) {
                         Console.WriteLine($"Error al notificar al jugador {player.userName}: {ex.Message}");
-                        matchPlayerCallback.TryRemove(player.userName, out _); 
+                        matchPlayerCallback.TryRemove(player.userName, out _);
                     }
                 }
             }
 
+            // Cambiar el turno al siguiente jugador.
+            SwitchTurn(matchCode);
             return true;
         }
+
 
         /*
         public void NotifyInfraction(string matchCode, string playerName) {
@@ -74,6 +82,29 @@ namespace TripasService.Services {
             // Notificar al jugador que cometió la infracción
             match.Callbacks[playerName]?.MatchEnded(matchCode, winner);
         }*/
+        //nuevos metodos para el cambio de turnos 
+        public bool IsPlayerTurn(string matchCode, string playerName) {
+            if (!activeMatches.TryGetValue(matchCode, out var match)) return false;
+            return match.IsPlayerTurn(playerName);
+        }
+        public void SwitchTurn(string matchCode) {
+            if (!activeMatches.TryGetValue(matchCode, out var match)) return;
+
+            match.SwitchTurn();
+
+            // Notificar a los jugadores sobre el cambio de turno.
+            foreach (var player in match.Players.Values) {
+                if (matchPlayerCallback.TryGetValue(player.userName, out var callback)) {
+                    try {
+                        callback.TurnChanged(match.CurrentPlayerTurn);
+                    } catch (Exception ex) {
+                        Console.WriteLine($"Error al notificar turno a {player.userName}: {ex.Message}");
+                        matchPlayerCallback.TryRemove(player.userName, out _);
+                    }
+                }
+            }
+        }
+
 
 
     }

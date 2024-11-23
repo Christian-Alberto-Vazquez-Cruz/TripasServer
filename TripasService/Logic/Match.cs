@@ -29,6 +29,9 @@ namespace TripasService.Logic {
         public int CurrentTurn { get; set; }
 
         [DataMember]
+        public string CurrentPlayerTurn { get; set; } // Identifica al jugador que está en turno.
+
+        [DataMember]
         public List<Trace> Traces { get; set; } = new List<Trace>();
 
         [DataMember]
@@ -43,7 +46,7 @@ namespace TripasService.Logic {
             (150, 143),(200, 145),(250, 130),(280, 130),(325, 125),(380, 130),(440, 125),(90, 155),(55, 180),(140, 180),
             (155, 175),(215, 180),(270, 155),(300, 175),(350, 180),(380, 160),(405, 155),(445, 175),(100, 200),(60, 225),
             (140, 225),(180, 230),(250, 250),(270, 215),(320, 210),(370, 220),(410, 205),(460, 200),(450, 245),(510, 245),
-            (40, 260),(100, 260),(175, 275),(200, 290),(325, 275),(480, 250),(360, 300),(330, 310),(60, 295),(280, 300),
+            (40, 260),(100, 260),(175, 275),(200, 290),(325, 275),(480, 250),(360, 300),(330, 310),(60, 295),(380, 300),
         };
 
         public void AddTrace(Trace trace) {
@@ -66,9 +69,11 @@ namespace TripasService.Logic {
         public void StartGame() {
             GenerateNodes();
             PairNodes();
+            CurrentPlayerTurn = Players["PlayerOne"]?.userName; // Asignar turno al anfitrión.
             Status = "InProgress";
             Console.WriteLine($"La partida {Code} ha comenzado con {NodeCount} nodos.");
         }
+
 
         public void EndGame() {
             Status = "Finished";
@@ -124,5 +129,21 @@ namespace TripasService.Logic {
             Status = "InProgress";
             CurrentTurn = 0;
         }
+
+        //nuevo para implementar turnos
+        // Cambiar al siguiente jugador.
+        public void SwitchTurn() {
+            if (Players["PlayerOne"]?.userName == CurrentPlayerTurn) {
+                CurrentPlayerTurn = Players["PlayerTwo"]?.userName;
+            } else {
+                CurrentPlayerTurn = Players["PlayerOne"]?.userName;
+            }
+        }
+
+        // Validar si un jugador está en su turno.
+        public bool IsPlayerTurn(string playerName) {
+            return CurrentPlayerTurn == playerName;
+        }
+
     }
 }
