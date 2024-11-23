@@ -9,7 +9,7 @@ namespace TripasService.Logic {
     [DataContract]
     public class Trace {
         [DataMember]
-        public string Player { get; set; } 
+        public string Player { get; set; }
 
         [DataMember]
         public Node StartNode { get; set; }
@@ -24,7 +24,7 @@ namespace TripasService.Logic {
         public List<TracePoint> TracePoints { get; set; } = new List<TracePoint>();
         [DataMember]
         public string Color { get; set; }
-        
+
         public Trace() {
 
         }

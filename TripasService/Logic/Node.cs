@@ -14,7 +14,7 @@ namespace TripasService.Logic {
         [DataMember]
         public string Id { get; set; }
 
- 
+
         [DataMember]
         public double X { get; set; }
 
@@ -34,9 +34,9 @@ namespace TripasService.Logic {
             Status = status;
         }
 
-        public Node() { 
+        public Node() {
 
-        } 
+        }
     }
 }
 
