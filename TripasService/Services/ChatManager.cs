@@ -62,7 +62,7 @@ namespace TripasService.Services {
                     try {
                         user.BroadcastMessage(message);
                     } catch (Exception exception) {
-                        string disconnectedUser = lobbyUsers.FirstOrDefault(x => x.Value == user).Key;
+                        string disconnectedUser = lobbyUsers.FirstOrDefault(lobby => lobby.Value == user).Key;
                         if (disconnectedUser != null) {
                             lobbyUsers.TryRemove(disconnectedUser, out _);
                             Console.WriteLine($"Excepción durante el broadcast para {disconnectedUser} en el lobby {lobbyCode}: {exception.Message}");

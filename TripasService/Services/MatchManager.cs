@@ -14,6 +14,17 @@ namespace TripasService.Services {
         private static ConcurrentDictionary<string, Match> activeMatches = new ConcurrentDictionary<string, Match>();
         private static ConcurrentDictionary<string, IMatchManagerCallback> matchPlayerCallback = new ConcurrentDictionary<string, IMatchManagerCallback>();
 
+        public List<Node> GetNodes(string matchCode) {
+            if (!activeMatches.TryGetValue(matchCode, out var match)) return null;
+            return match.GetAllNodes();
+        }
+
+        // NUEVO: Obtener las parejas de nodos de un juego
+        public Dictionary<string, string> GetNodePairs(string matchCode) {
+            if (!activeMatches.TryGetValue(matchCode, out var match)) return null;
+            return match.GetNodePairs();
+        }
+
         public bool RegisterPlayerCallback(string matchCode, string username) {
             if (!activeMatches.TryGetValue(matchCode, out var match)) return false;
 
@@ -30,17 +41,15 @@ namespace TripasService.Services {
         public bool RegisterTrace(string matchCode, Trace trace) {
             if (!activeMatches.TryGetValue(matchCode, out var match)) return false;
 
-            // Agregar el trazo a la partida
             match.AddTrace(trace);
 
-            // Notificar al jugador contrario
             foreach (var player in match.Players.Values) {
                 if (player.userName != trace.Player && matchPlayerCallback.TryGetValue(player.userName, out var callback)) {
                     try {
                         callback.TraceReceived(trace);
                     } catch (Exception ex) {
                         Console.WriteLine($"Error al notificar al jugador {player.userName}: {ex.Message}");
-                        matchPlayerCallback.TryRemove(player.userName, out _); // Eliminar callback inválido
+                        matchPlayerCallback.TryRemove(player.userName, out _); 
                     }
                 }
             }

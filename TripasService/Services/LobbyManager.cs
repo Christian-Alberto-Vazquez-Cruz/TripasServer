@@ -15,7 +15,6 @@ namespace TripasService.Services {
         private bool TryNotifyCallback(string userName, Action<ILobbyManagerCallback> callbackAction) {
             if (lobbyPlayerCallback.TryGetValue(userName, out var callback)) {
                 try {
-                    // Verificar si el canal está vivo
                     if (((ICommunicationObject)callback).State == CommunicationState.Opened) {
                         callbackAction(callback);
                         return true;
@@ -28,7 +27,6 @@ namespace TripasService.Services {
                     Console.WriteLine($"Channel was disposed for {userName}: {ex.Message}");
                 }
 
-                // Si llegamos aquí, hubo un error y debemos limpiar el callback
                 lobbyPlayerCallback.TryRemove(userName, out _);
                 Console.WriteLine($"Callback removed for {userName} due to communication error");
             }
@@ -46,7 +44,7 @@ namespace TripasService.Services {
                     // Eliminar el callback del guest
                     lobbyPlayerCallback.TryRemove(guest.userName, out _);
 
-                    // Notificar al host usando el método seguro
+                    // Notificar al host que Guest abandonó
                     if (host != null) {
                         TryNotifyCallback(host.userName, callback => callback.GuestLeftCallback());
                     }
@@ -57,7 +55,7 @@ namespace TripasService.Services {
         private void OnHostDisconnect(string code) {
             if (lobbies.TryGetValue(code, out var lobby)) {
                 if (lobby.Players.TryGetValue("PlayerTwo", out var guest) && guest != null) {
-                    // Notificar al guest usando el método seguro
+                    // Notificar al guest que Host abadonó
                     TryNotifyCallback(guest.userName, callback => callback.HostLeftCallback());
                     // Eliminar el callback del guest ya que el lobby se cerrará
                     lobbyPlayerCallback.TryRemove(guest.userName, out _);
@@ -79,11 +77,11 @@ namespace TripasService.Services {
                     if (lobbyPlayerCallback.TryAdd(guest.userName, callback)) {
                         Console.WriteLine($"Guest {guest.userName} callback registered successfully");
 
-                        // Notificar al host usando el método seguro
+                        // Notificar al host que se unió un Guest
                         if (TryNotifyCallback(host.userName, callbk => callbk.GuestJoinedCallback(guest.userName))) {
                             return true;
                         } else {
-                            // Si no se pudo notificar al host, limpiamos el callback del guest
+                            // Limpiar callback si ocurre una excepción en el Host
                             lobbyPlayerCallback.TryRemove(guest.userName, out _);
                         }
                     }
@@ -123,14 +121,12 @@ namespace TripasService.Services {
 
             // Registrar la partida en el sistema
             if (!activeMatches.TryAdd(code, match)) {
-                Console.WriteLine($"No se pudo registrar la partida con código {code}. Verificar duplicados.");
+                Console.WriteLine($"Unable to register match with {code} code. Verify duplicity.");
                 return;
             }
 
-            // Eliminar el lobby, ya que ahora está en una partida activa
             lobbies.TryRemove(code, out _);
 
-            // Notificar a ambos jugadores que la partida ha comenzado
             NotifyPlayersMatchStarted(host, guest);
         }
 

@@ -9,7 +9,7 @@ namespace TripasService.Logic {
     [DataContract]
     public class Trace {
         [DataMember]
-        public string Player { get; set; } //Identifica al jugador que hace el trazo
+        public string Player { get; set; } 
 
         [DataMember]
         public Node StartNode { get; set; }
@@ -20,11 +20,8 @@ namespace TripasService.Logic {
         [DataMember]
         public DateTime Timestamp { get; set; }
 
-        // Coordenadas del trazo para dibujo
         [DataMember]
         public List<TracePoint> TracePoints { get; set; } = new List<TracePoint>();
-
-        // Color del trazo
         [DataMember]
         public string Color { get; set; }
         

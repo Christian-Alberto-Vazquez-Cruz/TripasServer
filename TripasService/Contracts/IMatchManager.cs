@@ -16,6 +16,11 @@ namespace TripasService.Contracts {
         [OperationContract]
         bool RegisterPlayerCallback(string matchCode, string username);
 
+        [OperationContract]
+        List<Node> GetNodes(string matchCode);
+
+        [OperationContract]
+        Dictionary<string, string> GetNodePairs(string matchCode);
     }
 
     [ServiceContract]

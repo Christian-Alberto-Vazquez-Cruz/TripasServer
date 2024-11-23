@@ -13,7 +13,6 @@ namespace TripasService.Logic {
 
         [DataMember]
         public double Y { get; set; }
-
         public TracePoint(double x, double y) {
             X = x;
             Y = y;
