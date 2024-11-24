@@ -32,7 +32,7 @@ namespace TripasService.Contracts {
         [OperationContract(IsOneWay = true)]
         void TraceReceived(Trace trace);
 
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void TurnChanged(string currentPlayer);
 
     }

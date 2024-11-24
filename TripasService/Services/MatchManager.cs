@@ -66,46 +66,25 @@ namespace TripasService.Services {
             return true;
         }
 
-
-        /*
-        public void NotifyInfraction(string matchCode, string playerName) {
-            if (!matches.ContainsKey(matchCode)) return;
-
-            var match = matches[matchCode];
-
-            // Notificar al jugador contrario que ha ganado
-            var winner = match.Players.FirstOrDefault(p => p != playerName);
-            if (winner != null) {
-                match.Callbacks[winner]?.MatchEnded(matchCode, winner);
-            }
-
-            // Notificar al jugador que cometió la infracción
-            match.Callbacks[playerName]?.MatchEnded(matchCode, winner);
-        }*/
-        //nuevos metodos para el cambio de turnos 
         public bool IsPlayerTurn(string matchCode, string playerName) {
             if (!activeMatches.TryGetValue(matchCode, out var match)) return false;
             return match.IsPlayerTurn(playerName);
         }
-        public void SwitchTurn(string matchCode) {
+        public async void SwitchTurn(string matchCode) {
             if (!activeMatches.TryGetValue(matchCode, out var match)) return;
 
             match.SwitchTurn();
 
-            // Notificar a los jugadores sobre el cambio de turno.
             foreach (var player in match.Players.Values) {
                 if (matchPlayerCallback.TryGetValue(player.userName, out var callback)) {
                     try {
-                        callback.TurnChanged(match.CurrentPlayerTurn);
+                        await Task.Run(() => callback.TurnChanged(match.CurrentPlayerTurn));
                     } catch (Exception ex) {
                         Console.WriteLine($"Error al notificar turno a {player.userName}: {ex.Message}");
-                        matchPlayerCallback.TryRemove(player.userName, out _);
                     }
                 }
             }
         }
-
-
 
     }
 }

@@ -26,10 +26,7 @@ namespace TripasService.Logic {
         public string Status { get; set; }
 
         [DataMember]
-        public int CurrentTurn { get; set; }
-
-        [DataMember]
-        public string CurrentPlayerTurn { get; set; } // Identifica al jugador que está en turno.
+        public string CurrentPlayerTurn { get; set; } 
 
         [DataMember]
         public List<Trace> Traces { get; set; } = new List<Trace>();
@@ -127,11 +124,7 @@ namespace TripasService.Logic {
             NodeCount = nodeCount;
             Players = players;
             Status = "InProgress";
-            CurrentTurn = 0;
         }
-
-        //nuevo para implementar turnos
-        // Cambiar al siguiente jugador.
         public void SwitchTurn() {
             if (Players["PlayerOne"]?.userName == CurrentPlayerTurn) {
                 CurrentPlayerTurn = Players["PlayerTwo"]?.userName;
@@ -139,8 +132,6 @@ namespace TripasService.Logic {
                 CurrentPlayerTurn = Players["PlayerOne"]?.userName;
             }
         }
-
-        // Validar si un jugador está en su turno.
         public bool IsPlayerTurn(string playerName) {
             return CurrentPlayerTurn == playerName;
         }

@@ -115,7 +115,8 @@ namespace DataBaseManager.DAO {
             return profileId;
         }
 
-        public static string GetPicPathByName(string username) {
+        //AQUÍ VERIFICAR QUÉ HACER CON PICPATH. ¿Puede ser nulo o asignar una por defecto? No tiene sentido regresar ToString();
+        public static string GetPicPathByUsername(string username) {
             string picPath = Constants.FAILED_OPERATION.ToString();
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -132,6 +133,25 @@ namespace DataBaseManager.DAO {
             }
 
             return picPath;
+        }
+
+        public static string GetMailByUsername(string username) {
+            string mail = "";
+            try {
+                using (tripasEntities db = new tripasEntities()) {
+                    Perfil userProfile = db.Perfil.FirstOrDefault(perfil => perfil.nombre == username);
+
+                    if (userProfile != null) {
+                        Login userLogin = db.Login.FirstOrDefault(login => login.idUsuario == userProfile.idPerfil);
+                        if (userLogin != null) {
+                            mail = userLogin.correo;
+                        } 
+                    }
+                }
+            } catch (EntityException entityException) {
+                Console.WriteLine($"Error trying to get the mail for username {username}: {entityException.Message}");
+            }
+            return mail;
         }
 
         public static int IsEmailRegisteredDAO(string mail) {
