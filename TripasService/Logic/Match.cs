@@ -26,9 +26,6 @@ namespace TripasService.Logic {
         public string Status { get; set; }
 
         [DataMember]
-        public string CurrentPlayerTurn { get; set; } 
-
-        [DataMember]
         public List<Trace> Traces { get; set; } = new List<Trace>();
 
         [DataMember]
@@ -36,6 +33,15 @@ namespace TripasService.Logic {
 
         [DataMember]
         public Dictionary<string, string> NodePairs { get; private set; } = new Dictionary<string, string>();
+        [DataMember]
+        public Dictionary<string, int> CurrentScores { get; private set; } = new Dictionary<string, int>();
+
+        [DataMember]
+        public string CurrentTurn { get; set; }
+
+        public void SwitchTurn() {
+            CurrentTurn = CurrentTurn == "PlayerOne" ? "PlayerTwo" : "PlayerOne";
+        }
 
         // Lista predefinida de coordenadas válidas para ecenario cat
         private static readonly List<(double X, double Y)> ValidCoordinates = new List<(double, double)> {
@@ -66,15 +72,15 @@ namespace TripasService.Logic {
         public void StartGame() {
             GenerateNodes();
             PairNodes();
-            CurrentPlayerTurn = Players["PlayerOne"]?.userName; // Asignar turno al anfitrión.
+
+            foreach (var player in Players.Values) {
+                if (player != null) {
+                    CurrentScores[player.userName] = 0;
+                }
+            }
+
             Status = "InProgress";
             Console.WriteLine($"La partida {Code} ha comenzado con {NodeCount} nodos.");
-        }
-
-
-        public void EndGame() {
-            Status = "Finished";
-            Console.WriteLine($"La partida {Code} ha terminado.");
         }
 
         private void GenerateNodes() {
@@ -118,6 +124,16 @@ namespace TripasService.Logic {
             }
         }
 
+        public void AddPoints(string player, int points) {
+            if (CurrentScores.ContainsKey(player)) {
+                CurrentScores[player] += points;
+            }
+        }
+
+        public int GetPlayerScore(string player) {
+            return CurrentScores.TryGetValue(player, out var score) ? score : 0;
+        }
+
         public Match(string code, string gameName, int nodeCount, Dictionary<string, Profile> players) {
             Code = code;
             GameName = gameName;
@@ -125,16 +141,5 @@ namespace TripasService.Logic {
             Players = players;
             Status = "InProgress";
         }
-        public void SwitchTurn() {
-            if (Players["PlayerOne"]?.userName == CurrentPlayerTurn) {
-                CurrentPlayerTurn = Players["PlayerTwo"]?.userName;
-            } else {
-                CurrentPlayerTurn = Players["PlayerOne"]?.userName;
-            }
-        }
-        public bool IsPlayerTurn(string playerName) {
-            return CurrentPlayerTurn == playerName;
-        }
-
     }
 }

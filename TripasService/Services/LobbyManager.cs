@@ -126,8 +126,9 @@ namespace TripasService.Services {
             }
 
             lobbies.TryRemove(code, out _);
-
             NotifyPlayersMatchStarted(host, guest);
+
+            
         }
 
         private void NotifyPlayersMatchStarted(Profile host, Profile guest) {

@@ -10,7 +10,7 @@ using DataBaseManager.DAO;
 using DataBaseManager.Utils;
 
 namespace TripasService.Services {
-    public class EmailInvitationManager : IEmailInvitationManager {
+    public partial class TripasGameService : IEmailInvitationManager {
 
         private static Dictionary<string, DateTime> lastSentInvitationTime = new Dictionary<string, DateTime>();
         public int SendInvitation(string username, string code) {
@@ -50,12 +50,12 @@ namespace TripasService.Services {
         }
 
         private bool CanSendInvitation(string username) {
-            bool result = true; 
+            bool result = true;
 
             if (lastSentInvitationTime.ContainsKey(username)) {
                 var lastSentTime = lastSentInvitationTime[username];
                 if ((DateTime.Now - lastSentTime).TotalSeconds < 20) {
-                    result = false; 
+                    result = false;
                 }
             }
             return result;

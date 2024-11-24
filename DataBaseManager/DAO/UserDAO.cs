@@ -227,5 +227,20 @@ namespace DataBaseManager.DAO {
             }
             return operationStatus;
         }
+
+        public static void UpdatePlayerScore(string userName, int additionalPoints) {
+            try {
+                using (tripasEntities db = new tripasEntities()) {
+                    var userProfile = db.Perfil.FirstOrDefault(p => p.nombre == userName);
+                    if (userProfile != null) {
+                        userProfile.puntaje = userProfile.puntaje + additionalPoints;
+                        db.SaveChanges();
+                        Console.WriteLine($"Puntos actualizados para {userName}: {userProfile.puntaje}");
+                    }
+                }
+            } catch (EntityException ex) {
+                Console.WriteLine($"Error al actualizar los puntos del jugador {userName}: {ex.Message}");
+            }
+        }
     }
 }

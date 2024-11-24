@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataBaseManager.DAO;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,6 @@ namespace TripasService.Services {
             return match.GetAllNodes();
         }
 
-        // NUEVO: Obtener las parejas de nodos de un juego
         public Dictionary<string, string> GetNodePairs(string matchCode) {
             if (!activeMatches.TryGetValue(matchCode, out var match)) return null;
             return match.GetNodePairs();
@@ -32,7 +32,6 @@ namespace TripasService.Services {
 
             var callback = OperationContext.Current.GetCallbackChannel<IMatchManagerCallback>();
 
-            // Verificar si el usuario pertenece a la partida
             if (match.Players.Values.Any(player => player.userName == username)) {
                 return matchPlayerCallback.TryAdd(username, callback);
             }
@@ -43,12 +42,12 @@ namespace TripasService.Services {
         public bool RegisterTrace(string matchCode, Trace trace) {
             if (!activeMatches.TryGetValue(matchCode, out var match)) return false;
 
-            if (!match.IsPlayerTurn(trace.Player)) {
-                Console.WriteLine($"El jugador {trace.Player} intentó dibujar fuera de su turno.");
-                return false; // El jugador no está en turno.
-            }
-
             match.AddTrace(trace);
+
+            int tracePoints = trace.Score;
+            match.AddPoints(trace.Player, tracePoints);
+
+            Console.WriteLine($"Jugador {trace.Player} recibió {tracePoints} puntos en la partida {matchCode}. Total actual: {match.GetPlayerScore(trace.Player)}");
 
             foreach (var player in match.Players.Values) {
                 if (player.userName != trace.Player && matchPlayerCallback.TryGetValue(player.userName, out var callback)) {
@@ -60,31 +59,21 @@ namespace TripasService.Services {
                     }
                 }
             }
-
-            // Cambiar el turno al siguiente jugador.
-            SwitchTurn(matchCode);
             return true;
         }
 
-        public bool IsPlayerTurn(string matchCode, string playerName) {
-            if (!activeMatches.TryGetValue(matchCode, out var match)) return false;
-            return match.IsPlayerTurn(playerName);
-        }
-        public async void SwitchTurn(string matchCode) {
-            if (!activeMatches.TryGetValue(matchCode, out var match)) return;
-
-            match.SwitchTurn();
+        public void EndMatch(string matchCode) {
+            if (!activeMatches.TryRemove(matchCode, out var match)) return;
 
             foreach (var player in match.Players.Values) {
-                if (matchPlayerCallback.TryGetValue(player.userName, out var callback)) {
-                    try {
-                        await Task.Run(() => callback.TurnChanged(match.CurrentPlayerTurn));
-                    } catch (Exception ex) {
-                        Console.WriteLine($"Error al notificar turno a {player.userName}: {ex.Message}");
-                    }
+                if (player != null) {
+                    int finalScore = match.GetPlayerScore(player.userName);
+                    UserDAO.UpdatePlayerScore(player.userName, finalScore);
+                    Console.WriteLine($"Jugador {player.userName} recibió {finalScore} puntos que se han guardado en la BD.");
                 }
             }
-        }
 
+            Console.WriteLine($"La partida {matchCode} ha terminado.");
+        }
     }
 }
