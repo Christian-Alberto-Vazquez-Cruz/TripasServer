@@ -71,7 +71,7 @@ namespace TripasService.Services {
         }
 
         public string GetPicPath(string username) {
-            string result = UserDAO.GetPicPathByName(username);
+            string result = UserDAO.GetPicPathByUsername(username);
             return result;
         }
     }
