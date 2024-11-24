@@ -33,7 +33,9 @@ namespace TripasService.Contracts {
         void TraceReceived(Trace trace);
 
         [OperationContract(IsOneWay = true)]
-        void TurnChanged(string currentPlayer);
-
+        void NotifyYourTurn();
+        [OperationContract]        
+        void NotifyNotYouTurn();   
+        
     }
 }

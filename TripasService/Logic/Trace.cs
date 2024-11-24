@@ -24,6 +24,16 @@ namespace TripasService.Logic {
         public List<TracePoint> TracePoints { get; set; } = new List<TracePoint>();
         [DataMember]
         public string Color { get; set; }
+        public int Score {
+            get {
+                // Número de puntos en la traza
+                int pointCount = TracePoints.Count;
+
+                // Fórmula lineal para puntaje entre 20 y 100
+                return Math.Min(100, Math.Max(20, 20 + (pointCount - 1) * 10));
+            }
+        }
+
 
         public Trace() {
 
