@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TripasService.Utils;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,11 +27,14 @@ namespace TripasService.Logic {
         public string Color { get; set; }
         public int Score {
             get {
-                // Número de puntos en la traza
-                int pointCount = TracePoints.Count;
+                int pointsCount = TracePoints.Count;
 
-                // Fórmula lineal para puntaje entre 20 y 100
-                return Math.Min(100, Math.Max(20, 20 + (pointCount - 1) * 10));
+                return pointsCount < Constants.MIN_POINTS_CRITERIA 
+                       ? Constants.MIN_TRACE_SCORE
+                       : TracePoints.Count > Constants.MAX_POINTS_CRITERIA 
+                       ? Constants.MAX_TRACE_SCORE
+                       : Constants.MIN_TRACE_SCORE + ((TracePoints.Count - Constants.MIN_POINTS_CRITERIA) * 
+                       Constants.MAX_MIN_TRACE_SCORE_DIFF) / Constants.MIN_MAX_POINTS_CRITERIA_DIFF;
             }
         }
 

@@ -21,6 +21,12 @@ namespace TripasService.Contracts {
 
         [OperationContract]
         Dictionary<string, string> GetNodePairs(string matchCode);
+
+        [OperationContract]
+        bool EndTurn(string matchCode, string userName);
+
+        [OperationContract]
+        string GetCurrentTurn(string matchCode);
     }
 
     [ServiceContract]
@@ -34,8 +40,8 @@ namespace TripasService.Contracts {
 
         [OperationContract(IsOneWay = true)]
         void NotifyYourTurn();
-        [OperationContract(IsOneWay = true)]
-        void NotifyNotYouTurn();   
-        
+        [OperationContract]
+        void NotifyNotYouTurn();
+
     }
 }

@@ -40,7 +40,11 @@ namespace TripasService.Logic {
         public string CurrentTurn { get; set; }
 
         public void SwitchTurn() {
-            CurrentTurn = CurrentTurn == "PlayerOne" ? "PlayerTwo" : "PlayerOne";
+            if (Players["PlayerOne"] == null || Players["PlayerTwo"] == null) return;
+
+            CurrentTurn = CurrentTurn == Players["PlayerOne"].userName
+                ? Players["PlayerTwo"].userName
+                : Players["PlayerOne"].userName;
         }
 
         // Lista predefinida de coordenadas válidas para ecenario cat
@@ -70,6 +74,8 @@ namespace TripasService.Logic {
         }
 
         public void StartGame() {
+            CurrentTurn = Players["PlayerOne"].userName;
+            //CurrentTurn = Players["PlayerOne"]?.userName ?? Players["PlayerTwo"]?.userName ?? string.Empty;
             GenerateNodes();
             PairNodes();
 
