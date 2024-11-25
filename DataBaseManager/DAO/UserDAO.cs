@@ -242,5 +242,9 @@ namespace DataBaseManager.DAO {
                 Console.WriteLine($"Error al actualizar los puntos del jugador {userName}: {ex.Message}");
             }
         }
+
+        public static void Cambio() {
+
+        }
     }
 }
