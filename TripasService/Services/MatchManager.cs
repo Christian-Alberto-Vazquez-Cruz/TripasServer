@@ -14,9 +14,6 @@ namespace TripasService.Services {
 
         private static ConcurrentDictionary<string, Match> activeMatches = new ConcurrentDictionary<string, Match>();
         private static ConcurrentDictionary<string, IMatchManagerCallback> matchPlayerCallback = new ConcurrentDictionary<string, IMatchManagerCallback>();
-        private readonly Dictionary<string, Match> matches = new Dictionary<string, Match>();
-
-
         public List<Node> GetNodes(string matchCode) {
             if (!activeMatches.TryGetValue(matchCode, out var match)) return null;
             return match.GetAllNodes();
@@ -39,9 +36,37 @@ namespace TripasService.Services {
             Console.WriteLine($"El jugador {username} no pertenece a la partida {matchCode}.");
             return false;
         }
+
+        public bool EndTurn(string matchCode, string userName) {
+            if (!activeMatches.TryGetValue(matchCode, out var match)) {
+                Console.WriteLine($"Partida {matchCode} no encontrada.");
+                return false;
+            }
+
+            // Cambiar turno
+            match.SwitchTurn();
+            Console.WriteLine($"Cambio de turno en la partida {matchCode}. Turno actual: {match.CurrentTurn}.");
+
+            foreach (var player in match.Players.Values) {
+                if (player != null && matchPlayerCallback.TryGetValue(player.userName, out var callback)) {
+                    try {
+                        if (player.userName == match.CurrentTurn) {
+                            callback.NotifyYourTurn();
+                        } else {
+                            callback.NotifyNotYouTurn();
+                        }
+                    } catch (Exception ex) {
+                        Console.WriteLine($"Error al notificar al jugador {player.userName}: {ex.Message}");
+                        matchPlayerCallback.TryRemove(player.userName, out _);
+                    }
+                }
+            }
+
+            return true;
+        }
+
         public bool RegisterTrace(string matchCode, Trace trace) {
             if (!activeMatches.TryGetValue(matchCode, out var match)) return false;
-
             match.AddTrace(trace);
 
             int tracePoints = trace.Score;
@@ -59,7 +84,18 @@ namespace TripasService.Services {
                     }
                 }
             }
+
             return true;
+        }
+
+        // Método en el servidor para obtener el turno actual de la partida
+        public string GetCurrentTurn(string matchCode) {
+            if (!activeMatches.TryGetValue(matchCode, out var match)) {
+                Console.WriteLine($"Partida {matchCode} no encontrada.");
+                return null;  // O devolver un mensaje de error o valor especial si no se encuentra la partida
+            }
+
+            return match.CurrentTurn;
         }
 
         public void EndMatch(string matchCode) {
