@@ -7,9 +7,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DataBaseManager.DAO {
-    public class FriendsDAO {
-        public int strikeUpFriendshipDAO(int idProfile1, int idProfile2) {
-            int operationStatus = Constants.FAILED;
+    public static class FriendsDAO {
+        public static int StrikeUpFriendshipDAO(int idProfile1, int idProfile2) {
+            int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     Amistad newFriendship = new Amistad() {
@@ -19,26 +19,27 @@ namespace DataBaseManager.DAO {
 
                     db.Amistad.Add(newFriendship);
                     db.SaveChanges();
-                    operationStatus = Constants.SUCESS;
+                    operationStatus = Constants.SUCCESSFUL_OPERATION;
                 }
             } catch (EntityException entityException) {
-                Console.WriteLine("Error trying to register the friendship {0}", entityException.Message);
+                Console.WriteLine($"Error trying to register the friendship {entityException.Message}");
             }
             return operationStatus;
         }
 
-        public int deleteFriendshipDAO(int idProfile1, int idProfile2) {
-            int operationStatus = Constants.FAILED;
+        //Not useful anymore?
+        public static int DeleteFriendshipDAO(int idProfile1, int idProfile2) {
+            int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    Amistad friendshipToDelete = new Amistad() {
-                        idJugadorUno = idProfile1,
-                        idJugadorDos = idProfile2,
-                    };
+                    var friendshipToDelete = db.Amistad.FirstOrDefault(a =>
+                    a.idJugadorUno == idProfile1 && a.idJugadorDos == idProfile2);
 
-                    db.Amistad.Remove(friendshipToDelete);
-                    db.SaveChanges();
-                    operationStatus = Constants.SUCESS;
+                    if (friendshipToDelete != null) {
+                        db.Amistad.Remove(friendshipToDelete);
+                        db.SaveChanges();
+                        operationStatus = Constants.SUCCESSFUL_OPERATION;
+                    }
                 }
             } catch (EntityException entityException) {
                 Console.WriteLine(entityException.Message);
@@ -46,8 +47,9 @@ namespace DataBaseManager.DAO {
             return operationStatus;
         }
 
-        public List<Perfil> getFriendsDAO (int idProfile) {
+        public static List<Perfil> GetFriendsDAO(int idProfile) {
             List<Perfil> friendList = new List<Perfil>();
+
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     var friends = (from friendship in db.Amistad
@@ -57,7 +59,7 @@ namespace DataBaseManager.DAO {
                     friendList = friends;
                 }
             } catch (EntityException entityException) {
-                Console.WriteLine("Error trying to retrieve the friend list {0}", entityException.Message);
+                Console.WriteLine($"Error trying to retrieve the friend list {entityException.Message}");
             }
             return friendList;
         }

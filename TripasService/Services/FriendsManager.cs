@@ -6,31 +6,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TripasService.Contracts;
+using TripasService.Logic;
 
 namespace TripasService.Services {
     public partial class TripasGameService : IFriendsManager {
-        public int addFriend(int idProfile1, int idProfile2) {
-            FriendsDAO friendsDAO = new FriendsDAO();   
-            int result = friendsDAO.strikeUpFriendshipDAO(idProfile1, idProfile2);
+        public int AddFriend(int idProfile1, int idProfile2) {
+            int result = FriendsDAO.StrikeUpFriendshipDAO(idProfile1, idProfile2);
+            return result;
+        }
+        public int DeleteFriend(int idProfile1, int idProfile2) {
+            int result = FriendsDAO.DeleteFriendshipDAO(idProfile1, idProfile2);
             return result;
         }
 
-        public int deleteFriend(int idProfile1, int idProfile2) {
-            FriendsDAO friendsDAO = new FriendsDAO();
-            int result = friendsDAO.deleteFriendshipDAO(idProfile1, idProfile2);
-            return result;
-        }
-
-        public List<Profile> getFriends(int idProfile) {
-            FriendsDAO friendsDAO = new FriendsDAO();
-            List<Perfil> friendProfiles= friendsDAO.getFriendsDAO(idProfile);
+        public List<Profile> GetFriends(int idProfile) {
+            List<Perfil> friendProfiles = FriendsDAO.GetFriendsDAO(idProfile);
             List<Profile> friendList = new List<Profile>();
 
             foreach (var friend in friendProfiles) {
                 Profile profile = new Profile() {
                     idProfile = friend.idPerfil,
-                    userName = friend.nombre
-                    //picturePath = friend.fotoRuta ¿Are we going to show the profile pic? 
+                    userName = friend.nombre,
+                    score = friend.puntaje,
+                    picturePath = friend.fotoRuta //¿Se mostrará la foto? Probablemente no
                 };
                 friendList.Add(profile);
             }
@@ -38,3 +36,4 @@ namespace TripasService.Services {
         }
     }
 }
+    

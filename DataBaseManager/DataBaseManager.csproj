@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{05A1748B-C629-483F-890A-DAB8AC3DA1B8}</ProjectGuid>
+    <ProjectGuid>{8EDFB12F-8FE4-4A72-9F92-A34C60536193}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>DataBaseManager</RootNamespace>
     <AssemblyName>DataBaseManager</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -53,59 +53,60 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Amistad.cs">
-      <DependentUpon>DataBase.tt</DependentUpon>
+      <DependentUpon>tripasDB.tt</DependentUpon>
     </Compile>
     <Compile Include="DAO\FriendsDAO.cs" />
+    <Compile Include="DAO\LeaderboardDAO.cs" />
     <Compile Include="DAO\UserDAO.cs" />
-    <Compile Include="DataBase.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DataBase.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DataBase.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DataBase.tt</DependentUpon>
-    </Compile>
-    <Compile Include="DataBase.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DataBase.edmx</DependentUpon>
-    </Compile>
     <Compile Include="Login.cs">
-      <DependentUpon>DataBase.tt</DependentUpon>
+      <DependentUpon>tripasDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Perfil.cs">
-      <DependentUpon>DataBase.tt</DependentUpon>
+      <DependentUpon>tripasDB.tt</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="sysdiagrams.cs">
-      <DependentUpon>DataBase.tt</DependentUpon>
+      <DependentUpon>tripasDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tripasDB.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>tripasDB.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tripasDB.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>tripasDB.tt</DependentUpon>
+    </Compile>
+    <Compile Include="tripasDB.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>tripasDB.edmx</DependentUpon>
     </Compile>
     <Compile Include="Utils\Constants.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <EntityDeploy Include="DataBase.edmx">
+    <EntityDeploy Include="tripasDB.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>DataBase.Designer.cs</LastGenOutput>
+      <LastGenOutput>tripasDB.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <None Include="DataBase.edmx.diagram">
-      <DependentUpon>DataBase.edmx</DependentUpon>
-    </None>
     <None Include="packages.config" />
+    <None Include="tripasDB.edmx.diagram">
+      <DependentUpon>tripasDB.edmx</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DataBase.Context.tt">
+    <Content Include="tripasDB.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DataBase.Context.cs</LastGenOutput>
-      <DependentUpon>DataBase.edmx</DependentUpon>
+      <LastGenOutput>tripasDB.Context.cs</LastGenOutput>
+      <DependentUpon>tripasDB.edmx</DependentUpon>
     </Content>
-    <Content Include="DataBase.tt">
+    <Content Include="tripasDB.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>DataBase.edmx</DependentUpon>
-      <LastGenOutput>DataBase.cs</LastGenOutput>
+      <DependentUpon>tripasDB.edmx</DependentUpon>
+      <LastGenOutput>tripasDB.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>
