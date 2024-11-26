@@ -27,20 +27,26 @@ namespace TripasService.Contracts {
 
         [OperationContract]
         string GetCurrentTurn(string matchCode);
+
+        [OperationContract]
+        bool EndMatch(string matchCode);
+        [OperationContract]
+        GameResult GetGameResult(string matchCode, string userName);
+
     }
 
     [ServiceContract]
     public interface IMatchManagerCallback {
 
         [OperationContract(IsOneWay = true)]
-        void MatchEnded(string matchCode);
+        void NotifyMatchEnded();
 
         [OperationContract(IsOneWay = true)]
         void TraceReceived(Trace trace);
 
         [OperationContract(IsOneWay = true)]
         void NotifyYourTurn();
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void NotifyNotYouTurn();
 
     }

@@ -59,6 +59,7 @@
     <Compile Include="Contracts\IStatusManager.cs" />
     <Compile Include="Contracts\IUserManager.cs" />
     <Compile Include="Contracts\IEmailVerificationManager.cs" />
+    <Compile Include="Logic\GameResult.cs" />
     <Compile Include="Logic\Lobby.cs" />
     <Compile Include="Logic\Match.cs" />
     <Compile Include="Logic\Node.cs" />

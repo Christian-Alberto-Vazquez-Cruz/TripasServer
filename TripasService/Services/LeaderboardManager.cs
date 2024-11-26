@@ -16,10 +16,10 @@ namespace TripasService.Services {
 
             foreach (var profileData in highestScoreProfiles) {
                 Profile profile = new Profile() {
-                    idProfile = profileData.idPerfil,
-                    userName = profileData.nombre,
-                    score = profileData.puntaje,
-                    picturePath = profileData.fotoRuta //¿Se mostrará la foto?
+                    IdProfile = profileData.idPerfil,
+                    Username = profileData.nombre,
+                    Score = profileData.puntaje,
+                    PicturePath = profileData.fotoRuta //¿Se mostrará la foto?
                 };
                 highestScoresList.Add(profile);
             }
