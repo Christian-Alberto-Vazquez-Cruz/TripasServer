@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DataBaseManager.DAO {
-    public class LeaderboardDAO {
+    public static class LeaderboardDAO {
         public static List<Perfil> GetHighestScoresDAO() {
             List<Perfil> bestPlayersList = new List<Perfil>();
             try {
