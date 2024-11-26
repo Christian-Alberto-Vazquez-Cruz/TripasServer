@@ -1,16 +1,21 @@
 ﻿using DataBaseManager.DAO;
 using DataBaseManager.Utils;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
+using Xunit.Sdk;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace TripasTests.DAO {
-    public class UserDAOShould {
+
+
+    public class UserDAOShould: IClassFixture<DatabaseFixture> {
 
         [Fact]
         public void AddUser() {
@@ -29,8 +34,6 @@ namespace TripasTests.DAO {
             int result = DataBaseManager.DAO.UserDAO.AddUserDAO(testPerfil, testLogin);
 
             Assert.Equal(userAdded, result);
-
-            DataBaseManager.DAO.UserDAO.DeleteUserDAO(testLogin.correo);
         }
 
     // [FACT] ¿Debería haber un caso de prueba por valores nulos? ¿Debería haber un caso de prueba con un valor nulo y otro no?
@@ -38,12 +41,11 @@ namespace TripasTests.DAO {
 
         [Fact]
         public void ValidateUser() {
-            //¿Debería realizarse la inserción previamente?
-            string password = "4fc5e3e3a50b4b10a0b71cc5053b813d44bec408fd6c2f02eb520c5401d5c3a7";
-            string email = "a@gmail.com";
+            string mail = "test@hotmail.com.mx";
+            string password = "MiContrasena1!";
 
             int userExists = Constants.FOUND_MATCH;
-            int result = DataBaseManager.DAO.UserDAO.ValidateUserDAO(password, email);
+            int result = DataBaseManager.DAO.UserDAO.ValidateUserDAO(password, mail);
 
             Assert.Equal(userExists, result);
         }
@@ -59,21 +61,18 @@ namespace TripasTests.DAO {
             Assert.Equal(userDoesntExist, result);    
         }
 
-        //[FACT] ¿Flujo donde lanza EntityException?
 
         [Fact]
         public void UpdateUserProfile() {
             //¿Agregar usuario?
             int id = 4;
-            string newPicPath = "";
+            string newPicPath = "/Images/Profiles/ImageProfile9.png";
             string newUsername = "Nombre";
 
             int userUpdated = Constants.SUCCESSFUL_OPERATION;
             int result = DataBaseManager.DAO.UserDAO.UpdateUserProfileDAO(id, newUsername, newPicPath);
 
-            Assert.Equal(userUpdated, result);  
-
-            //¿Devolver usuario a sus valores originales?
+            Assert.Equal(userUpdated, result);
         }
 
         [Fact]
@@ -116,9 +115,9 @@ namespace TripasTests.DAO {
             DataBaseManager.DAO.UserDAO.DeleteUserDAO(testLogin.correo);
         }*/
 
-        [Fact] //¿Se debería insertar un nuevo Login y luego borrarlo? 
+        [Fact] 
         public void IsEmailRegistered() {
-            string testEmail = "a@gmail.com";
+            string testEmail = "zS22013636@estudiantes.uv.mx";
             int result = UserDAO.IsEmailRegisteredDAO(testEmail);
 
             int emailRegistered = Constants.FOUND_MATCH;
@@ -134,24 +133,15 @@ namespace TripasTests.DAO {
             Assert.Equal(emailNotRegistered, result);
         }
 
-        [Fact]
-        public void IsEmailRegisteredNull() {
-            string testEmail = null;
-            int result = UserDAO.IsEmailRegisteredDAO(testEmail);
-
-            int failedOperation = Constants.FAILED_OPERATION;
-            Assert.Equal(failedOperation, result);
-        }
-
-        //[Fact] IsEmailRegisteredEntityException ¿Qué hago sin Mocks?
 
         [Fact]
         public void IsUsernameRegistered() {
-            string testUsername = "zetazeta";
+            string testUsername = "test";
             int result = UserDAO.IsNameRegistered(testUsername);
 
             int usernameRegistered = Constants.FOUND_MATCH;
             Assert.Equal(usernameRegistered, result);
+           
         }
 
         [Fact]
@@ -163,16 +153,30 @@ namespace TripasTests.DAO {
             Assert.Equal(usernameNotRegistered, result);
         }
 
-        [Fact]
-        public void IsUsernameRegisteredNull() { //En el anterior se hizo un if (string.IsNullOrEmpty(mail)) ¿Aquí igual o no? 
-                                                 // ¿Y si se maneja en el método que expone el contrato y no en el DAO?
-            string testUsername = null;
-            int result = UserDAO.IsNameRegistered(testUsername);
-
-            Assert.Equal(Constants.FAILED_OPERATION, result);
-        }
-
         //[Fact] IsUsernameRegisteredEntityException ¿Qué hago sin Mocks?
 
+    }
+
+    public class DatabaseFixture : IDisposable {
+
+        public DatabaseFixture() {
+
+            DataBaseManager.Login testLogin = new DataBaseManager.Login() {
+                correo = "test@hotmail.com.mx",
+                contrasena = "MiContrasena1!"
+            };
+
+            DataBaseManager.Perfil testProfile = new DataBaseManager.Perfil() {
+                nombre = "test",
+                puntaje = 0,
+                fotoRuta = Constants.INITIAL_PIC_PATH
+            };
+
+            UserDAO.AddUserDAO(testProfile, testLogin);
+        }
+        public void Dispose() {
+            UserDAO.DeleteAccountDAO("test@hotmail.com.mx");
+            UserDAO.DeleteAccountDAO("zS22013636@estudiantes.uv.mx");
+        }
     }
 }

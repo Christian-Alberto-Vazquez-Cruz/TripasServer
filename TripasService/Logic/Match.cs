@@ -42,9 +42,9 @@ namespace TripasService.Logic {
         public void SwitchTurn() {
             if (Players["PlayerOne"] == null || Players["PlayerTwo"] == null) return;
 
-            CurrentTurn = CurrentTurn == Players["PlayerOne"].userName
-                ? Players["PlayerTwo"].userName
-                : Players["PlayerOne"].userName;
+            CurrentTurn = CurrentTurn == Players["PlayerOne"].Username
+                ? Players["PlayerTwo"].Username
+                : Players["PlayerOne"].Username;
         }
 
         // Lista predefinida de coordenadas válidas para ecenario cat
@@ -74,14 +74,14 @@ namespace TripasService.Logic {
         }
 
         public void StartGame() {
-            CurrentTurn = Players["PlayerOne"].userName;
+            CurrentTurn = Players["PlayerOne"].Username;
             //CurrentTurn = Players["PlayerOne"]?.userName ?? Players["PlayerTwo"]?.userName ?? string.Empty;
             GenerateNodes();
             PairNodes();
 
             foreach (var player in Players.Values) {
                 if (player != null) {
-                    CurrentScores[player.userName] = 0;
+                    CurrentScores[player.Username] = 0;
                 }
             }
 

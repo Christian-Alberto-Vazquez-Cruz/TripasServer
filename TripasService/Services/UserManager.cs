@@ -24,7 +24,7 @@ namespace TripasService.Services {
             };
 
             DataBaseManager.Perfil newPerfil = new DataBaseManager.Perfil() {
-                nombre = profile.userName,
+                nombre = profile.Username,
             };
 
             int insertionResult = UserDAO.AddUserDAO(newPerfil, newLogin);
@@ -44,9 +44,9 @@ namespace TripasService.Services {
         public Profile GetProfileByMail(string email) {
             Perfil profileDB = UserDAO.GetProfileByMailDAO(email);
             Profile profile = new Profile() {
-                idProfile = profileDB.idPerfil,
-                userName = profileDB.nombre,
-                picturePath = profileDB.fotoRuta,
+                IdProfile = profileDB.idPerfil,
+                Username = profileDB.nombre,
+                PicturePath = profileDB.fotoRuta,
             };
             return profile;
         }

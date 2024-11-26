@@ -206,7 +206,7 @@ namespace DataBaseManager.DAO {
             return operationStatus;
         }
 
-        public static int DeleteUserDAO(string email) {
+        public static int DeleteAccountDAO(string email) {
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -243,8 +243,42 @@ namespace DataBaseManager.DAO {
             }
         }
 
-        public static void Cambio() {
+        public static int AddUserWithSpecificIdDAO(Perfil profile, Login user) {
+            int operationStatus = Constants.FAILED_OPERATION;
+            try {
+                using (tripasEntities db = new tripasEntities()) {
+                    if (db.Login.Any(login   => login.idUsuario == user.idUsuario) ||
+                        db.Perfil.Any(userProfile => userProfile.idPerfil == userProfile.idPerfil)) {
+                        Console.WriteLine($"El ID de usuario {user.idUsuario} ya existe.");
+                        return Constants.FAILED_OPERATION;
+                    }
 
+                    db.Configuration.AutoDetectChangesEnabled = false;
+
+                    Login newUserLogin = new Login {
+                        idUsuario = user.idUsuario,
+                        correo = user.correo,
+                        contrasena = user.contrasena
+                    };
+                    db.Login.Add(newUserLogin);
+                    db.SaveChanges();
+
+                    Perfil newUserProfile = new Perfil {
+                        idPerfil = user.idUsuario, 
+                        nombre = profile.nombre,
+                        puntaje = Constants.INITIAL_SCORE,
+                        fotoRuta = Constants.INITIAL_PIC_PATH
+                    };
+                    db.Perfil.Add(newUserProfile);
+                    db.SaveChanges();
+
+                    db.Configuration.AutoDetectChangesEnabled = true;
+                    operationStatus = Constants.SUCCESSFUL_OPERATION;
+                }
+            } catch (EntityException entityException) {
+                Console.WriteLine($"Error trying to register the user with {user.correo} mail and specific ID {user.idUsuario}. {entityException.Message}");
+            }
+            return operationStatus;
         }
     }
 }
