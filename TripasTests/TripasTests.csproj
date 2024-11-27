@@ -96,7 +96,13 @@
     <None Include="Connected Services\ProxyTripas\TripasTests.ProxyTripas.GameEnumsPlayerStatus.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Connected Services\ProxyTripas\TripasTests.ProxyTripas.GameResult.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
     <None Include="Connected Services\ProxyTripas\TripasTests.ProxyTripas.Lobby.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Connected Services\ProxyTripas\TripasTests.ProxyTripas.Node.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Connected Services\ProxyTripas\TripasTests.ProxyTripas.Profile.datasource">

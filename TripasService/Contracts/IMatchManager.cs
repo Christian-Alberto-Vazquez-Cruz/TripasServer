@@ -30,8 +30,6 @@ namespace TripasService.Contracts {
 
         [OperationContract]
         bool EndMatch(string matchCode);
-        [OperationContract]
-        GameResult GetGameResult(string matchCode, string userName);
 
     }
 
@@ -39,15 +37,22 @@ namespace TripasService.Contracts {
     public interface IMatchManagerCallback {
 
         [OperationContract(IsOneWay = true)]
-        void NotifyMatchEnded();
-
-        [OperationContract(IsOneWay = true)]
         void TraceReceived(Trace trace);
 
         [OperationContract(IsOneWay = true)]
         void NotifyYourTurn();
+
         [OperationContract(IsOneWay = true)]
         void NotifyNotYouTurn();
+
+        [OperationContract(IsOneWay = true)]
+        void NotifyYouLost();
+
+        [OperationContract(IsOneWay = true)]
+        void NotifyYouWon();
+
+        [OperationContract(IsOneWay = true)]
+        void NotifyDraw();
 
     }
 }

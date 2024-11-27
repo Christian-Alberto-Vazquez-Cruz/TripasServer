@@ -12,23 +12,23 @@ namespace TripasService.Services {
         private static ConcurrentDictionary<string, Lobby> lobbies = new ConcurrentDictionary<string, Lobby>();
         private static ConcurrentDictionary<string, ILobbyManagerCallback> lobbyPlayerCallback = new ConcurrentDictionary<string, ILobbyManagerCallback>();
 
-        private bool TryNotifyCallback(string userName, Action<ILobbyManagerCallback> callbackAction) {
-            if (lobbyPlayerCallback.TryGetValue(userName, out var callback)) {
+        private bool TryNotifyCallback(string username, Action<ILobbyManagerCallback> callbackAction) {
+            if (lobbyPlayerCallback.TryGetValue(username, out var callback)) {
                 try {
                     if (((ICommunicationObject)callback).State == CommunicationState.Opened) {
                         callbackAction(callback);
                         return true;
                     }
                 } catch (CommunicationException ex) {
-                    Console.WriteLine($"Communication error with {userName}: {ex.Message}");
+                    Console.WriteLine($"Communication error with {username}: {ex.Message}");
                 } catch (TimeoutException ex) {
-                    Console.WriteLine($"Timeout while notifying {userName}: {ex.Message}");
+                    Console.WriteLine($"Timeout while notifying {username}: {ex.Message}");
                 } catch (ObjectDisposedException ex) {
-                    Console.WriteLine($"Channel was disposed for {userName}: {ex.Message}");
+                    Console.WriteLine($"Channel was disposed for {username}: {ex.Message}");
                 }
 
-                lobbyPlayerCallback.TryRemove(userName, out _);
-                Console.WriteLine($"Callback removed for {userName} due to communication error");
+                lobbyPlayerCallback.TryRemove(username, out _);
+                Console.WriteLine($"Callback removed for {username} due to communication error");
             }
             return false;
         }
