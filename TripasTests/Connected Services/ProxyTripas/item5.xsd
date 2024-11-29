@@ -1,22 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://schemas.microsoft.com/2003/10/Serialization/Arrays" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost:8082/?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/TripasService.Contracts" />
-  <xs:complexType name="ArrayOfKeyValueOfstringProfiledJUIlwiz">
+  <xs:import schemaLocation="http://localhost:8082/?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/TripasService.Logic" />
+  <xs:complexType name="ArrayOfKeyValueOfstringProfileNMlWG8Ac">
     <xs:annotation>
       <xs:appinfo>
         <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
       </xs:appinfo>
     </xs:annotation>
     <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringProfiledJUIlwiz">
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringProfileNMlWG8Ac">
         <xs:complexType>
           <xs:sequence>
             <xs:element name="Key" nillable="true" type="xs:string" />
-            <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/TripasService.Contracts" name="Value" nillable="true" type="q1:Profile" />
+            <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/TripasService.Logic" name="Value" nillable="true" type="q1:Profile" />
           </xs:sequence>
         </xs:complexType>
       </xs:element>
     </xs:sequence>
   </xs:complexType>
-  <xs:element name="ArrayOfKeyValueOfstringProfiledJUIlwiz" nillable="true" type="tns:ArrayOfKeyValueOfstringProfiledJUIlwiz" />
+  <xs:element name="ArrayOfKeyValueOfstringProfileNMlWG8Ac" nillable="true" type="tns:ArrayOfKeyValueOfstringProfileNMlWG8Ac" />
+  <xs:complexType name="ArrayOfKeyValueOfstringstring">
+    <xs:annotation>
+      <xs:appinfo>
+        <IsDictionary xmlns="http://schemas.microsoft.com/2003/10/Serialization/">true</IsDictionary>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValueOfstringstring">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Key" nillable="true" type="xs:string" />
+            <xs:element name="Value" nillable="true" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfKeyValueOfstringstring" nillable="true" type="tns:ArrayOfKeyValueOfstringstring" />
 </xs:schema>

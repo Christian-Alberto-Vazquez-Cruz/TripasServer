@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/TripasService.Contracts" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/TripasService.Contracts" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost:8082/?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/TripasService.Utils" />
   <xs:complexType name="LoginUser">
     <xs:sequence>
       <xs:element minOccurs="0" name="idLoginUser" type="xs:int" />
@@ -9,28 +8,12 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="LoginUser" nillable="true" type="tns:LoginUser" />
-  <xs:complexType name="Profile">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="idProfile" type="xs:int" />
-      <xs:element minOccurs="0" name="picturePath" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="score" type="xs:int" />
-      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/TripasService.Utils" minOccurs="0" name="status" type="q1:GameEnums.PlayerStatus" />
-      <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Profile" nillable="true" type="tns:Profile" />
   <xs:complexType name="ProfileNotFoundFault">
     <xs:sequence>
       <xs:element minOccurs="0" name="errorMessage" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="ProfileNotFoundFault" nillable="true" type="tns:ProfileNotFoundFault" />
-  <xs:complexType name="ArrayOfProfile">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="Profile" nillable="true" type="tns:Profile" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfProfile" nillable="true" type="tns:ArrayOfProfile" />
   <xs:complexType name="Message">
     <xs:sequence>
       <xs:element minOccurs="0" name="chatMessage" nillable="true" type="xs:string" />

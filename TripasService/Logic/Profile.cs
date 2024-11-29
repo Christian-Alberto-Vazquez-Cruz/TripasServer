@@ -19,6 +19,6 @@ namespace TripasService.Logic {
         [DataMember]
         public string PicturePath { get; set; }
         [DataMember]
-        public GameEnums.PlayerStatus status { get; set; }
+        public GameEnums.PlayerStatus Status { get; set; }
     }
 }

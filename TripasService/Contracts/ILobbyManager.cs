@@ -5,7 +5,6 @@ using System.Dynamic;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using TripasService.Logic;
-
 namespace TripasService.Contracts {
 
 

@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TripasTests.ProxyTripas;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
@@ -88,32 +89,30 @@ namespace TripasTests.DAO {
             Assert.Equal(userNotFound, result);
         }
 
-        /*[Fact]
+        [Fact]
         public void GetProfileByMail() {
 
-            string testEmail = "test@gmail.com";
-            DataBaseManager.Login testLogin = new DataBaseManager.Login {
-                idUsuario = 2000,
-                correo = testEmail,
-                contrasena = "MiContrasena1!"
+            DataBaseManager.Perfil obtainedPerfil = UserDAO.GetProfileByMailDAO("a@gmail.com");
+
+            Profile obtainedProfile = new Profile() {
+                IdProfile = obtainedPerfil.idPerfil,
+                Username = obtainedPerfil.nombre,
+                Score = obtainedPerfil.puntaje,
+                PicturePath = obtainedPerfil.fotoRuta,
+                status = GameEnumsPlayerStatus.Offline
             };
 
-            DataBaseManager.Perfil testPerfil = new DataBaseManager.Perfil {
-                idPerfil = 2000,
-                nombre = "TestUser",
-                puntaje = 0,
-                fotoRuta = Constants.INITIAL_PIC_PATH
+
+            Profile expectedProfile = new Profile() {
+                IdProfile = 1,
+                Username = "Alambrito",
+                Score = 0,
+                PicturePath = "/Images/Profiles/ImageProfile9.png",
+                status = GameEnumsPlayerStatus.Offline
             };
 
-            DataBaseManager.DAO.UserDAO.AddUserDAO(testPerfil, testLogin);
-
-            DataBaseManager.Perfil expectedProfile = testPerfil;
-            DataBaseManager.Perfil result = DataBaseManager.DAO.UserDAO.GetProfileByMailDAO(testEmail);
-
-            Assert.Equal(expectedProfile, result);
-
-            DataBaseManager.DAO.UserDAO.DeleteUserDAO(testLogin.correo);
-        }*/
+            Assert.Equal(obtainedProfile.Username, expectedProfile.Username);
+        }
 
         [Fact] 
         public void IsEmailRegistered() {
@@ -173,10 +172,25 @@ namespace TripasTests.DAO {
             };
 
             UserDAO.AddUserDAO(testProfile, testLogin);
+
+            DataBaseManager.Login testLogin2 = new DataBaseManager.Login() {
+                correo = "Pablito@hotmail.com.mx",
+                contrasena = "MiContrasena1!"
+            };
+
+            DataBaseManager.Perfil testProfile2 = new DataBaseManager.Perfil() {
+                nombre = "Pablo",
+                puntaje = 0,
+                fotoRuta = Constants.INITIAL_PIC_PATH
+            };
+
+            UserDAO.AddUserDAO(testProfile2, testLogin2);
+
         }
         public void Dispose() {
             UserDAO.DeleteAccountDAO("test@hotmail.com.mx");
             UserDAO.DeleteAccountDAO("zS22013636@estudiantes.uv.mx");
+            UserDAO.DeleteAccountDAO("Pablito@hotmail.com.mx");
         }
     }
 }

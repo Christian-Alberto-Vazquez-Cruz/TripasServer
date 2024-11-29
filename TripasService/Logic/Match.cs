@@ -23,9 +23,6 @@ namespace TripasService.Logic {
         };
 
         [DataMember]
-        public string Status { get; set; }
-
-        [DataMember]
         public List<Trace> Traces { get; set; } = new List<Trace>();
 
         [DataMember]
@@ -75,7 +72,6 @@ namespace TripasService.Logic {
 
         public void StartGame() {
             CurrentTurn = Players["PlayerOne"].Username;
-            //CurrentTurn = Players["PlayerOne"]?.userName ?? Players["PlayerTwo"]?.userName ?? string.Empty;
             GenerateNodes();
             PairNodes();
 
@@ -85,7 +81,6 @@ namespace TripasService.Logic {
                 }
             }
 
-            Status = "InProgress";
             Console.WriteLine($"La partida {Code} ha comenzado con {NodeCount} nodos.");
         }
 
@@ -145,7 +140,6 @@ namespace TripasService.Logic {
             GameName = gameName;
             NodeCount = nodeCount;
             Players = players;
-            Status = "InProgress";
         }
     }
 }

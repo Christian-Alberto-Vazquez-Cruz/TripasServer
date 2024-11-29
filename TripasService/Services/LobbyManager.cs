@@ -12,23 +12,23 @@ namespace TripasService.Services {
         private static ConcurrentDictionary<string, Lobby> lobbies = new ConcurrentDictionary<string, Lobby>();
         private static ConcurrentDictionary<string, ILobbyManagerCallback> lobbyPlayerCallback = new ConcurrentDictionary<string, ILobbyManagerCallback>();
 
-        private bool TryNotifyCallback(string userName, Action<ILobbyManagerCallback> callbackAction) {
-            if (lobbyPlayerCallback.TryGetValue(userName, out var callback)) {
+        private bool TryNotifyCallback(string username, Action<ILobbyManagerCallback> callbackAction) {
+            if (lobbyPlayerCallback.TryGetValue(username, out var callback)) {
                 try {
                     if (((ICommunicationObject)callback).State == CommunicationState.Opened) {
                         callbackAction(callback);
                         return true;
                     }
                 } catch (CommunicationException ex) {
-                    Console.WriteLine($"Communication error with {userName}: {ex.Message}");
+                    Console.WriteLine($"Communication error with {username}: {ex.Message}");
                 } catch (TimeoutException ex) {
-                    Console.WriteLine($"Timeout while notifying {userName}: {ex.Message}");
+                    Console.WriteLine($"Timeout while notifying {username}: {ex.Message}");
                 } catch (ObjectDisposedException ex) {
-                    Console.WriteLine($"Channel was disposed for {userName}: {ex.Message}");
+                    Console.WriteLine($"Channel was disposed for {username}: {ex.Message}");
                 }
 
-                lobbyPlayerCallback.TryRemove(userName, out _);
-                Console.WriteLine($"Callback removed for {userName} due to communication error");
+                lobbyPlayerCallback.TryRemove(username, out _);
+                Console.WriteLine($"Callback removed for {username} due to communication error");
             }
             return false;
         }
@@ -87,7 +87,7 @@ namespace TripasService.Services {
                     }
                 }
             }
-            return false;   
+            return false;
         }
         public void StartMatch(string code) {
             if (!lobbies.TryGetValue(code, out var lobby)) {
@@ -95,17 +95,18 @@ namespace TripasService.Services {
                 return;
             }
 
-            if (!lobby.Players.TryGetValue("PlayerOne", out var host)) {
+            //Aquí no debería ser un Profile tampoco
+            if (!lobby.Players.TryGetValue("PlayerOne", out Profile host)) {
                 Console.WriteLine($"El lobby {code} no tiene un anfitrión válido.");
                 return;
             }
 
-            if (!lobby.Players.TryGetValue("PlayerTwo", out var guest)) {
+            //Aquí no debería ser un Profile tampoco
+            if (!lobby.Players.TryGetValue("PlayerTwo", out Profile guest)) {
                 Console.WriteLine($"El lobby {code} no tiene suficientes jugadores para iniciar la partida.");
                 return;
             }
 
-            // Crear la partida usando las mismas claves del lobby
             var match = new Match(
                 code,
                 lobby.GameName,
@@ -128,7 +129,7 @@ namespace TripasService.Services {
             lobbies.TryRemove(code, out _);
             NotifyPlayersMatchStarted(host, guest);
 
-            
+
         }
 
         private void NotifyPlayersMatchStarted(Profile host, Profile guest) {

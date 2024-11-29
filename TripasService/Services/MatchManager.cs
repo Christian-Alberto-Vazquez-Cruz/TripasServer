@@ -53,7 +53,7 @@ namespace TripasService.Services {
                         if (player.Username == match.CurrentTurn) {
                             callback.NotifyYourTurn();
                         } else {
-                            callback.NotifyNotYouTurn();
+                            callback.NotifyNotYourTurn();
                         }
                     } catch (Exception ex) {
                         Console.WriteLine($"Error al notificar al jugador {player.Username}: {ex.Message}");
@@ -98,68 +98,136 @@ namespace TripasService.Services {
             return match.CurrentTurn;
         }
 
+
         public bool EndMatch(string matchCode) {
-            if (!activeMatches.TryRemove(matchCode, out var match)) {
-                Console.WriteLine($"La partida {matchCode} no existe o ya fue eliminada.");
-                return false;
-            }
+            var match = GetAndRemoveMatch(matchCode);
+            if (match == null) return false;
 
-            foreach (var player in match.Players.Values) {
-                if (player != null) {
-                    int finalScore = match.GetPlayerScore(player.Username);
-                    UserDAO.UpdatePlayerScore(player.Username, finalScore);
-                    Console.WriteLine($"Jugador {player.Username} recibió {finalScore} puntos. Guardados en la BD.");
-                }
-            }
+            SavePlayerScores(match);
+            NotifyMatchResults(match, matchCode);
 
-            foreach (var player in match.Players.Values) {
-                if (player != null && matchPlayerCallback.TryGetValue(player.Username, out var callback)) {
-                    NotifyPlayerMatchEnded(player.Username, callback);
-                }
-            }
-            Console.WriteLine($"La partida {matchCode} ha terminado exitosamente.");
+            Console.WriteLine($"Match {matchCode} has ended successfully.");
             return true;
         }
 
-        private void NotifyPlayerMatchEnded(string playerName, IMatchManagerCallback callback) {
-            try {
-                callback.NotifyMatchEnded();
-                Console.WriteLine($"Notificado al jugador {playerName} del fin de la partida.");
-            } catch (CommunicationException communicationException) {
-                Console.WriteLine($"Error al notificar a {playerName}: {communicationException.Message}");
-                matchPlayerCallback.TryRemove(playerName, out _);
-            } catch (TimeoutException timeoutException) {
-                Console.WriteLine($"Error de timeOut notificando a {playerName}: {timeoutException.Message}");
-                matchPlayerCallback.TryRemove(playerName, out _);
-            } catch (Exception ex) {
-                Console.WriteLine($"Error inesperado notificando a {playerName}: {ex.Message}");
+        private Match GetAndRemoveMatch(string matchCode) {
+            if (!activeMatches.TryRemove(matchCode, out var match)) {
+                Console.WriteLine($"The match {matchCode} does not exist or has already been removed.");
+                return null;
+            }
+            return match;
+        }
+        private void SavePlayerScores(Match match) {
+            foreach (var player in match.Players.Values.Where(player => player != null)) {
+                int finalScore = match.GetPlayerScore(player.Username);
+                UserDAO.UpdatePlayerScore(player.Username, finalScore);
+                Console.WriteLine($"Player {player.Username} scored {finalScore} points. Saved to the database.");
             }
         }
 
-        public GameResult GetGameResult(string matchCode, string username) {
+        private void NotifyMatchResults(Match match, string matchCode) {
+            var scores = match.CurrentScores;
+            var highestScore = scores.Values.Max();
+            var winners = scores.Where(x => x.Value == highestScore).Select(x => x.Key).ToList();
+
+            foreach (var player in match.Players.Values.Where(p => p != null)) {
+                string username = player.Username;
+                NotifyPlayerResult(username, winners, matchCode);
+            }
+        }
+
+        private void NotifyPlayerResult(string username, List<string> winners, string matchCode) {
+            if (winners.Contains(username)) {
+                if (winners.Count > 1) {
+                    TryNotifyMatchCallback(username, callback => callback.NotifyDraw());
+                    Console.WriteLine($"Player {username} notified of a draw in match {matchCode}.");
+                } else {
+                    TryNotifyMatchCallback(username, callback => callback.NotifyYouWon());
+                    Console.WriteLine($"Player {username} won match {matchCode}.");
+                }
+            } else {
+                TryNotifyMatchCallback(username, callback => callback.NotifyYouLost());
+                Console.WriteLine($"Player {username} lost match {matchCode}.");
+            }
+        }
+
+        private bool TryNotifyMatchCallback(string userName, Action<IMatchManagerCallback> callbackAction) {
+            if (matchPlayerCallback.TryGetValue(userName, out var callback)) {
+                try {
+                    if (((ICommunicationObject)callback).State == CommunicationState.Opened) {
+                        callbackAction(callback);
+                        return true;
+                    }
+                } catch (CommunicationException ex) {
+                    Console.WriteLine($"Communication error with {userName}: {ex.Message}");
+                } catch (TimeoutException ex) {
+                    Console.WriteLine($"Timeout while notifying {userName}: {ex.Message}");
+                } catch (ObjectDisposedException ex) {
+                    Console.WriteLine($"Channel was disposed for {userName}: {ex.Message}");
+                } catch (Exception ex) {
+                    Console.WriteLine($"Unexpected error notifying {userName}: {ex.Message}");
+                }
+                matchPlayerCallback.TryRemove(userName, out _);
+                Console.WriteLine($"Callback removed for {userName} due to communication error.");
+            }
+            return false;
+        }
+
+        public bool LeaveMatch(string matchCode, string username) {
             if (!activeMatches.TryGetValue(matchCode, out var match)) {
-                Console.WriteLine($"Partida con código {matchCode} no encontrada.");
-                return null; // O lanzar una excepción
+                Console.WriteLine($"La partida {matchCode} no existe.");
+                return false;
             }
 
-            var playersScores = match.CurrentScores;
-
-            if (!playersScores.ContainsKey(username)) {
-                Console.WriteLine($"El jugador {username} no participa en la partida {matchCode}.");
-                return null; // O lanzar una excepción
+            // Verificar si el jugador pertenece a la partida
+            if (!match.Players.Values.Any(player => player != null && player.Username == username)) {
+                Console.WriteLine($"El jugador {username} no pertenece a la partida {matchCode}.");
+                return false;
             }
 
-            var highestScore = playersScores.Values.Max();
-            var winners = playersScores
-                .Where(x => x.Value == highestScore)
-                .Select(x => x.Key)
-                .ToList();
+            // Identificar al jugador contrario
+            var leavingPlayerKey = match.Players.FirstOrDefault(p => p.Value?.Username == username).Key;
+            var opponent = match.Players.Values.FirstOrDefault(p => p != null && p.Username != username);
 
-            return new GameResult {
-                IsWinner = winners.Contains(username),
-                IsDraw = winners.Count > 1,
-                Score = playersScores[username]
-            };
+            // Eliminar al jugador que abandona
+            if (leavingPlayerKey != null) {
+                match.Players[leavingPlayerKey] = null;
+                Console.WriteLine($"El jugador {username} ha abandonado la partida {matchCode}.");
+            }
+
+            // Notificar al jugador contrario para que sea expulsado del lobby
+            if (opponent != null && matchPlayerCallback.TryGetValue(opponent.Username, out var callback)) {
+                try {
+                    callback.NotifyPlayerLeft(); // Notificar al jugador contrario sobre el abandono
+                    Console.WriteLine($"El jugador {opponent.Username} ha sido notificado de que debe abandonar la partida {matchCode}.");
+                } catch (Exception ex) {
+                    Console.WriteLine($"Error al notificar al jugador {opponent.Username}: {ex.Message}");
+                    matchPlayerCallback.TryRemove(opponent.Username, out _);
+                }
+            }
+
+            // Eliminar la partida del servidor
+            EndMatchByAbandonment(matchCode);
+            return true;
         }
+
+        private void EndMatchByAbandonment(string matchCode) {
+            if (!activeMatches.TryRemove(matchCode, out var match)) {
+                Console.WriteLine($"La partida {matchCode} ya había sido eliminada.");
+                return;
+            }
+
+            Console.WriteLine($"La partida {matchCode} ha sido eliminada debido al abandono.");
+
+            // Eliminar los callbacks asociados a los jugadores
+            foreach (var player in match.Players.Values.Where(p => p != null)) {
+                if (matchPlayerCallback.TryRemove(player.Username, out var callback)) {
+                    Console.WriteLine($"El callback del jugador {player.Username} ha sido eliminado.");
+                }
+            }
+
+            SavePlayerScores(match); // Registrar los puntajes si es necesario
+        }
+
     }
 }
