@@ -14,7 +14,7 @@ namespace TripasService.Services {
         private ConcurrentDictionary<string, ConcurrentDictionary<string, IChatManagerCallBack>> connectedUsersByLobby =
             new ConcurrentDictionary<string, ConcurrentDictionary<string, IChatManagerCallBack>>();
 
-        //Obtiene el diccionario o crea uno nuevo
+
         public void ConnectToChat(string userName, string lobbyCode) {
             var callback = OperationContext.Current.GetCallbackChannel<IChatManagerCallBack>();
 
@@ -53,7 +53,7 @@ namespace TripasService.Services {
             }
         }
 
-        // Si hay un error, busca y elimina al usuario desconectado
+
         private void BroadcastMessageToLobby(Message message, string lobbyCode) {
             Console.WriteLine($"Broadcasting message to lobby {lobbyCode}: {message}");
 

@@ -95,25 +95,26 @@ namespace TripasService.Services {
                 return;
             }
 
-            if (!lobby.Players.TryGetValue("PlayerOne", out var host)) {
+            //Aquí no debería ser un Profile tampoco
+            if (!lobby.Players.TryGetValue("PlayerOne", out Profile host)) {
                 Console.WriteLine($"El lobby {code} no tiene un anfitrión válido.");
                 return;
             }
 
-            if (!lobby.Players.TryGetValue("PlayerTwo", out var guest)) {
+            //Aquí no debería ser un Profile tampoco
+            if (!lobby.Players.TryGetValue("PlayerTwo", out Profile guest)) {
                 Console.WriteLine($"El lobby {code} no tiene suficientes jugadores para iniciar la partida.");
                 return;
             }
 
-            // Crear la partida usando las mismas claves del lobby
             var match = new Match(
                 code,
                 lobby.GameName,
                 lobby.NodeCount,
-                new Dictionary<string, Profile>
+                new Dictionary<string, string>
                 {
-            { "PlayerOne", host },
-            { "PlayerTwo", guest }
+            { "PlayerOne", host.Username },
+            { "PlayerTwo", guest.Username }
                 }
             );
 

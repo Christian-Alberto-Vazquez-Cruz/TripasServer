@@ -28,7 +28,7 @@ namespace DataBaseManager.DAO {
                     Perfil newUserProfile = new Perfil {
                         nombre = profile.nombre,
                         puntaje = Constants.INITIAL_SCORE,
-                        fotoRuta = Constants.INITIAL_PIC_PATH,
+                        fotoRuta = profile.fotoRuta,
                         idPerfil = newUserLogin.idUsuario
                     };
                     db.Perfil.Add(newUserProfile);

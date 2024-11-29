@@ -43,7 +43,7 @@ namespace TripasService.Contracts {
         void NotifyYourTurn();
 
         [OperationContract(IsOneWay = true)]
-        void NotifyNotYuTurn();
+        void NotifyNotYourTurn();
 
         [OperationContract(IsOneWay = true)]
         void NotifyYouLost();

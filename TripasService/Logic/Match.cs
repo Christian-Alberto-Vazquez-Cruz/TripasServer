@@ -16,14 +16,16 @@ namespace TripasService.Logic {
         [DataMember]
         public int NodeCount { get; set; }
 
+        //Eliminar
         [DataMember]
-        public Dictionary<string, Profile> Players { get; set; } = new Dictionary<string, Profile> {
+        public string Status { get; set; }
+
+        [DataMember]
+        public Dictionary<string, string> Players { get; set; } = new Dictionary<string, string> {
             { "PlayerOne", null },
             { "PlayerTwo", null }
         };
 
-        [DataMember]
-        public string Status { get; set; }
 
         [DataMember]
         public List<Trace> Traces { get; set; } = new List<Trace>();
@@ -40,12 +42,13 @@ namespace TripasService.Logic {
         public string CurrentTurn { get; set; }
 
         public void SwitchTurn() {
-            if (Players["PlayerOne"] == null || Players["PlayerTwo"] == null) return;
+            if (string.IsNullOrEmpty(Players["PlayerOne"]) || string.IsNullOrEmpty(Players["PlayerTwo"])) return;
 
-            CurrentTurn = CurrentTurn == Players["PlayerOne"].Username
-                ? Players["PlayerTwo"].Username
-                : Players["PlayerOne"].Username;
+            CurrentTurn = CurrentTurn == Players["PlayerOne"]
+                ? Players["PlayerTwo"]
+                : Players["PlayerOne"];
         }
+
 
         // Lista predefinida de coordenadas válidas para ecenario cat
         private static readonly List<(double X, double Y)> ValidCoordinates = new List<(double, double)> {
@@ -74,14 +77,13 @@ namespace TripasService.Logic {
         }
 
         public void StartGame() {
-            CurrentTurn = Players["PlayerOne"].Username;
-            //CurrentTurn = Players["PlayerOne"]?.userName ?? Players["PlayerTwo"]?.userName ?? string.Empty;
+            CurrentTurn = Players["PlayerOne"];
             GenerateNodes();
             PairNodes();
 
             foreach (var player in Players.Values) {
                 if (player != null) {
-                    CurrentScores[player.Username] = 0;
+                    CurrentScores[player] = 0;
                 }
             }
 
@@ -140,7 +142,7 @@ namespace TripasService.Logic {
             return CurrentScores.TryGetValue(player, out var score) ? score : 0;
         }
 
-        public Match(string code, string gameName, int nodeCount, Dictionary<string, Profile> players) {
+        public Match(string code, string gameName, int nodeCount, Dictionary<string, string> players) {
             Code = code;
             GameName = gameName;
             NodeCount = nodeCount;
