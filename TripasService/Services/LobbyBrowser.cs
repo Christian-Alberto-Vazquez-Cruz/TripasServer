@@ -14,23 +14,25 @@ namespace TripasService.Services {
             return lobbies.Values.ToList();
         }
 
-        public bool JoinLobby(string code, Profile guest) {
+        public bool JoinLobby(string code,string guestUsername) {
             bool result = false;
-            if (lobbies.TryGetValue(code, out var lobby) && lobby.HasSpace) {
-                lobby.Players["PlayerTwo"] = guest;
+            if (lobbies.TryGetValue(code, out Lobby lobby) && lobby.HasSpace) {
+                lobby.Players["PlayerTwo"] = guestUsername;
                 result = true;
             }
             return result;
         }
 
         //AQUÍ SE DEBE INICIALIZAR UNA CADENA VACÍA. ¿CÓMO SE HACE?
-        public string CreateLobby(string gameName, int nodeCount, Profile owner, TimeSpan duration) {
+
+        //TAMBIÉN QUITAR EL TIMESPAN
+        public string CreateLobby(string gameName, int nodeCount, string ownerUsername, TimeSpan duration) {
             string code;
             do {
                 code = CodesGeneratorHelper.GenerateLobbyCode();
             } while (lobbies.ContainsKey(code));
 
-            var newLobby = new Lobby(code, gameName, nodeCount, owner, duration);
+            Lobby newLobby = new Lobby(code, gameName, nodeCount, ownerUsername, duration);
             if (lobbies.TryAdd(code, newLobby)) {
                 return code;
             }

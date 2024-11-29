@@ -22,13 +22,13 @@ namespace TripasService.Logic {
         public TimeSpan Duration { get; set; }
 
         [DataMember]
-        public Dictionary<string, Profile> Players { get; set; } = new Dictionary<string, Profile>();
+        public Dictionary<string, string> Players { get; set; } = new Dictionary<string, string>();
 
-        public Lobby(string code, string gameName, int nodeCount, Profile owner, TimeSpan duration) {
+        public Lobby(string code, string gameName, int nodeCount, string ownerUsername, TimeSpan duration) {
             Code = code;
             GameName = gameName;
             NodeCount = nodeCount;
-            Players["PlayerOne"] = owner;
+            Players["PlayerOne"] = ownerUsername;
             Duration = duration;
         }
         public bool HasSpace => !Players.ContainsKey("PlayerTwo");

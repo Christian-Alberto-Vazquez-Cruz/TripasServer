@@ -14,10 +14,10 @@ namespace TripasService.Contracts {
 
 
         [OperationContract(IsOneWay = true)]
-        void LeaveLobby(string code, int playerId);
+        void LeaveLobby(string code, string username);
 
         [OperationContract]
-        bool ConnectPlayerToLobby(string code, int playerId);
+        bool ConnectPlayerToLobby(string code, string username);
 
         [OperationContract(IsOneWay = true)]
         void StartMatch(string code);

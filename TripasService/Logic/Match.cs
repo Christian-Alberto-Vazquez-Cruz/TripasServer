@@ -16,10 +16,6 @@ namespace TripasService.Logic {
         [DataMember]
         public int NodeCount { get; set; }
 
-        //Eliminar
-        [DataMember]
-        public string Status { get; set; }
-
         [DataMember]
         public Dictionary<string, string> Players { get; set; } = new Dictionary<string, string> {
             { "PlayerOne", null },
@@ -87,7 +83,6 @@ namespace TripasService.Logic {
                 }
             }
 
-            Status = "InProgress";
             Console.WriteLine($"La partida {Code} ha comenzado con {NodeCount} nodos.");
         }
 
@@ -147,7 +142,6 @@ namespace TripasService.Logic {
             GameName = gameName;
             NodeCount = nodeCount;
             Players = players;
-            Status = "InProgress";
         }
     }
 }

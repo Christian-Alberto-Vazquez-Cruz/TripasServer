@@ -237,7 +237,7 @@ namespace DataBaseManager.DAO {
                         db.SaveChanges();
                         Console.WriteLine($"Puntos actualizados para {userName}: {userProfile.puntaje}");
                     }
-                }
+                }   
             } catch (EntityException ex) {
                 Console.WriteLine($"Error al actualizar los puntos del jugador {userName}: {ex.Message}");
             }

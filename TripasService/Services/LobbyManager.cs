@@ -33,56 +33,53 @@ namespace TripasService.Services {
             return false;
         }
 
-        public void LeaveLobby(string code, int playerId) {
-            if (lobbies.TryGetValue(code, out var lobby)) {
-                if (lobby.Players.TryGetValue("PlayerOne", out var host) && host.IdProfile == playerId) {
+        public void LeaveLobby(string code, string username) {
+            if (lobbies.TryGetValue(code, out Lobby lobby)) {
+                if (lobby.Players.TryGetValue("PlayerOne", out string hostUsername) && hostUsername == username) {
                     // Eliminar el callback del host
-                    lobbyPlayerCallback.TryRemove(host.Username, out _);
+                    lobbyPlayerCallback.TryRemove(hostUsername, out _);
                     OnHostDisconnect(code);
-                } else if (lobby.Players.TryGetValue("PlayerTwo", out var guest) && guest.IdProfile == playerId) {
+                } else if (lobby.Players.TryGetValue("PlayerTwo", out string guestUsername) && guestUsername == username) {
                     lobby.Players.Remove("PlayerTwo");
                     // Eliminar el callback del guest
-                    lobbyPlayerCallback.TryRemove(guest.Username, out _);
-
+                    lobbyPlayerCallback.TryRemove(guestUsername, out _);
                     // Notificar al host que Guest abandonó
-                    if (host != null) {
-                        TryNotifyCallback(host.Username, callback => callback.GuestLeftCallback());
-                    }
+                    TryNotifyCallback(hostUsername, callback => callback.GuestLeftCallback());
                 }
             }
         }
 
         private void OnHostDisconnect(string code) {
-            if (lobbies.TryGetValue(code, out var lobby)) {
-                if (lobby.Players.TryGetValue("PlayerTwo", out var guest) && guest != null) {
+            if (lobbies.TryGetValue(code, out Lobby lobby)) {
+                if (lobby.Players.TryGetValue("PlayerTwo", out string guestUsername)) {
                     // Notificar al guest que Host abadonó
-                    TryNotifyCallback(guest.Username, callback => callback.HostLeftCallback());
+                    TryNotifyCallback(guestUsername, callback => callback.HostLeftCallback());
                     // Eliminar el callback del guest ya que el lobby se cerrará
-                    lobbyPlayerCallback.TryRemove(guest.Username, out _);
+                    lobbyPlayerCallback.TryRemove(guestUsername, out _);
                 }
                 DeleteLobby(code);
             }
         }
 
-        public bool ConnectPlayerToLobby(string code, int playerId) {
+        public bool ConnectPlayerToLobby(string code, string username) {
             var callback = OperationContext.Current.GetCallbackChannel<ILobbyManagerCallback>();
 
-            if (lobbies.TryGetValue(code, out var lobby)) {
-                if (lobby.Players.TryGetValue("PlayerOne", out var host) && host.IdProfile == playerId) {
-                    if (lobbyPlayerCallback.TryAdd(host.Username, callback)) {
-                        Console.WriteLine($"Host {host.Username} callback registered successfully");
+            if (lobbies.TryGetValue(code, out Lobby lobby)) {
+                if (lobby.Players.TryGetValue("PlayerOne", out var hostUsername) && hostUsername == username) {
+                    if (lobbyPlayerCallback.TryAdd(hostUsername, callback)) {
+                        Console.WriteLine($"Host {hostUsername} callback registered successfully");
                         return true;
                     }
-                } else if (lobby.Players.TryGetValue("PlayerTwo", out var guest) && guest.IdProfile == playerId) {
-                    if (lobbyPlayerCallback.TryAdd(guest.Username, callback)) {
-                        Console.WriteLine($"Guest {guest.Username} callback registered successfully");
+                } else if (lobby.Players.TryGetValue("PlayerTwo", out string guestUsername) && guestUsername == username) {
+                    if (lobbyPlayerCallback.TryAdd(guestUsername, callback)) {
+                        Console.WriteLine($"Guest {guestUsername} callback registered successfully");
 
                         // Notificar al host que se unió un Guest
-                        if (TryNotifyCallback(host.Username, callbk => callbk.GuestJoinedCallback(guest.Username))) {
+                        if (TryNotifyCallback(hostUsername, callbk => callbk.GuestJoinedCallback(guestUsername))) {
                             return true;
                         } else {
-                            // Limpiar callback si ocurre una excepción en el Host
-                            lobbyPlayerCallback.TryRemove(guest.Username, out _);
+                            // Limpiar callback si ocurre una excepción en el Host  
+                            lobbyPlayerCallback.TryRemove(guestUsername, out _);
                         }
                     }
                 }
@@ -95,14 +92,12 @@ namespace TripasService.Services {
                 return;
             }
 
-            //Aquí no debería ser un Profile tampoco
-            if (!lobby.Players.TryGetValue("PlayerOne", out Profile host)) {
+            if (!lobby.Players.TryGetValue("PlayerOne", out var hostUsername)) {
                 Console.WriteLine($"El lobby {code} no tiene un anfitrión válido.");
                 return;
             }
 
-            //Aquí no debería ser un Profile tampoco
-            if (!lobby.Players.TryGetValue("PlayerTwo", out Profile guest)) {
+            if (!lobby.Players.TryGetValue("PlayerTwo", out var guestUsername)) {
                 Console.WriteLine($"El lobby {code} no tiene suficientes jugadores para iniciar la partida.");
                 return;
             }
@@ -113,8 +108,8 @@ namespace TripasService.Services {
                 lobby.NodeCount,
                 new Dictionary<string, string>
                 {
-            { "PlayerOne", host.Username },
-            { "PlayerTwo", guest.Username }
+                    { "PlayerOne", hostUsername },
+                    { "PlayerTwo", guestUsername }
                 }
             );
 
@@ -126,15 +121,13 @@ namespace TripasService.Services {
                 return;
             }
 
-            lobbies.TryRemove(code, out _);
-            NotifyPlayersMatchStarted(host, guest);
-
-            
+            DeleteLobby(code);
+            NotifyPlayersMatchStarted(hostUsername, guestUsername);
         }
 
-        private void NotifyPlayersMatchStarted(Profile host, Profile guest) {
-            TryNotifyCallback(host.Username, cb => cb.GameStarted());
-            TryNotifyCallback(guest.Username, cb => cb.GameStarted());
+        private void NotifyPlayersMatchStarted(string hostUsername, string guestUsername) {
+            TryNotifyCallback(hostUsername, cb => cb.GameStarted());
+            TryNotifyCallback(guestUsername, cb => cb.GameStarted());
         }
 
 
