@@ -17,11 +17,10 @@ namespace TripasService.Logic {
         public int NodeCount { get; set; }
 
         [DataMember]
-        public Dictionary<string, string> Players { get; set; } = new Dictionary<string, string> {
+        public Dictionary<string, Profile> Players { get; set; } = new Dictionary<string, Profile> {
             { "PlayerOne", null },
             { "PlayerTwo", null }
         };
-
 
         [DataMember]
         public List<Trace> Traces { get; set; } = new List<Trace>();
@@ -38,13 +37,12 @@ namespace TripasService.Logic {
         public string CurrentTurn { get; set; }
 
         public void SwitchTurn() {
-            if (string.IsNullOrEmpty(Players["PlayerOne"]) || string.IsNullOrEmpty(Players["PlayerTwo"])) return;
+            if (Players["PlayerOne"] == null || Players["PlayerTwo"] == null) return;
 
-            CurrentTurn = CurrentTurn == Players["PlayerOne"]
-                ? Players["PlayerTwo"]
-                : Players["PlayerOne"];
+            CurrentTurn = CurrentTurn == Players["PlayerOne"].Username
+                ? Players["PlayerTwo"].Username
+                : Players["PlayerOne"].Username;
         }
-
 
         // Lista predefinida de coordenadas válidas para ecenario cat
         private static readonly List<(double X, double Y)> ValidCoordinates = new List<(double, double)> {
@@ -73,13 +71,13 @@ namespace TripasService.Logic {
         }
 
         public void StartGame() {
-            CurrentTurn = Players["PlayerOne"];
+            CurrentTurn = Players["PlayerOne"].Username;
             GenerateNodes();
             PairNodes();
 
             foreach (var player in Players.Values) {
                 if (player != null) {
-                    CurrentScores[player] = 0;
+                    CurrentScores[player.Username] = 0;
                 }
             }
 
@@ -137,7 +135,7 @@ namespace TripasService.Logic {
             return CurrentScores.TryGetValue(player, out var score) ? score : 0;
         }
 
-        public Match(string code, string gameName, int nodeCount, Dictionary<string, string> players) {
+        public Match(string code, string gameName, int nodeCount, Dictionary<string, Profile> players) {
             Code = code;
             GameName = gameName;
             NodeCount = nodeCount;

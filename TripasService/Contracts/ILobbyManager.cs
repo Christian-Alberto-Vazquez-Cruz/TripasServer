@@ -5,7 +5,6 @@ using System.Dynamic;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using TripasService.Logic;
-
 namespace TripasService.Contracts {
 
 
@@ -14,10 +13,10 @@ namespace TripasService.Contracts {
 
 
         [OperationContract(IsOneWay = true)]
-        void LeaveLobby(string code, string username);
+        void LeaveLobby(string code, int playerId);
 
         [OperationContract]
-        bool ConnectPlayerToLobby(string code, string username);
+        bool ConnectPlayerToLobby(string code, int playerId);
 
         [OperationContract(IsOneWay = true)]
         void StartMatch(string code);

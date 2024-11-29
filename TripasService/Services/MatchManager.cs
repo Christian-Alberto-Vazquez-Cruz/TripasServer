@@ -15,21 +15,21 @@ namespace TripasService.Services {
         private static ConcurrentDictionary<string, Match> activeMatches = new ConcurrentDictionary<string, Match>();
         private static ConcurrentDictionary<string, IMatchManagerCallback> matchPlayerCallback = new ConcurrentDictionary<string, IMatchManagerCallback>();
         public List<Node> GetNodes(string matchCode) {
-            if (!activeMatches.TryGetValue(matchCode, out Match match)) return null;
+            if (!activeMatches.TryGetValue(matchCode, out var match)) return null;
             return match.GetAllNodes();
         }
 
         public Dictionary<string, string> GetNodePairs(string matchCode) {
-            if (!activeMatches.TryGetValue(matchCode, out Match match)) return null;
+            if (!activeMatches.TryGetValue(matchCode, out var match)) return null;
             return match.GetNodePairs();
         }
 
         public bool RegisterPlayerCallback(string matchCode, string username) {
-            if (!activeMatches.TryGetValue(matchCode, out Match match)) return false;
+            if (!activeMatches.TryGetValue(matchCode, out var match)) return false;
 
             var callback = OperationContext.Current.GetCallbackChannel<IMatchManagerCallback>();
 
-            if (match.Players.Values.Contains(username)) {
+            if (match.Players.Values.Any(player => player.Username == username)) {
                 return matchPlayerCallback.TryAdd(username, callback);
             }
 
@@ -38,7 +38,7 @@ namespace TripasService.Services {
         }
 
         public bool EndTurn(string matchCode, string userName) {
-            if (!activeMatches.TryGetValue(matchCode, out Match match)) {
+            if (!activeMatches.TryGetValue(matchCode, out var match)) {
                 Console.WriteLine($"Partida {matchCode} no encontrada.");
                 return false;
             }
@@ -47,17 +47,17 @@ namespace TripasService.Services {
             match.SwitchTurn();
             Console.WriteLine($"Cambio de turno en la partida {matchCode}. Turno actual: {match.CurrentTurn}.");
 
-            foreach (string player in match.Players.Values) {
-                if (player != null && matchPlayerCallback.TryGetValue(player, out var callback)) {
+            foreach (var player in match.Players.Values) {
+                if (player != null && matchPlayerCallback.TryGetValue(player.Username, out var callback)) {
                     try {
-                        if (player == match.CurrentTurn) {
+                        if (player.Username == match.CurrentTurn) {
                             callback.NotifyYourTurn();
                         } else {
                             callback.NotifyNotYourTurn();
                         }
                     } catch (Exception ex) {
-                        Console.WriteLine($"Error al notificar al jugador {player}: {ex.Message}");
-                        matchPlayerCallback.TryRemove(player, out _);
+                        Console.WriteLine($"Error al notificar al jugador {player.Username}: {ex.Message}");
+                        matchPlayerCallback.TryRemove(player.Username, out _);
                     }
                 }
             }
@@ -66,7 +66,7 @@ namespace TripasService.Services {
         }
 
         public bool RegisterTrace(string matchCode, Trace trace) {
-            if (!activeMatches.TryGetValue(matchCode, out Match match)) return false;
+            if (!activeMatches.TryGetValue(matchCode, out var match)) return false;
             match.AddTrace(trace);
 
             int tracePoints = trace.Score;
@@ -74,13 +74,13 @@ namespace TripasService.Services {
 
             Console.WriteLine($"Jugador {trace.Player} recibió {tracePoints} puntos en la partida {matchCode}. Total actual: {match.GetPlayerScore(trace.Player)}");
 
-            foreach (string player in match.Players.Values) {
-                if (player != trace.Player && matchPlayerCallback.TryGetValue(player, out var callback)) {
+            foreach (var player in match.Players.Values) {
+                if (player.Username != trace.Player && matchPlayerCallback.TryGetValue(player.Username, out var callback)) {
                     try {
                         callback.TraceReceived(trace);
                     } catch (Exception ex) {
-                        Console.WriteLine($"Error al notificar al jugador {player}: {ex.Message}");
-                        matchPlayerCallback.TryRemove(player, out _);
+                        Console.WriteLine($"Error al notificar al jugador {player.Username}: {ex.Message}");
+                        matchPlayerCallback.TryRemove(player.Username, out _);
                     }
                 }
             }
@@ -90,7 +90,7 @@ namespace TripasService.Services {
 
         // Método en el servidor para obtener el turno actual de la partida
         public string GetCurrentTurn(string matchCode) {
-            if (!activeMatches.TryGetValue(matchCode, out Match match)) {
+            if (!activeMatches.TryGetValue(matchCode, out var match)) {
                 Console.WriteLine($"Partida {matchCode} no encontrada.");
                 return null;  // O devolver un mensaje de error o valor especial si no se encuentra la partida
             }
@@ -118,11 +118,10 @@ namespace TripasService.Services {
             return match;
         }
         private void SavePlayerScores(Match match) {
-            //foreach (var player in match.Players.Values.Where(player => player != null)) {
-            foreach (string player in match.Players.Values.Where(player => !string.IsNullOrEmpty(player))) {
-                int finalScore = match.GetPlayerScore(player);
-                UserDAO.UpdatePlayerScore(player, finalScore);
-                Console.WriteLine($"Player {player} scored {finalScore} points. Saved to the database.");
+            foreach (var player in match.Players.Values.Where(player => player != null)) {
+                int finalScore = match.GetPlayerScore(player.Username);
+                UserDAO.UpdatePlayerScore(player.Username, finalScore);
+                Console.WriteLine($"Player {player.Username} scored {finalScore} points. Saved to the database.");
             }
         }
 
@@ -131,8 +130,8 @@ namespace TripasService.Services {
             var highestScore = scores.Values.Max();
             var winners = scores.Where(x => x.Value == highestScore).Select(x => x.Key).ToList();
 
-            foreach (string player in match.Players.Values.Where(player => player != null)) {
-                string username = player;
+            foreach (var player in match.Players.Values.Where(p => p != null)) {
+                string username = player.Username;
                 NotifyPlayerResult(username, winners, matchCode);
             }
         }
@@ -173,6 +172,62 @@ namespace TripasService.Services {
             }
             return false;
         }
+
+        public bool LeaveMatch(string matchCode, string username) {
+            if (!activeMatches.TryGetValue(matchCode, out var match)) {
+                Console.WriteLine($"La partida {matchCode} no existe.");
+                return false;
+            }
+
+            // Verificar si el jugador pertenece a la partida
+            if (!match.Players.Values.Any(player => player != null && player.Username == username)) {
+                Console.WriteLine($"El jugador {username} no pertenece a la partida {matchCode}.");
+                return false;
+            }
+
+            // Identificar al jugador contrario
+            var leavingPlayerKey = match.Players.FirstOrDefault(p => p.Value?.Username == username).Key;
+            var opponent = match.Players.Values.FirstOrDefault(p => p != null && p.Username != username);
+
+            // Eliminar al jugador que abandona
+            if (leavingPlayerKey != null) {
+                match.Players[leavingPlayerKey] = null;
+                Console.WriteLine($"El jugador {username} ha abandonado la partida {matchCode}.");
+            }
+
+            // Notificar al jugador contrario para que sea expulsado del lobby
+            if (opponent != null && matchPlayerCallback.TryGetValue(opponent.Username, out var callback)) {
+                try {
+                    callback.NotifyPlayerLeft(); // Notificar al jugador contrario sobre el abandono
+                    Console.WriteLine($"El jugador {opponent.Username} ha sido notificado de que debe abandonar la partida {matchCode}.");
+                } catch (Exception ex) {
+                    Console.WriteLine($"Error al notificar al jugador {opponent.Username}: {ex.Message}");
+                    matchPlayerCallback.TryRemove(opponent.Username, out _);
+                }
+            }
+
+            // Eliminar la partida del servidor
+            EndMatchByAbandonment(matchCode);
+            return true;
+        }
+
+        private void EndMatchByAbandonment(string matchCode) {
+            if (!activeMatches.TryRemove(matchCode, out var match)) {
+                Console.WriteLine($"La partida {matchCode} ya había sido eliminada.");
+                return;
+            }
+
+            Console.WriteLine($"La partida {matchCode} ha sido eliminada debido al abandono.");
+
+            // Eliminar los callbacks asociados a los jugadores
+            foreach (var player in match.Players.Values.Where(p => p != null)) {
+                if (matchPlayerCallback.TryRemove(player.Username, out var callback)) {
+                    Console.WriteLine($"El callback del jugador {player.Username} ha sido eliminado.");
+                }
+            }
+
+            SavePlayerScores(match); // Registrar los puntajes si es necesario
+        }
+
     }
 }
-
