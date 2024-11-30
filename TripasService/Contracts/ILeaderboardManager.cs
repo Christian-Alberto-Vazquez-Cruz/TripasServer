@@ -9,6 +9,7 @@ using TripasService.Logic;
 namespace TripasService.Contracts {
     [ServiceContract]
     public interface ILeaderboardManager {
+
         [OperationContract]
         List<Profile> GetHighestScores();
     }

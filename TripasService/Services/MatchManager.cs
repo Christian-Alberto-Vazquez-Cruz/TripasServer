@@ -15,6 +15,7 @@ namespace TripasService.Services {
         private static ConcurrentDictionary<string, Match> activeMatches = new ConcurrentDictionary<string, Match>();
         private static ConcurrentDictionary<string, IMatchManagerCallback> matchPlayerCallback = new ConcurrentDictionary<string, IMatchManagerCallback>();
         public List<Node> GetNodes(string matchCode) {
+            //INICIALIZAR UNA LISTA VACÍA. EN EL CLIENTE PREGUNTAR SI HAY MÁS DE 0 ITEMS
             if (!activeMatches.TryGetValue(matchCode, out var match)) return null;
             return match.GetAllNodes();
         }
@@ -43,7 +44,6 @@ namespace TripasService.Services {
                 return false;
             }
 
-            // Cambiar turno
             match.SwitchTurn();
             Console.WriteLine($"Cambio de turno en la partida {matchCode}. Turno actual: {match.CurrentTurn}.");
 
@@ -88,7 +88,7 @@ namespace TripasService.Services {
             return true;
         }
 
-        // Método en el servidor para obtener el turno actual de la partida
+        //REGRESAR TURNO STRING VACÍO?
         public string GetCurrentTurn(string matchCode) {
             if (!activeMatches.TryGetValue(matchCode, out var match)) {
                 Console.WriteLine($"Partida {matchCode} no encontrada.");

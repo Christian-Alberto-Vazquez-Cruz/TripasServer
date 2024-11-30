@@ -16,16 +16,14 @@ namespace TripasService.Services {
 
         private static Dictionary<string, string> verificationCodesCreateAccount = new Dictionary<string, string>();
         public int SendVerificationCodeRegister(string email) {
-
             int operationResult = Constants.FAILED_OPERATION;
-            string code = generateCode();
+            string code = GenerateCode();
             if (verificationCodesCreateAccount.ContainsKey(email)) {
                 verificationCodesCreateAccount[email] = code;  
             }
             else {
                 verificationCodesCreateAccount.Add(email, code);
                 StartVerificationCodeTimer(email);
-
                 string emailSender = "servicetripas@gmail.com";
                 string emailPassword = "fxllpkrxfgnzbpvy";
                 string displayName = "Verification-Code Tripas Game";
@@ -81,15 +79,15 @@ namespace TripasService.Services {
                 </html>";
         }
 
-        private bool verifyCodeUniqueness(string code) {
+        private bool VerifyCodeUniqueness(string code) {
             return verificationCodesCreateAccount.ContainsValue(code);
         }
 
-        private string generateCode() {
+        private string GenerateCode() {
             string code;
             do {
                 code = CodesGeneratorHelper.GenerateVerificationCode();
-            } while (verifyCodeUniqueness(code));
+            } while (VerifyCodeUniqueness(code));
             return code;
         }
 

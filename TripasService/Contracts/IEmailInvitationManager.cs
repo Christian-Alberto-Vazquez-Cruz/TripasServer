@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace TripasService.Contracts {
     [ServiceContract]
     public interface IEmailInvitationManager {
+
         [OperationContract]
         int SendInvitation(string username, string code);
     }
