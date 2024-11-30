@@ -186,6 +186,7 @@ namespace TripasService.Services {
             }
 
             Console.WriteLine($"El invitado {guest.Username} ha sido expulsado del lobby {code}.");
+            
         }
     }
 }
