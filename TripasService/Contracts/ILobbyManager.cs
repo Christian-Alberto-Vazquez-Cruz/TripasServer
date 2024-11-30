@@ -7,10 +7,8 @@ using System.ServiceModel;
 using TripasService.Logic;
 namespace TripasService.Contracts {
 
-
     [ServiceContract(CallbackContract = typeof(ILobbyManagerCallback))]
     public interface ILobbyManager {
-
 
         [OperationContract(IsOneWay = true)]
         void LeaveLobby(string code, int playerId);
@@ -33,7 +31,7 @@ namespace TripasService.Contracts {
         [OperationContract]
         void GuestLeftCallback();
         [OperationContract]
-        void GuestJoinedCallback(string guestName);
+        void GuestJoinedCallback(string guestName, string picturePath);
         [OperationContract]
         void GameStarted();
     }

@@ -9,6 +9,7 @@ using TripasService.Logic;
 namespace TripasService.Contracts {
     [ServiceContract]
     public interface IFriendsManager {
+
         [OperationContract]
         int AddFriend(int idProfile1, int idProfile2);
 

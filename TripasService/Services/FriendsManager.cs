@@ -28,7 +28,6 @@ namespace TripasService.Services {
                     IdProfile = friend.idPerfil,
                     Username = friend.nombre,
                     Score = friend.puntaje,
-                    PicturePath = friend.fotoRuta //¿Se mostrará la foto? Probablemente no
                 };
                 friendList.Add(profile);
             }

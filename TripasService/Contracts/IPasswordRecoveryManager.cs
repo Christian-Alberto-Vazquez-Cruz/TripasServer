@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace TripasService.Contracts {
     [ServiceContract]
     public interface IPasswordRecoveryManager {
+
         [OperationContract]
         int SendRecoveryCode(string email);
 

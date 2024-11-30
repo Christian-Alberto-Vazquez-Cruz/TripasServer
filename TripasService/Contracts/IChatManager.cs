@@ -10,6 +10,7 @@ namespace TripasService.Contracts {
 
     [ServiceContract(CallbackContract = typeof(IChatManagerCallBack))]
     public interface IChatManager {
+
         [OperationContract(IsOneWay = true)]
         void SendMessage(string userName, Message message, string lobbyCode);
 
