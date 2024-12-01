@@ -17,7 +17,7 @@ namespace TripasService.Contracts {
         bool JoinLobby(string code, Profile guest);
 
         [OperationContract]
-        string CreateLobby(string gameName, int nodeCount, Profile owner, TimeSpan duration);
+        string CreateLobby(string gameName, int nodeCount, Profile owner);
 
         [OperationContract]
         Lobby GetLobbyByCode(string code);

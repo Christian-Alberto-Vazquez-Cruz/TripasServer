@@ -19,20 +19,22 @@ namespace TripasService.Contracts {
         [OperationContract(IsOneWay = true)]
         void StartMatch(string code);
 
+        [OperationContract(IsOneWay = true)]
+        void KickPlayer(string code);
 
     }
 
     [ServiceContract]
     public interface ILobbyManagerCallback {
-        [OperationContract]
-        void RemoveFromLobby();
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
+        void KickedFromLobby();
+        [OperationContract(IsOneWay = true)]
         void HostLeftCallback();
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
         void GuestLeftCallback();
-        [OperationContract]
-        void GuestJoinedCallback(string guestName, string picturePath);
-        [OperationContract]
+        [OperationContract(IsOneWay = true)]
+        void GuestJoinedCallback(string guestName, string picturePath, int idProfile);
+        [OperationContract(IsOneWay = true)]
         void GameStarted();
     }
 

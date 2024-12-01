@@ -12,12 +12,6 @@ namespace TripasService.Utils {
             InGame
         }
 
-        public enum LobbyStatus {
-            Open,
-            Closed,
-            InProgress
-        }
-
         public enum NodeStatus {
             Free,
             Occupied,

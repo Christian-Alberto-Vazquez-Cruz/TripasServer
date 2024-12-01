@@ -25,13 +25,13 @@ namespace TripasService.Services {
 
         //AQUÍ SE DEBE INICIALIZAR UNA CADENA VACÍA. ¿CÓMO SE HACE?
         //TAMBIÉN QUITAR EL TIMESPAN
-        public string CreateLobby(string gameName, int nodeCount, Profile owner, TimeSpan duration) {
+        public string CreateLobby(string gameName, int nodeCount, Profile owner) {
             string code;
             do {
                 code = CodesGeneratorHelper.GenerateLobbyCode();
             } while (lobbies.ContainsKey(code));
 
-            var newLobby = new Lobby(code, gameName, nodeCount, owner, duration);
+            var newLobby = new Lobby(code, gameName, nodeCount, owner);
             if (lobbies.TryAdd(code, newLobby)) {
                 return code;
             }
@@ -45,6 +45,3 @@ namespace TripasService.Services {
         }
     }
 }
-
-
-

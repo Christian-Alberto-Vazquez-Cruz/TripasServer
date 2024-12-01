@@ -44,7 +44,6 @@ namespace TripasService.Logic {
                 : Players["PlayerOne"].Username;
         }
 
-        // Lista predefinida de coordenadas válidas para ecenario cat
         private static readonly List<(double X, double Y)> ValidCoordinates = new List<(double, double)> {
             (175, 48),(235, 50),(140, 60),(100, 80),(175, 80),(270, 90),(355, 105),(130, 115),(52, 145),
             (150, 143),(200, 145),(250, 130),(280, 130),(325, 125),(380, 130),(440, 125),(90, 155),(55, 180),(140, 180),
@@ -74,20 +73,19 @@ namespace TripasService.Logic {
             CurrentTurn = Players["PlayerOne"].Username;
             GenerateNodes();
             PairNodes();
+            InitializeScores();
+        }
 
-            foreach (var player in Players.Values) {
+        public void InitializeScores() {
+            foreach (Profile player in Players.Values) {
                 if (player != null) {
                     CurrentScores[player.Username] = 0;
                 }
             }
-
-            Console.WriteLine($"La partida {Code} ha comenzado con {NodeCount} nodos.");
         }
-
         private void GenerateNodes() {
-            var random = new Random();
+            Random random = new Random();
 
-            // Seleccionar aleatoriamente las coordenadas necesarias para los nodos
             var selectedCoordinates = ValidCoordinates
                 .OrderBy(_ => random.Next())
                 .Take(NodeCount)
@@ -95,7 +93,7 @@ namespace TripasService.Logic {
 
             for (int i = 0; i < selectedCoordinates.Count; i++) {
                 var (x, y) = selectedCoordinates[i];
-                var node = new Node {
+                Node node = new Node {
                     Id = $"Node-{i}",
                     X = x,
                     Y = y
@@ -105,11 +103,11 @@ namespace TripasService.Logic {
         }
 
         private void PairNodes() {
-            var nodeIds = Nodes.Keys.ToList();
-            var random = new Random();
+            List<string> nodeIds = Nodes.Keys.ToList();
+            Random random = new Random();
             nodeIds = nodeIds.OrderBy(_ => random.Next()).ToList(); // Mezclar nodos aleatoriamente
 
-            var colors = new List<string> { "Red", "Blue", "Gray", "Green", "Purple", "Yellow", "Cyan" };
+            List<string> colors = new List<string> { "Red", "Blue", "Gray", "Green", "Purple","Yellow", "White", "Orange", "Magenta", "Brown" };
             int colorIndex = 0;
 
             for (int i = 0; i < nodeIds.Count - 1; i += 2) {
@@ -140,6 +138,9 @@ namespace TripasService.Logic {
             GameName = gameName;
             NodeCount = nodeCount;
             Players = players;
+        }
+
+        public Match() {
         }
     }
 }

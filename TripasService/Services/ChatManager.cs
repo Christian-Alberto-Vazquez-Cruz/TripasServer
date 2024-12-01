@@ -22,11 +22,7 @@ namespace TripasService.Services {
                 _ => new ConcurrentDictionary<string, IChatManagerCallBack>());
 
             if (lobbyUsers.TryAdd(userName, callback)) {
-                Console.WriteLine($"{userName} se ha conectado al chat en el lobby {lobbyCode}");
-
                 BroadcastMessageToLobby(new Message($"{userName} se ha unido al lobby.", DateTime.Now, userName), lobbyCode);
-            } else {
-                Console.WriteLine($"Usuario {userName} ya se encuentra conectado en el lobby {lobbyCode}.");
             }
         }
 
@@ -70,6 +66,24 @@ namespace TripasService.Services {
                     }
                 }
             }
+        }
+
+        private void RemoveChatCallbacks(string code) {
+            if (connectedUsersByLobby.TryGetValue(code, out var lobbyUsers)) {
+                foreach (var username in lobbyUsers.Keys) {
+                    lobbyUsers.TryRemove(username, out _);
+                    Console.WriteLine($"El callback de chat para {username} ha sido eliminado del lobby {code}.");
+                }
+
+                DeleteLobbyChat(code);
+            } else {
+                Console.WriteLine($"No se encontró ningún lobby con el código {code}.");
+            }
+        }
+
+        public bool DeleteLobbyChat(string code) {
+            bool operationResult = connectedUsersByLobby.TryRemove(code, out _);
+            return operationResult;
         }
     }
 }
