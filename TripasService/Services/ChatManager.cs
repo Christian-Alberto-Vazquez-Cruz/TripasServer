@@ -22,11 +22,7 @@ namespace TripasService.Services {
                 _ => new ConcurrentDictionary<string, IChatManagerCallBack>());
 
             if (lobbyUsers.TryAdd(userName, callback)) {
-                Console.WriteLine($"{userName} se ha conectado al chat en el lobby {lobbyCode}");
-
                 BroadcastMessageToLobby(new Message($"{userName} se ha unido al lobby.", DateTime.Now, userName), lobbyCode);
-            } else {
-                Console.WriteLine($"Usuario {userName} ya se encuentra conectado en el lobby {lobbyCode}.");
             }
         }
 
@@ -89,6 +85,5 @@ namespace TripasService.Services {
             bool operationResult = connectedUsersByLobby.TryRemove(code, out _);
             return operationResult;
         }
-
     }
 }

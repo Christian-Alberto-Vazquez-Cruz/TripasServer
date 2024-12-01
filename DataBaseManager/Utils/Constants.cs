@@ -13,5 +13,7 @@ namespace DataBaseManager.Utils {
         public const int NO_MATCHES = -2;
         public const int FOUND_MATCH = 2;
         public const int HOW_MANY_SCORES = 10;
+
+        public const string NO_MATCHES_STRING = "No matches found";
     }
 }

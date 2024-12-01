@@ -28,11 +28,11 @@ namespace TripasService.Contracts {
         [OperationContract]
         string GetCurrentTurn(string matchCode);
 
-        [OperationContract]
-        bool EndMatch(string matchCode);
+        [OperationContract(IsOneWay = true)]
+        void EndMatch(string matchCode);
 
-        [OperationContract]
-        bool LeaveMatch(string matchCode, string username);
+        [OperationContract(IsOneWay = true)]
+        void LeaveMatch(string matchCode, string username);
 
     }
 

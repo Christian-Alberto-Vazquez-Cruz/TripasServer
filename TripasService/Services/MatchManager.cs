@@ -1,4 +1,5 @@
 ﻿using DataBaseManager.DAO;
+using TripasService.Utils;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -33,7 +34,6 @@ namespace TripasService.Services {
             if (match.Players.Values.Any(player => player.Username == username)) {
                 return matchPlayerCallback.TryAdd(username, callback);
             }
-
             Console.WriteLine($"El jugador {username} no pertenece a la partida {matchCode}.");
             return false;
         }
@@ -61,7 +61,6 @@ namespace TripasService.Services {
                     }
                 }
             }
-
             return true;
         }
 
@@ -84,7 +83,6 @@ namespace TripasService.Services {
                     }
                 }
             }
-
             return true;
         }
 
@@ -94,36 +92,26 @@ namespace TripasService.Services {
                 Console.WriteLine($"Partida {matchCode} no encontrada.");
                 return null;  // O devolver un mensaje de error o valor especial si no se encuentra la partida
             }
-
             return match.CurrentTurn;
         }
 
 
-        public bool EndMatch(string matchCode) {
-            var match = GetMatch(matchCode);
-            if (match == null) return false;
+        public void EndMatch(string matchCode) {
+            Match match = GetMatch(matchCode);
+            if (match.Code == Constants.NO_MATCHES_STRING) {
+                return;
+            }
 
             SavePlayerScores(match);
             NotifyMatchResults(match);
-            //NUEVO
             RemoveMatchCallbacks(matchCode);
-
-            Console.WriteLine($"Match {matchCode} has ended successfully.");
-            return true;
         }
 
-        private Match GetMatch(string matchCode) {
-            if (!activeMatches.TryGetValue(matchCode, out var match)) {
-                Console.WriteLine($"The match {matchCode} does not exist or has already been removed.");
-                return null;
-            }
-            return match;
-        }
         private void SavePlayerScores(Match match) {
-            foreach (var player in match.Players.Values.Where(player => player != null)) {
+            foreach (var player in match.Players.Values.Where(player => player.IdProfile < Constants.MIN_ID_GUEST ||
+            player.IdProfile > Constants.MAX_ID_GUEST)) {
                 int finalScore = match.GetPlayerScore(player.Username);
                 UserDAO.UpdatePlayerScore(player.Username, finalScore);
-                Console.WriteLine($"Player {player.Username} scored {finalScore} points. Saved to the database.");
             }
         }
 
@@ -175,24 +163,21 @@ namespace TripasService.Services {
             return false;
         }
 
-        public bool LeaveMatch(string matchCode, string username) {
-            if (!activeMatches.TryGetValue(matchCode, out var match)) {
-                Console.WriteLine($"La partida {matchCode} no existe.");
-                return false;
+        public void LeaveMatch(string matchCode, string username) {
+
+            Match match = GetMatch(matchCode);
+            if (match.Code == Constants.NO_MATCHES_STRING) {
+                return;
             }
 
-            // Verificar si el jugador pertenece a la partida
             if (!match.Players.Values.Any(player => player != null && player.Username == username)) {
                 Console.WriteLine($"El jugador {username} no pertenece a la partida {matchCode}.");
-                return false;
+                return;
             }
 
-            // Identificar al jugador contrario
             var leavingPlayerKey = match.Players.FirstOrDefault(p => p.Value?.Username == username).Key;
             var opponent = match.Players.Values.FirstOrDefault(p => p != null && p.Username != username);
 
-
-            // Notificar al jugador contrario para que sea expulsado del lobby
             if (opponent != null && matchPlayerCallback.TryGetValue(opponent.Username, out var callback)) {
                 try {
                     callback.NotifyPlayerLeft();
@@ -205,7 +190,6 @@ namespace TripasService.Services {
 
             RemoveMatchCallbacks(matchCode);
             EndMatchByAbandonment(matchCode);
-            return true;
         }
 
         private void EndMatchByAbandonment(string matchCode) {
@@ -233,6 +217,15 @@ namespace TripasService.Services {
             }
         }
 
+        private Match GetMatch(string matchCode) {
+            Match match = new Match() {
+                Code = Constants.NO_MATCHES_STRING
+            };
 
+            if (activeMatches.TryGetValue(matchCode, out var matchSearched)) {
+                match = matchSearched;
+            }
+            return match;
+        }
     }
 }
