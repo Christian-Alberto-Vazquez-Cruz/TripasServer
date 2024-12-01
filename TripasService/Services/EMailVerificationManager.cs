@@ -28,7 +28,7 @@ namespace TripasService.Services {
                 string emailPassword = "fxllpkrxfgnzbpvy";
                 string displayName = "Verification-Code Tripas Game";
                 try {
-                    string emailBody = this.emailBodyRegister(code);
+                    string emailBody = this.EmailBodyRegister(code);
                     MailMessage mailMessage = new MailMessage();
                     mailMessage.From = new MailAddress(emailSender, displayName);
                     mailMessage.To.Add(email);
@@ -63,7 +63,7 @@ namespace TripasService.Services {
             return result; 
         }
 
-        private string emailBodyRegister(string code) {
+        private string EmailBodyRegister(string code) {
             return $@"
                 <html>
                 <body>

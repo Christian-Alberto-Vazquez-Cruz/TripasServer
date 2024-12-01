@@ -9,7 +9,6 @@ namespace TripasService.Utils {
         public enum PlayerStatus {
             Offline,
             Online,
-            InGame
         }
 
         public enum NodeStatus {

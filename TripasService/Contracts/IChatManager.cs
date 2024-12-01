@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TripasService.Logic;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Text;
@@ -12,13 +13,13 @@ namespace TripasService.Contracts {
     public interface IChatManager {
 
         [OperationContract(IsOneWay = true)]
-        void SendMessage(string userName, Message message, string lobbyCode);
+        void SendMessage(string username, Message message, string lobbyCode);
 
         [OperationContract(IsOneWay = true)]
-        void ConnectToChat(string userName, string lobbyCode);
+        void ConnectToChat(string username, string lobbyCode);
 
         [OperationContract(IsOneWay = true)]
-        void LeaveChat(string userName, string lobbyCode);
+        void LeaveChat(string username, string lobbyCode);
 
     }
     [ServiceContract]
@@ -26,30 +27,5 @@ namespace TripasService.Contracts {
         [OperationContract]
         void BroadcastMessage(Message message);
 
-    }
-
-    [DataContract]
-    public class Message {
-        [DataMember]
-        public DateTime timeStamp { get; set; } 
-
-        [DataMember]
-        public string chatMessage { get; set; }
-
-        [DataMember]
-        public string userName { get; set; }
-
-       public Message(string chatMessage, DateTime timeStamp, string userName) {
-            this.chatMessage = chatMessage;
-            this.timeStamp = timeStamp;
-            this.userName = userName;
-        }
-
-        public Message() {
-
-        }
-        public override string ToString() {
-            return $"{timeStamp.ToLocalTime()} {userName}: {chatMessage}";
-        }
     }
 }

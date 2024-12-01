@@ -1,10 +1,12 @@
-﻿using System;
+﻿using TripasService.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using TripasService.Contracts;
+using DataBaseManager.DAO;
 
 namespace TripasService.Logic {
     [DataContract]
@@ -21,12 +23,15 @@ namespace TripasService.Logic {
         [DataMember]
         public Dictionary<string, Profile> Players { get; set; } = new Dictionary<string, Profile>();
 
-        public Lobby(string code, string gameName, int nodeCount, Profile owner) {
+        public Lobby(string code, string gameName, int nodeCount, Profile host) {
             Code = code;
             GameName = gameName;
             NodeCount = nodeCount;
-            Players["PlayerOne"] = owner;
+            Players["PlayerOne"] = host;
         }
+
+        //CAMBIAR
         public bool HasSpace => !Players.ContainsKey("PlayerTwo");
+
     }
 }

@@ -12,7 +12,7 @@ namespace TripasService.Services {
         private static Dictionary<string, string> recoveryCodes = new Dictionary<string, string>();
 
         public int SendRecoveryCode(string email) {
-            if (verifyEmailRegistration(email) == Constants.NO_MATCHES) {
+            if (VerifyEmailRegistration(email) == Constants.NO_MATCHES) {
                 return Constants.NO_MATCHES;
             }
 
@@ -87,7 +87,7 @@ namespace TripasService.Services {
             });
         }
 
-        private int verifyEmailRegistration(string email) {
+        private int VerifyEmailRegistration(string email) {
             int result = UserDAO.IsEmailRegisteredDAO(email);
             return result;
         }

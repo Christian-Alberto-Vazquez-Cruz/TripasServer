@@ -14,6 +14,6 @@ namespace TripasService.Contracts {
         int SendVerificationCodeRegister(string email);
 
         [OperationContract]
-        bool VerifyCode(string email, string code);
+        bool VerifyCode(string email, string verificationCode);
     }
 }
