@@ -17,7 +17,7 @@ namespace TripasService.Services {
             int operationResult = Constants.FAILED_OPERATION;
             string emailReceiver = UserDAO.GetMailByUsername(username);
 
-            if (!string.IsNullOrEmpty(emailReceiver)) {
+            if (emailReceiver != Constants.NO_MATCHES_STRING) {
                 if (CanSendInvitation(username)) {
                     string emailSender = "servicetripas@gmail.com";
                     string emailPassword = "fxllpkrxfgnzbpvy";

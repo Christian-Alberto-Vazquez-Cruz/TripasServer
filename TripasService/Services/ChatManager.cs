@@ -12,24 +12,23 @@ using System.Collections.Concurrent;
 namespace TripasService.Services {
     public partial class TripasGameService : IChatManager {
 
-        private ConcurrentDictionary<string, ConcurrentDictionary<string, IChatManagerCallBack>> connectedUsersByLobby =
+        private ConcurrentDictionary<string, ConcurrentDictionary<string, IChatManagerCallBack>> _connectedUsersByLobby =
             new ConcurrentDictionary<string, ConcurrentDictionary<string, IChatManagerCallBack>>();
 
-
-        public void ConnectToChat(string userName, string lobbyCode) {
+        public void ConnectToChat(string username, string lobbyCode) {
             var callback = OperationContext.Current.GetCallbackChannel<IChatManagerCallBack>();
 
-            ConcurrentDictionary<string, IChatManagerCallBack> lobbyUsers = connectedUsersByLobby.GetOrAdd(lobbyCode,
+            ConcurrentDictionary<string, IChatManagerCallBack> lobbyUsers = _connectedUsersByLobby.GetOrAdd(lobbyCode,
                 _ => new ConcurrentDictionary<string, IChatManagerCallBack>());
 
-            if (lobbyUsers.TryAdd(userName, callback)) {
-                BroadcastMessageToLobby(new Message($"{userName} se ha unido al lobby."), lobbyCode);
+            if (lobbyUsers.TryAdd(username, callback)) {
+                BroadcastMessageToLobby(new Message($"{username} se ha unido al lobby."), lobbyCode);
             } 
         }
 
-        public void SendMessage(string userName, Message message, string lobbyCode) {
-            if (connectedUsersByLobby.TryGetValue(lobbyCode, out var lobbyUsers) &&
-                lobbyUsers.ContainsKey(userName)) {
+        public void SendMessage(string username, Message message, string lobbyCode) {
+            if (_connectedUsersByLobby.TryGetValue(lobbyCode, out var lobbyUsers) &&
+                lobbyUsers.ContainsKey(username)) {
                 BroadcastMessageToLobby(message, lobbyCode);
             } 
         }
@@ -37,7 +36,7 @@ namespace TripasService.Services {
         private void BroadcastMessageToLobby(Message message, string lobbyCode) {
             Console.WriteLine($"Broadcasting message to lobby {lobbyCode}: {message}");
 
-            if (connectedUsersByLobby.TryGetValue(lobbyCode, out var lobbyUsers)) {
+            if (_connectedUsersByLobby.TryGetValue(lobbyCode, out var lobbyUsers)) {
                 foreach (var user in lobbyUsers.Values) {
                     try {
                         user.BroadcastMessage(message);
@@ -57,20 +56,20 @@ namespace TripasService.Services {
             }
         }
 
-        public void LeaveChat(string userName, string lobbyCode) {
-            if (connectedUsersByLobby.TryGetValue(lobbyCode, out var lobbyUsers) &&
-                lobbyUsers.TryRemove(userName, out _)) {
+        public void LeaveChat(string username, string lobbyCode) {
+            if (_connectedUsersByLobby.TryGetValue(lobbyCode, out var lobbyUsers) &&
+                lobbyUsers.TryRemove(username, out _)) {
 
-                BroadcastMessageToLobby(new Message($"User {userName} abandonó el lobby."), lobbyCode);
+                BroadcastMessageToLobby(new Message($"User {username} abandonó el lobby."), lobbyCode);
 
                 if (lobbyUsers.IsEmpty) {
-                    connectedUsersByLobby.TryRemove(lobbyCode, out _);
+                    _connectedUsersByLobby.TryRemove(lobbyCode, out _);
                 }
             }
         }
 
         private void RemoveChatCallbacks(string code) {
-            if (connectedUsersByLobby.TryGetValue(code, out var lobbyUsers)) {
+            if (_connectedUsersByLobby.TryGetValue(code, out var lobbyUsers)) {
                 foreach (var username in lobbyUsers.Keys) {
                     lobbyUsers.TryRemove(username, out _);
                 }
@@ -80,9 +79,8 @@ namespace TripasService.Services {
         }
 
         public bool DeleteLobbyChat(string code) {
-            bool operationResult = connectedUsersByLobby.TryRemove(code, out _);
+            bool operationResult = _connectedUsersByLobby.TryRemove(code, out _);
             return operationResult;
         }
-
     }
 }
