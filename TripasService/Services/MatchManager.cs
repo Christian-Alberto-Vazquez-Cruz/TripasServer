@@ -100,18 +100,20 @@ namespace TripasService.Services {
 
 
         public bool EndMatch(string matchCode) {
-            var match = GetAndRemoveMatch(matchCode);
+            var match = GetMatch(matchCode);
             if (match == null) return false;
 
             SavePlayerScores(match);
-            NotifyMatchResults(match, matchCode);
+            NotifyMatchResults(match);
+            //NUEVO
+            RemoveMatchCallbacks(matchCode);
 
             Console.WriteLine($"Match {matchCode} has ended successfully.");
             return true;
         }
 
-        private Match GetAndRemoveMatch(string matchCode) {
-            if (!activeMatches.TryRemove(matchCode, out var match)) {
+        private Match GetMatch(string matchCode) {
+            if (!activeMatches.TryGetValue(matchCode, out var match)) {
                 Console.WriteLine($"The match {matchCode} does not exist or has already been removed.");
                 return null;
             }
@@ -125,14 +127,14 @@ namespace TripasService.Services {
             }
         }
 
-        private void NotifyMatchResults(Match match, string matchCode) {
+        private void NotifyMatchResults(Match match) {
             var scores = match.CurrentScores;
             var highestScore = scores.Values.Max();
             var winners = scores.Where(x => x.Value == highestScore).Select(x => x.Key).ToList();
 
             foreach (var player in match.Players.Values.Where(p => p != null)) {
                 string username = player.Username;
-                NotifyPlayerResult(username, winners, matchCode);
+                NotifyPlayerResult(username, winners, match.Code);
             }
         }
 
@@ -189,16 +191,11 @@ namespace TripasService.Services {
             var leavingPlayerKey = match.Players.FirstOrDefault(p => p.Value?.Username == username).Key;
             var opponent = match.Players.Values.FirstOrDefault(p => p != null && p.Username != username);
 
-            // Eliminar al jugador que abandona
-            if (leavingPlayerKey != null) {
-                match.Players[leavingPlayerKey] = null;
-                Console.WriteLine($"El jugador {username} ha abandonado la partida {matchCode}.");
-            }
 
             // Notificar al jugador contrario para que sea expulsado del lobby
             if (opponent != null && matchPlayerCallback.TryGetValue(opponent.Username, out var callback)) {
                 try {
-                    callback.NotifyPlayerLeft(); // Notificar al jugador contrario sobre el abandono
+                    callback.NotifyPlayerLeft();
                     Console.WriteLine($"El jugador {opponent.Username} ha sido notificado de que debe abandonar la partida {matchCode}.");
                 } catch (Exception ex) {
                     Console.WriteLine($"Error al notificar al jugador {opponent.Username}: {ex.Message}");
@@ -206,7 +203,7 @@ namespace TripasService.Services {
                 }
             }
 
-            // Eliminar la partida del servidor
+            RemoveMatchCallbacks(matchCode);
             EndMatchByAbandonment(matchCode);
             return true;
         }
@@ -218,16 +215,24 @@ namespace TripasService.Services {
             }
 
             Console.WriteLine($"La partida {matchCode} ha sido eliminada debido al abandono.");
-
-            // Eliminar los callbacks asociados a los jugadores
-            foreach (var player in match.Players.Values.Where(p => p != null)) {
-                if (matchPlayerCallback.TryRemove(player.Username, out var callback)) {
-                    Console.WriteLine($"El callback del jugador {player.Username} ha sido eliminado.");
-                }
-            }
-
             SavePlayerScores(match); // Registrar los puntajes si es necesario
         }
+
+        private void RemoveMatchCallbacks(string matchCode) {
+            if (!activeMatches.TryGetValue(matchCode, out var match)) {
+                Console.WriteLine($"La partida {matchCode} no existe o ya fue eliminada.");
+                return;
+            }
+
+            foreach (var player in match.Players.Values.Where(p => p != null)) {
+                if (matchPlayerCallback.TryRemove(player.Username, out _)) {
+                    Console.WriteLine($"El callback del jugador {player.Username} ha sido eliminado de la partida {matchCode}.");
+                } else {
+                    Console.WriteLine($"No se encontró un callback asociado al jugador {player.Username} en la partida {matchCode}.");
+                }
+            }
+        }
+
 
     }
 }

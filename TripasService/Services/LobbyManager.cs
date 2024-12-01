@@ -135,9 +135,9 @@ namespace TripasService.Services {
                 return;
             }
 
-            lobbies.TryRemove(code, out _);
             NotifyPlayersMatchStarted(host, guest);
-
+            RemoveLobbyCallbacks(code);
+            RemoveChatCallbacks(code);
 
         }
 
@@ -146,9 +146,22 @@ namespace TripasService.Services {
             TryNotifyCallback(guest.Username, cb => cb.GameStarted());
         }
 
+        private void RemoveLobbyCallbacks(string code) {
+            if (lobbies.TryGetValue(code, out var lobby)) {
+                foreach (Profile player in lobby.Players.Values) {
+                    if (lobbyPlayerCallback.TryRemove(player.Username, out _)) {
+                        Console.WriteLine($"El callback de lobby para {player.Username} ha sido eliminado del lobby {code}.");
+                    }
+                }
+                DeleteLobby(code);
+            } else {
+                Console.WriteLine($"No se encontró ningún lobby con el código {code}.");
+            }
+        }
 
         public bool DeleteLobby(string code) {
-            return lobbies.TryRemove(code, out _);
+            bool operationResult = lobbies.TryRemove(code, out _);
+            return operationResult;
         }
 
         public void KickPlayer(string code) {
@@ -188,5 +201,6 @@ namespace TripasService.Services {
             Console.WriteLine($"El invitado {guest.Username} ha sido expulsado del lobby {code}.");
             
         }
+
     }
 }
