@@ -19,8 +19,8 @@ namespace TripasService.Services {
         public int CreateAccount(LoginUser newUser, Profile newProfile) {
 
             DataBaseManager.Login newLogin = new DataBaseManager.Login() {
-                contrasena = newUser.password,
-                correo = newUser.mail
+                contrasena = newUser.Password,
+                correo = newUser.Mail
             };
 
             DataBaseManager.Perfil newPerfil = new DataBaseManager.Perfil() {
@@ -33,8 +33,8 @@ namespace TripasService.Services {
             return insertionResult;
         }
 
-        public int UpdateProfile(int idProfile, string newUsername, string newPicPath) {
-            int result = UserDAO.UpdateUserProfileDAO(idProfile, newUsername, newPicPath);
+        public int UpdateProfile(int idProfile, string newUsername, string newPic) {
+            int result = UserDAO.UpdateUserProfileDAO(idProfile, newUsername, newPic);
             return result;
         }
 
@@ -62,8 +62,6 @@ namespace TripasService.Services {
             return isRegistered;
         }
 
-
-        //===> AQUÍ SE ESTÁ EMPLEANDO LA VERIFICACIÓN DE NO NULOS 
         public int IsNameRegistered(string username) {
             int isRegistered = Constants.FAILED_OPERATION;
             if (!string.IsNullOrEmpty(username)) {

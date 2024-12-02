@@ -38,17 +38,6 @@ namespace TripasService.Contracts {
 
     }
 
-
-    [DataContract]
-    public class LoginUser {
-        [DataMember]
-        public int idLoginUser { get; set; }
-        [DataMember]
-        public string mail { get; set; }
-        [DataMember]
-        public string password { get; set; }
-    }
-
     [DataContract]
     public class ProfileNotFoundFault {
         [DataMember]

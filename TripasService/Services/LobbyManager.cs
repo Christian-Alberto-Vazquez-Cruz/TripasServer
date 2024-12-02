@@ -9,11 +9,11 @@ using System.ServiceModel;
 
 namespace TripasService.Services {
     public partial class TripasGameService : ILobbyManager {
-        private static ConcurrentDictionary<string, Lobby> lobbies = new ConcurrentDictionary<string, Lobby>();
-        private static ConcurrentDictionary<string, ILobbyManagerCallback> lobbyPlayerCallback = new ConcurrentDictionary<string, ILobbyManagerCallback>();
+        private static readonly ConcurrentDictionary<string, Lobby> _lobbies = new ConcurrentDictionary<string, Lobby>();
+        private static readonly ConcurrentDictionary<string, ILobbyManagerCallback> _lobbyPlayerCallback = new ConcurrentDictionary<string, ILobbyManagerCallback>();
 
         private bool TryNotifyCallback(string username, Action<ILobbyManagerCallback> callbackAction) {
-            if (lobbyPlayerCallback.TryGetValue(username, out var callback)) {
+            if (_lobbyPlayerCallback.TryGetValue(username, out var callback)) {
                 try {
                     if (((ICommunicationObject)callback).State == CommunicationState.Opened) {
                         callbackAction(callback);
@@ -27,22 +27,22 @@ namespace TripasService.Services {
                     Console.WriteLine($"Channel was disposed for {username}: {ex.Message}");
                 }
 
-                lobbyPlayerCallback.TryRemove(username, out _);
+                _lobbyPlayerCallback.TryRemove(username, out _);
                 Console.WriteLine($"Callback removed for {username} due to communication error");
             }
             return false;
         }
 
         public void LeaveLobby(string code, int playerId) {
-            if (lobbies.TryGetValue(code, out var lobby)) {
+            if (_lobbies.TryGetValue(code, out var lobby)) {
                 if (lobby.Players.TryGetValue("PlayerOne", out var host) && host.IdProfile == playerId) {
                     // Eliminar el callback del host
-                    lobbyPlayerCallback.TryRemove(host.Username, out _);
+                    _lobbyPlayerCallback.TryRemove(host.Username, out _);
                     OnHostDisconnect(code);
                 } else if (lobby.Players.TryGetValue("PlayerTwo", out var guest) && guest.IdProfile == playerId) {
                     lobby.Players.Remove("PlayerTwo");
                     // Eliminar el callback del guest
-                    lobbyPlayerCallback.TryRemove(guest.Username, out _);
+                    _lobbyPlayerCallback.TryRemove(guest.Username, out _);
 
                     // Notificar al host que Guest abandonó
                     if (host != null) {
@@ -53,12 +53,12 @@ namespace TripasService.Services {
         }
 
         private void OnHostDisconnect(string code) {
-            if (lobbies.TryGetValue(code, out var lobby)) {
+            if (_lobbies.TryGetValue(code, out var lobby)) {
                 if (lobby.Players.TryGetValue("PlayerTwo", out var guest) && guest != null) {
                     // Notificar al guest que Host abadonó
                     TryNotifyCallback(guest.Username, callback => callback.HostLeftCallback());
                     // Eliminar el callback del guest ya que el lobby se cerrará
-                    lobbyPlayerCallback.TryRemove(guest.Username, out _);
+                    _lobbyPlayerCallback.TryRemove(guest.Username, out _);
                 }
                 DeleteLobby(code);
             }
@@ -67,26 +67,26 @@ namespace TripasService.Services {
         public bool ConnectPlayerToLobby(string code, int playerId) {
             var callback = OperationContext.Current.GetCallbackChannel<ILobbyManagerCallback>();
 
-            if (!lobbies.TryGetValue(code, out var lobby)) {
+            if (!_lobbies.TryGetValue(code, out var lobby)) {
                 Console.WriteLine($"Lobby with code {code} not found.");
                 return false;
             }
 
             if (lobby.Players.TryGetValue("PlayerOne", out var host) && host.IdProfile == playerId) {
-                if (lobbyPlayerCallback.TryAdd(host.Username, callback)) {
+                if (_lobbyPlayerCallback.TryAdd(host.Username, callback)) {
                     Console.WriteLine($"Host {host.Username} callback registered successfully.");
                     return true;
                 } else {
                     Console.WriteLine($"Failed to register callback for host {host.Username}.");
                 }
             } else if (lobby.Players.TryGetValue("PlayerTwo", out var guest) && guest.IdProfile == playerId) {
-                if (lobbyPlayerCallback.TryAdd(guest.Username, callback)) {
+                if (_lobbyPlayerCallback.TryAdd(guest.Username, callback)) {
                     Console.WriteLine($"Guest {guest.Username} callback registered successfully.");
                     if (TryNotifyCallback(host.Username, callbk => callbk.GuestJoinedCallback(guest.Username, guest.PicturePath, guest.IdProfile))) {
                         return true;
                     } else {
                         Console.WriteLine($"Failed to notify host {host.Username} about guest {guest.Username}.");
-                        lobbyPlayerCallback.TryRemove(guest.Username, out _);
+                        _lobbyPlayerCallback.TryRemove(guest.Username, out _);
                     }
                 } else {
                     Console.WriteLine($"Failed to register callback for guest {guest.Username}.");
@@ -99,7 +99,7 @@ namespace TripasService.Services {
 
 
         public void StartMatch(string code) {
-            if (!lobbies.TryGetValue(code, out var lobby)) {
+            if (!_lobbies.TryGetValue(code, out var lobby)) {
                 Console.WriteLine($"Lobby con código {code} no encontrado.");
                 return;
             }
@@ -130,7 +130,7 @@ namespace TripasService.Services {
             match.StartGame();
 
             // Registrar la partida en el sistema
-            if (!activeMatches.TryAdd(code, match)) {
+            if (!_activeMatches.TryAdd(code, match)) {
                 Console.WriteLine($"Unable to register match with {code} code. Verify duplicity.");
                 return;
             }
@@ -147,9 +147,9 @@ namespace TripasService.Services {
         }
 
         private void RemoveLobbyCallbacks(string code) {
-            if (lobbies.TryGetValue(code, out var lobby)) {
+            if (_lobbies.TryGetValue(code, out var lobby)) {
                 foreach (Profile player in lobby.Players.Values) {
-                    if (lobbyPlayerCallback.TryRemove(player.Username, out _)) {
+                    if (_lobbyPlayerCallback.TryRemove(player.Username, out _)) {
                         Console.WriteLine($"El callback de lobby para {player.Username} ha sido eliminado del lobby {code}.");
                     }
                 }
@@ -160,12 +160,12 @@ namespace TripasService.Services {
         }
 
         public bool DeleteLobby(string code) {
-            bool operationResult = lobbies.TryRemove(code, out _);
+            bool operationResult = _lobbies.TryRemove(code, out _);
             return operationResult;
         }
 
         public void KickPlayer(string code) {
-            if (!lobbies.TryGetValue(code, out var lobby)) {
+            if (!_lobbies.TryGetValue(code, out var lobby)) {
                 Console.WriteLine($"Lobby con código {code} no encontrado.");
                 return;
             }
@@ -182,7 +182,7 @@ namespace TripasService.Services {
 
             lobby.Players.Remove("PlayerTwo");
 
-            if (lobbyPlayerCallback.TryRemove(guest.Username, out var guestCallback)) {
+            if (_lobbyPlayerCallback.TryRemove(guest.Username, out var guestCallback)) {
                 try {
                     guestCallback.KickedFromLobby();
                 } catch (Exception ex) {
@@ -190,7 +190,7 @@ namespace TripasService.Services {
                 }
             }
 
-            if (lobbyPlayerCallback.TryGetValue(host.Username, out var hostCallback)) {
+            if (_lobbyPlayerCallback.TryGetValue(host.Username, out var hostCallback)) {
                 try {
                     hostCallback.GuestLeftCallback();
                 } catch (Exception ex) {

@@ -105,7 +105,7 @@ namespace TripasService.Logic {
         private void PairNodes() {
             List<string> nodeIds = Nodes.Keys.ToList();
             Random random = new Random();
-            nodeIds = nodeIds.OrderBy(_ => random.Next()).ToList(); // Mezclar nodos aleatoriamente
+            nodeIds = nodeIds.OrderBy(_ => random.Next()).ToList();
 
             List<string> colors = new List<string> { "Red", "Blue", "Gray", "Green", "Purple","Yellow", "White", "Orange", "Magenta", "Brown" };
             int colorIndex = 0;
@@ -114,11 +114,9 @@ namespace TripasService.Logic {
                 NodePairs[nodeIds[i]] = nodeIds[i + 1];
                 NodePairs[nodeIds[i + 1]] = nodeIds[i];
 
-                // Asignar el color a ambos nodos de la pareja
                 Nodes[nodeIds[i]].Color = colors[colorIndex];
                 Nodes[nodeIds[i + 1]].Color = colors[colorIndex];
 
-                // Avanzar al siguiente color
                 colorIndex = (colorIndex + 1) % colors.Count;
             }
         }
