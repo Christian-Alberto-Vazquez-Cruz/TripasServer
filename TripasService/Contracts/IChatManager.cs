@@ -8,10 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TripasService.Contracts {
-
     [ServiceContract(CallbackContract = typeof(IChatManagerCallBack))]
     public interface IChatManager {
-
         /// <summary>
         /// Sends a message to your current lobby chat (if you are in)
         /// </summary>

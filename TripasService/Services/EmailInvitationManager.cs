@@ -11,57 +11,39 @@ using DataBaseManager.Utils;
 
 namespace TripasService.Services {
     public partial class TripasGameService : IEmailInvitationManager {
-
-        private static Dictionary<string, DateTime> lastSentInvitationTime = new Dictionary<string, DateTime>();
         public int SendInvitation(string username, string code) {
             int operationResult = Constants.FAILED_OPERATION;
             string emailReceiver = UserDAO.GetMailByUsername(username);
 
             if (emailReceiver != Constants.NO_MATCHES_STRING) {
-                if (CanSendInvitation(username)) {
-                    string emailSender = "servicetripas@gmail.com";
-                    string emailPassword = "fxllpkrxfgnzbpvy";
-                    string displayName = "Tripas Game Invitation";
+                string emailSender = "servicetripas@gmail.com";
+                string emailPassword = "fxllpkrxfgnzbpvy";
+                string displayName = "Tripas Game Invitation";
 
-                    try {
-                        string emailBody = this.emailBodyInvitation(code);
-                        MailMessage mailMessage = new MailMessage();
-                        mailMessage.From = new MailAddress(emailSender, displayName);
-                        mailMessage.To.Add(emailReceiver);
+                try {
+                    string emailBody = this.EmailBodyInvitation(code);
+                    MailMessage mailMessage = new MailMessage();
+                    mailMessage.From = new MailAddress(emailSender, displayName);
+                    mailMessage.To.Add(emailReceiver);
 
-                        mailMessage.Subject = "A friend has invited your to a match!";
-                        mailMessage.Body = emailBody;
-                        mailMessage.IsBodyHtml = true;
+                    mailMessage.Subject = "A friend has invited you to a match!";
+                    mailMessage.Body = emailBody;
+                    mailMessage.IsBodyHtml = true;
 
-                        SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
-                        smtpClient.Credentials = new NetworkCredential(emailSender, emailPassword);
-                        smtpClient.EnableSsl = true;
+                    SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
+                    smtpClient.Credentials = new NetworkCredential(emailSender, emailPassword);
+                    smtpClient.EnableSsl = true;
 
-                        smtpClient.Send(mailMessage);
-                        operationResult = Constants.SUCCESSFUL_OPERATION;
-
-                        lastSentInvitationTime[username] = DateTime.Now;
-                    } catch (SmtpException smtpException) {
-                        Console.WriteLine($" An SMTPException for {username} invitation. {smtpException.Message}");
-                    }
+                    smtpClient.Send(mailMessage);
+                    operationResult = Constants.SUCCESSFUL_OPERATION;
+                } catch (SmtpException smtpException) {
+                    Console.WriteLine($"An SMTPException for {username} invitation. {smtpException.Message}");
                 }
             }
             return operationResult;
         }
 
-        private bool CanSendInvitation(string username) {
-            bool result = true;
-
-            if (lastSentInvitationTime.ContainsKey(username)) {
-                var lastSentTime = lastSentInvitationTime[username];
-                if ((DateTime.Now - lastSentTime).TotalSeconds < 20) {
-                    result = false;
-                }
-            }
-            return result;
-        }
-
-        private string emailBodyInvitation(string code) {
+        private string EmailBodyInvitation(string code) {
             return $@"
                 <html>
                 <body>

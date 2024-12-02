@@ -11,25 +11,26 @@ using TripasService.Logic;
 namespace TripasService.Services {
     public partial class TripasGameService : IFriendsManager {
         public int AddFriend(int idProfile1, int idProfile2) {
-            int result = FriendsDAO.StrikeUpFriendshipDAO(idProfile1, idProfile2);
-            return result;
+            int operationResult = FriendsDAO.StrikeUpFriendshipDAO(idProfile1, idProfile2);
+            return operationResult;
         }
         public int DeleteFriend(int idProfile1, int idProfile2) {
-            int result = FriendsDAO.DeleteFriendshipDAO(idProfile1, idProfile2);
-            return result;
+            int operationResult = FriendsDAO.DeleteFriendshipDAO(idProfile1, idProfile2);
+            return operationResult;
         }
 
         public List<Profile> GetFriends(int idProfile) {
             List<Perfil> friendProfiles = FriendsDAO.GetFriendsDAO(idProfile);
             List<Profile> friendList = new List<Profile>();
 
-            foreach (var friend in friendProfiles) {
-                Profile profile = new Profile() {
-                    IdProfile = friend.idPerfil,
-                    Username = friend.nombre,
-                    Score = friend.puntaje,
-                };
-                friendList.Add(profile);
+            if (!(friendProfiles.Count == 0)) {
+                foreach (var friend in friendProfiles) {
+                    Profile profile = new Profile() {
+                        IdProfile = friend.idPerfil,
+                        Username = friend.nombre,
+                    };
+                    friendList.Add(profile);
+                }
             }
             return friendList;
         }
