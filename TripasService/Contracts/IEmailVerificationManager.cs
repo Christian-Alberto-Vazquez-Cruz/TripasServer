@@ -21,7 +21,7 @@ namespace TripasService.Contracts {
         /// Sends an email with a a needed verification code to register that expires in 60s
         /// </summary>
         /// <param name="email">Given email to register</param>
-        /// <param name="verificationCode">verification code that was early sent to the player email</param>
+        /// <param name="verificationCode">verification code that was earlier sent to player's email</param>
         /// <returns>Returns true if code matches and false if it doesn't</returns>
         [OperationContract]
         bool VerifyCode(string email, string verificationCode);

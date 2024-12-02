@@ -80,6 +80,7 @@
     <Compile Include="Services\UserManager.cs" />
     <Compile Include="Utils\CodesGeneratorHelper.cs" />
     <Compile Include="Utils\Constants.cs" />
+    <Compile Include="Utils\EmailHelpercs.cs" />
     <Compile Include="Utils\GameEnums.cs" />
   </ItemGroup>
   <ItemGroup>
