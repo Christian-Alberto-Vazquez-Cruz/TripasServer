@@ -12,10 +12,10 @@ namespace TripasService.Contracts {
     [ServiceContract]
     public interface IUserManager {
         [OperationContract]
-        int CreateAccount(LoginUser user, Profile profile);
+        int CreateAccount(LoginUser newUser, Profile newProfile);
 
         [OperationContract]
-        int UpdateProfile(int idProfile, string newUsername, string newPic);
+        int UpdateProfile(int idProfile, string newUsername, string newPicPath);
 
         [OperationContract]
         int VerifyLogin(string email, string password);

@@ -17,9 +17,10 @@ namespace TripasService.Logic {
         [DataMember]
         public string Username { get; set; }
 
-        public Message(string chatMessage) {
+        public Message(string chatMessage, string username) {
             this.ChatMessage = chatMessage;
             this.TimeStamp = DateTime.Now;
+            this.Username = username;
         }
 
         public Message() {

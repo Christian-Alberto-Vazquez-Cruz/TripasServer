@@ -16,23 +16,25 @@ using System.Runtime.Remoting.Messaging;
 namespace TripasService.Services {
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single)]
     public partial class TripasGameService : IUserManager {
-        public int CreateAccount(LoginUser user, Profile profile) {
+        public int CreateAccount(LoginUser newUser, Profile newProfile) {
 
             DataBaseManager.Login newLogin = new DataBaseManager.Login() {
-                contrasena = user.password,
-                correo = user.mail
+                contrasena = newUser.password,
+                correo = newUser.mail
             };
 
             DataBaseManager.Perfil newPerfil = new DataBaseManager.Perfil() {
-                nombre = profile.Username,
+                nombre = newProfile.Username,
+                puntaje = Constants.INITIAL_SCORE,
+                fotoRuta = Constants.DEFAULT_PICPATH
             };
 
             int insertionResult = UserDAO.AddUserDAO(newPerfil, newLogin);
             return insertionResult;
         }
 
-        public int UpdateProfile(int idProfile, string newUsername, string newPic) {
-            int result = UserDAO.UpdateUserProfileDAO(idProfile, newUsername, newPic);
+        public int UpdateProfile(int idProfile, string newUsername, string newPicPath) {
+            int result = UserDAO.UpdateUserProfileDAO(idProfile, newUsername, newPicPath);
             return result;
         }
 

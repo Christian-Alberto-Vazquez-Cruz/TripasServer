@@ -22,7 +22,7 @@ namespace TripasService.Services {
                 _ => new ConcurrentDictionary<string, IChatManagerCallBack>());
 
             if (lobbyUsers.TryAdd(username, callback)) {
-                BroadcastMessageToLobby(new Message($"{username} se ha unido al lobby."), lobbyCode);
+                BroadcastMessageToLobby(new Message($"{username} se ha unido al lobby.", username), lobbyCode);
             } 
         }
 
@@ -60,7 +60,7 @@ namespace TripasService.Services {
             if (_connectedUsersByLobby.TryGetValue(lobbyCode, out var lobbyUsers) &&
                 lobbyUsers.TryRemove(username, out _)) {
 
-                BroadcastMessageToLobby(new Message($"User {username} abandonó el lobby."), lobbyCode);
+                BroadcastMessageToLobby(new Message($"User {username} abandonó el lobby.", username), lobbyCode);
 
                 if (lobbyUsers.IsEmpty) {
                     _connectedUsersByLobby.TryRemove(lobbyCode, out _);

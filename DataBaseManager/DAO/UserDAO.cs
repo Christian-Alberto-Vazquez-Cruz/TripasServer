@@ -14,13 +14,13 @@ using DataBaseManager.Utils;
 
 namespace DataBaseManager.DAO {
     public static class UserDAO {
-        public static int AddUserDAO(Perfil profile, Login user) {
+        public static int AddUserDAO(Perfil profile, Login newLogin) {
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     Login newUserLogin = new Login {
-                        correo = user.correo,
-                        contrasena = user.contrasena
+                        correo = newLogin.correo,
+                        contrasena = newLogin.contrasena
                     };
                     db.Login.Add(newUserLogin);
                     db.SaveChanges();
@@ -36,7 +36,7 @@ namespace DataBaseManager.DAO {
                     operationStatus = Constants.SUCCESSFUL_OPERATION;
                 }
             } catch (EntityException entityException) {
-                Console.WriteLine($"Error trying to register the user with {user.correo} mail, {profile.idPerfil} idProfile. {entityException.Message}");
+                Console.WriteLine($"Error trying to register the user with {newLogin.correo} mail, {profile.idPerfil} idProfile. {entityException.Message}");
             }
             return operationStatus;
         }
