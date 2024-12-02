@@ -22,5 +22,6 @@ namespace TripasService.Utils {
         public const string NO_MATCHES_STRING = "No matches found";
         public const int MIN_ID_GUEST = 100000;
         public const int MAX_ID_GUEST = 110001;
+        public const int EMPTY_STRUCTURE = -3;
     }
 }

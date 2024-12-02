@@ -1,69 +1,41 @@
 ﻿using TripasService.Utils;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using TripasService.Contracts;
 using System.Net;
 using System.Net.Mail;
-using System.Net.NetworkInformation;
+using System.Threading.Tasks;
+using TripasService.Contracts;
 using DataBaseManager.DAO;
+using System.Globalization;
 
 namespace TripasService.Services {
     public partial class TripasGameService : IEmailVerificationManager {
 
         private static Dictionary<string, string> verificationCodesCreateAccount = new Dictionary<string, string>();
+
         public int SendVerificationCodeRegister(string email) {
             int operationResult = Constants.FAILED_OPERATION;
+            string subject = "Your verification code";
+            string displayName = "Verification-Code Tripas Game"; 
+
             string code = GenerateCode();
-            if (verificationCodesCreateAccount.ContainsKey(email)) {
-                verificationCodesCreateAccount[email] = code;  
-            }
-            else {
-                verificationCodesCreateAccount.Add(email, code);
-                StartVerificationCodeTimer(email);
-                string emailSender = "servicetripas@gmail.com";
-                string emailPassword = "fxllpkrxfgnzbpvy";
-                string displayName = "Verification-Code Tripas Game";
-                try {
-                    string emailBody = this.emailBodyRegister(code);
-                    MailMessage mailMessage = new MailMessage();
-                    mailMessage.From = new MailAddress(emailSender, displayName);
-                    mailMessage.To.Add(email);
+            StoreVerificationCode(email, code);
+            string emailBody = CreateEmailBodyRegister(code);
+            operationResult = EmailHelper.SendEmail(email, subject, emailBody, displayName);
 
-                    mailMessage.Subject = "Your verification code";
-                    mailMessage.Body = emailBody;
-                    mailMessage.IsBodyHtml = true;
-                    
-                    SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
-                    smtpClient.Credentials = new NetworkCredential(emailSender, emailPassword);
-                    smtpClient.EnableSsl = true;
-
-                    smtpClient.Send(mailMessage);
-                    operationResult = Constants.SUCCESSFUL_OPERATION;
-                }
-                catch (SmtpException smtpException) {
-                    Console.WriteLine("Unable to send the mail "+smtpException.ToString());
-                }
-
-            }
             return operationResult;
         }
 
-        public bool VerifyCode(string email, string code) {
-            bool result = false;
-            if (verificationCodesCreateAccount.TryGetValue(email, out string storedCode)) {
-                if (storedCode.Equals(code)) {
-                    verificationCodesCreateAccount.Remove(email);
-                    result = true; 
-                }
-            } 
-            return result; 
+        private void StoreVerificationCode(string email, string code) {
+            if (verificationCodesCreateAccount.ContainsKey(email)) {
+                verificationCodesCreateAccount[email] = code;
+            } else {
+                verificationCodesCreateAccount.Add(email, code);
+                StartVerificationCodeTimer(email);
+            }
         }
 
-        private string emailBodyRegister(string code) {
+        private string CreateEmailBodyRegister(string code) {
             return $@"
                 <html>
                 <body>
@@ -78,9 +50,9 @@ namespace TripasService.Services {
                 </body>
                 </html>";
         }
-
         private bool VerifyCodeUniqueness(string code) {
-            return verificationCodesCreateAccount.ContainsValue(code);
+            bool codeUniqueness = verificationCodesCreateAccount.ContainsValue(code);
+            return codeUniqueness;
         }
 
         private string GenerateCode() {
@@ -93,10 +65,20 @@ namespace TripasService.Services {
 
         private void StartVerificationCodeTimer(string email) {
             Task.Run(async () => {
-                await Task.Delay(60000); 
+                await Task.Delay(60000);
                 verificationCodesCreateAccount.Remove(email);
             });
         }
 
+        public bool VerifyCode(string email, string code) {
+            bool verificationResult = false;
+            if (verificationCodesCreateAccount.TryGetValue(email, out string storedCode)) {
+                if (storedCode.Equals(code)) {
+                    verificationCodesCreateAccount.Remove(email);
+                    verificationResult = true;
+                }
+            }
+            return verificationResult;
+        }
     }
 }

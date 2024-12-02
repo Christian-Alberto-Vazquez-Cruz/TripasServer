@@ -61,6 +61,7 @@
     <Compile Include="Contracts\IEmailVerificationManager.cs" />
     <Compile Include="Logic\Lobby.cs" />
     <Compile Include="Logic\Match.cs" />
+    <Compile Include="Logic\Message.cs" />
     <Compile Include="Logic\Node.cs" />
     <Compile Include="Logic\TracePoint.cs" />
     <Compile Include="Logic\Profile.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Services\UserManager.cs" />
     <Compile Include="Utils\CodesGeneratorHelper.cs" />
     <Compile Include="Utils\Constants.cs" />
+    <Compile Include="Utils\EmailHelpercs.cs" />
     <Compile Include="Utils\GameEnums.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,50 +9,35 @@ using DataBaseManager.DAO;
 
 namespace TripasService.Services {
     public partial class TripasGameService : IPasswordRecoveryManager {
-        private static Dictionary<string, string> recoveryCodes = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> _recoveryCodes = new Dictionary<string, string>();
 
         public int SendRecoveryCode(string email) {
-            if (verifyEmailRegistration(email) == Constants.NO_MATCHES) {
-                return Constants.NO_MATCHES;
+            int operationResult = UserDAO.IsEmailRegisteredDAO(email);
+
+            if (operationResult != Constants.FOUND_MATCH) {
+                return operationResult;
             }
 
-            //AQUÍ FALTA VERIFICAR CUANDO VERIFYEMAL ES IGUAL A CONSTANTS.FAILED_OPERATION;
-
-            string code = CodesGeneratorHelper.GenerateVerificationCode();
-            recoveryCodes[email] = code;  
-            StartRecoveryCodeTimer(email);
-
-            string emailSender = "servicetripas@gmail.com";
-            string emailPassword = "fxllpkrxfgnzbpvy";
+            string code = GenerateAndStoreRecoveryCode(email);
+            string subject = "Your password recovery code";
             string displayName = "Password Recovery - Tripas Game";
-            try {
-                string emailBody = EmailBodyRecovery(code);
-                MailMessage mailMessage = new MailMessage {
-                    From = new MailAddress(emailSender, displayName),
-                    Subject = "Your password recovery code",
-                    Body = emailBody,
-                    IsBodyHtml = true
-                };
-                mailMessage.To.Add(email);
+            string emailBody = CreateEmailBodyRecovery(code);
 
-                SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587) {
-                    Credentials = new NetworkCredential(emailSender, emailPassword),
-                    EnableSsl = true
-                };
+            operationResult = EmailHelper.SendEmail(email, subject, emailBody, displayName);
+            return operationResult;
+        }
 
-                smtpClient.Send(mailMessage);
-                return Constants.SUCCESSFUL_OPERATION;
-            }
-            catch (SmtpException smtpException) {
-                Console.WriteLine("Unable to send the mail: " + smtpException.ToString());
-                return Constants.FAILED_OPERATION;
-            }
+        private string GenerateAndStoreRecoveryCode(string email) {
+            string code = CodesGeneratorHelper.GenerateVerificationCode();
+            _recoveryCodes[email] = code;
+            StartRecoveryCodeTimer(email);
+            return code; 
         }
 
         public bool VerifyRecoveryCode(string email, string code) {
-            if (recoveryCodes.TryGetValue(email, out string storedCode)) {
+            if (_recoveryCodes.TryGetValue(email, out string storedCode)) {
                 if (storedCode.Equals(code)) {
-                    recoveryCodes.Remove(email);
+                    _recoveryCodes.Remove(email);
                     return true;
                 }
             }
@@ -64,7 +49,7 @@ namespace TripasService.Services {
             return result; 
         }
 
-        private string EmailBodyRecovery(string code) {
+        private string CreateEmailBodyRecovery(string code) {
             return $@"
                 <html>
                 <body>
@@ -82,15 +67,9 @@ namespace TripasService.Services {
         private void StartRecoveryCodeTimer(string email) {
             Task.Run(async () => {
                 await Task.Delay(60000);
-                recoveryCodes.Remove(email);
+                _recoveryCodes.Remove(email);
                 Console.WriteLine($"El código de recuperación para {email} ha sido eliminado después de 60 segundos.");
             });
         }
-
-        private int verifyEmailRegistration(string email) {
-            int result = UserDAO.IsEmailRegisteredDAO(email);
-            return result;
-        }
-
     }
 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DataBaseManager.DAO {
     public static class FriendsDAO {
         public static int StrikeUpFriendshipDAO(int idProfile1, int idProfile2) {
-            int operationStatus = Constants.FAILED_OPERATION;
+            int operationResult = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     Amistad newFriendship = new Amistad() {
@@ -19,17 +19,16 @@ namespace DataBaseManager.DAO {
 
                     db.Amistad.Add(newFriendship);
                     db.SaveChanges();
-                    operationStatus = Constants.SUCCESSFUL_OPERATION;
+                    operationResult = Constants.SUCCESSFUL_OPERATION;
                 }
             } catch (EntityException entityException) {
                 Console.WriteLine($"Error trying to register the friendship {entityException.Message}");
             }
-            return operationStatus;
+            return operationResult;
         }
 
-        //Not useful anymore?
         public static int DeleteFriendshipDAO(int idProfile1, int idProfile2) {
-            int operationStatus = Constants.FAILED_OPERATION;
+            int operationResult = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     var friendshipToDelete = db.Amistad.FirstOrDefault(a =>
@@ -38,13 +37,15 @@ namespace DataBaseManager.DAO {
                     if (friendshipToDelete != null) {
                         db.Amistad.Remove(friendshipToDelete);
                         db.SaveChanges();
-                        operationStatus = Constants.SUCCESSFUL_OPERATION;
+                        operationResult = Constants.SUCCESSFUL_OPERATION;
+                    } else {
+                        operationResult = Constants.NO_MATCHES;
                     }
                 }
             } catch (EntityException entityException) {
                 Console.WriteLine(entityException.Message);
             }
-            return operationStatus;
+            return operationResult;
         }
 
         public static List<Perfil> GetFriendsDAO(int idProfile) {

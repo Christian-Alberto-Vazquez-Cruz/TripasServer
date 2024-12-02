@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mail;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Mail;
 using TripasService.Contracts;
 using DataBaseManager.DAO;
 using DataBaseManager.Utils;
@@ -12,56 +8,39 @@ using DataBaseManager.Utils;
 namespace TripasService.Services {
     public partial class TripasGameService : IEmailInvitationManager {
 
-        private static Dictionary<string, DateTime> lastSentInvitationTime = new Dictionary<string, DateTime>();
         public int SendInvitation(string username, string code) {
             int operationResult = Constants.FAILED_OPERATION;
             string emailReceiver = UserDAO.GetMailByUsername(username);
 
-            if (!string.IsNullOrEmpty(emailReceiver)) {
-                if (CanSendInvitation(username)) {
-                    string emailSender = "servicetripas@gmail.com";
-                    string emailPassword = "fxllpkrxfgnzbpvy";
-                    string displayName = "Tripas Game Invitation";
-
-                    try {
-                        string emailBody = this.emailBodyInvitation(code);
-                        MailMessage mailMessage = new MailMessage();
-                        mailMessage.From = new MailAddress(emailSender, displayName);
-                        mailMessage.To.Add(emailReceiver);
-
-                        mailMessage.Subject = "A friend has invited your to a match!";
-                        mailMessage.Body = emailBody;
-                        mailMessage.IsBodyHtml = true;
-
-                        SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
-                        smtpClient.Credentials = new NetworkCredential(emailSender, emailPassword);
-                        smtpClient.EnableSsl = true;
-
-                        smtpClient.Send(mailMessage);
-                        operationResult = Constants.SUCCESSFUL_OPERATION;
-
-                        lastSentInvitationTime[username] = DateTime.Now;
-                    } catch (SmtpException smtpException) {
-                        Console.WriteLine($" An SMTPException for {username} invitation. {smtpException.Message}");
-                    }
-                }
+            if (emailReceiver != Constants.NO_MATCHES_STRING) {
+                operationResult = SendEmailInvitation(emailReceiver, code);
             }
+
             return operationResult;
         }
 
-        private bool CanSendInvitation(string username) {
-            bool result = true;
+        private int SendEmailInvitation(string emailReceiver, string code) {
+            int operationResult = Constants.FAILED_OPERATION;
+            string emailSender = "servicetripas@gmail.com";
+            string emailPassword = "fxllpkrxfgnzbpvy";
+            string displayName = "Tripas Game Invitation";
 
-            if (lastSentInvitationTime.ContainsKey(username)) {
-                var lastSentTime = lastSentInvitationTime[username];
-                if ((DateTime.Now - lastSentTime).TotalSeconds < 20) {
-                    result = false;
-                }
+            try {
+                string emailBody = CreateEmailBodyInvitation(code);
+                MailMessage mailMessage = CreateMailMessage(emailSender, displayName, emailReceiver, emailBody);
+
+                SmtpClient smtpClient = CreateSmtpClient(emailSender, emailPassword);
+                smtpClient.Send(mailMessage);
+                operationResult = Constants.SUCCESSFUL_OPERATION;
+            } catch (SmtpException smtpException) {
+                //LOGGUEAR ESTO
+                Console.WriteLine($"An exception involving EmailInvitationManager has ocurred {smtpException.ToString()}");
             }
-            return result;
+
+            return operationResult;
         }
 
-        private string emailBodyInvitation(string code) {
+        private string CreateEmailBodyInvitation(string code) {
             return $@"
                 <html>
                 <body>
@@ -75,6 +54,25 @@ namespace TripasService.Services {
                     <p><strong>Tripas Game Team</strong></p>
                 </body>
                 </html>";
+        }
+
+        private MailMessage CreateMailMessage(string emailSender, string displayName, string emailReceiver, string emailBody) {
+            MailMessage mailMessage = new MailMessage {
+                From = new MailAddress(emailSender, displayName),
+                Subject = "A friend has invited you to a match!",
+                Body = emailBody,
+                IsBodyHtml = true
+            };
+            mailMessage.To.Add(emailReceiver);
+            return mailMessage;
+        }
+
+        private SmtpClient CreateSmtpClient(string emailSender, string emailPassword) {
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587) {
+                Credentials = new NetworkCredential(emailSender, emailPassword),
+                EnableSsl = true
+            };
+            return smtpClient;
         }
     }
 }
