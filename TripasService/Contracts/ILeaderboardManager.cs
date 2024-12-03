@@ -6,13 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 using TripasService.Logic;
 
+
 namespace TripasService.Contracts {
     [ServiceContract]
     public interface ILeaderboardManager {
+
         /// <summary>
         /// Retrieves the 10 highests scores players
         /// </summary>
-        /// <returns>Returns an empty List<Profile> if there are no players, or a list<Profile> with username and score</returns>
+        /// <param name="username">User in friendlist to invite</param>
+        /// <param name="code">Lobby code</param>
+        /// <returns>Returns a list of Profiles with username and score, if there are no players, the list will be empty</returns>
+
         [OperationContract]
         List<Profile> GetHighestScores();
     }

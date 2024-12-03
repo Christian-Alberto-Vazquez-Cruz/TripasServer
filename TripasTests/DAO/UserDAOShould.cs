@@ -20,25 +20,37 @@ namespace TripasTests.DAO {
 
         [Fact]
         public void AddUser() {
-            DataBaseManager.Login testLogin = new DataBaseManager.Login() {
-                correo = "zS22013636@estudiantes.uv.mx",
+            DataBaseManager.Login newLogin = new DataBaseManager.Login() {
+                correo = "zS22011132@estudiantes.uv.mx",
                 contrasena = "MiContrasena1!"
             };
 
-            DataBaseManager.Perfil testPerfil = new DataBaseManager.Perfil() {
+            DataBaseManager.Perfil newPerfil = new DataBaseManager.Perfil() {
                 nombre = "Pedrinho",
-                puntaje = 0,
-                fotoRuta = Constants.INITIAL_PIC_PATH
+                fotoRuta = Constants.INITIAL_PIC_PATH,
             };
 
             int userAdded = Constants.SUCCESSFUL_OPERATION;
-            int result = DataBaseManager.DAO.UserDAO.AddUserDAO(testPerfil, testLogin);
+            int result = DataBaseManager.DAO.UserDAO.AddUserDAO(newPerfil, newLogin);
 
             Assert.Equal(userAdded, result);
         }
 
-    // [FACT] ¿Debería haber un caso de prueba por valores nulos? ¿Debería haber un caso de prueba con un valor nulo y otro no?
-    // [FACT] Un caso de prueba por un error con la BD, ¿Cómo?
+
+        [Fact]
+        public void AddUserException() {
+            DataBaseManager.Login newLoginEmpty = new DataBaseManager.Login();
+            DataBaseManager.Perfil newPerfilEmpty = new DataBaseManager.Perfil();
+
+
+            int operationFailed = Constants.FAILED_OPERATION;
+            int resultObtained = DataBaseManager.DAO.UserDAO.AddUserDAO(newPerfilEmpty, newLoginEmpty);
+
+            Assert.Equal(operationFailed, resultObtained);
+        }
+
+        // [FACT] ¿Debería haber un caso de prueba por valores nulos? ¿Debería haber un caso de prueba con un valor nulo y otro no?
+        // [FACT] Un caso de prueba por un error con la BD, ¿Cómo?
 
         [Fact]
         public void ValidateUser() {
@@ -189,7 +201,7 @@ namespace TripasTests.DAO {
         }
         public void Dispose() {
             UserDAO.DeleteAccountDAO("test@hotmail.com.mx");
-            UserDAO.DeleteAccountDAO("zS22013636@estudiantes.uv.mx");
+            UserDAO.DeleteAccountDAO("zS22011132@estudiantes.uv.mx");
             UserDAO.DeleteAccountDAO("Pablito@hotmail.com.mx");
         }
     }

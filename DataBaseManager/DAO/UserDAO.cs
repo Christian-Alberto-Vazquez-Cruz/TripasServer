@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Entity.Core;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -18,22 +20,28 @@ namespace DataBaseManager.DAO {
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    Login newUserLogin = new Login {
-                        correo = newLogin.correo,
-                        contrasena = newLogin.contrasena
-                    };
-                    db.Login.Add(newUserLogin);
-                    db.SaveChanges();
+                    try {
+                        Login newUserLogin = new Login {
+                            correo = newLogin.correo,
+                            contrasena = newLogin.contrasena
+                        };
+                        db.Login.Add(newUserLogin);
+                        db.SaveChanges();
 
-                    Perfil newUserProfile = new Perfil {
-                        nombre = profile.nombre,
-                        puntaje = Constants.INITIAL_SCORE,
-                        fotoRuta = profile.fotoRuta,
-                        idPerfil = newUserLogin.idUsuario
-                    };
-                    db.Perfil.Add(newUserProfile);
-                    db.SaveChanges();
-                    operationStatus = Constants.SUCCESSFUL_OPERATION;
+                        Perfil newUserProfile = new Perfil {
+                            nombre = profile.nombre,
+                            puntaje = Constants.INITIAL_SCORE,
+                            fotoRuta = profile.fotoRuta,
+                            idPerfil = newUserLogin.idUsuario
+                        };
+                        db.Perfil.Add(newUserProfile);
+                        db.SaveChanges();
+                        operationStatus = Constants.SUCCESSFUL_OPERATION;
+                    } catch (DbEntityValidationException dbEntityValidationException) {
+                        operationStatus = Constants.FAILED_OPERATION;
+                    } catch (DbUpdateException dbUpdateException) {
+                        operationStatus = Constants.FAILED_OPERATION;
+                    }
                 }
             } catch (EntityException entityException) {
                 Console.WriteLine($"Error trying to register the user with {newLogin.correo} mail, {profile.idPerfil} idProfile. {entityException.Message}");
