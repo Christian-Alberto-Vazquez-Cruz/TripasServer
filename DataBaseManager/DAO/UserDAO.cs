@@ -60,10 +60,13 @@ namespace DataBaseManager.DAO {
                         operationStatus = Constants.NO_MATCHES;
                     }
                 }
+            } catch (SqlException sqlException) {
+                Console.WriteLine($"Error trying to validate user: {mail}, {sqlException.Message}");
+                //operationStatus = Constants.FAILED_OPERATION;
             } catch (EntityException entityException) {
-                Console.WriteLine($"Error trying to validate user: {mail}, {entityException.Message}");
+                //LOGGEAR
+                //operationStatus = Constants.FAILED_OPERATION;
             }
-
             return operationStatus;
         }
 

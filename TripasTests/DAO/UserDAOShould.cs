@@ -76,6 +76,17 @@ namespace TripasTests.DAO {
 
 
         [Fact]
+        public void ValidateUserException() {
+            string password = null;
+            string mail = null;
+
+            int exceptionResult = Constants.FAILED_OPERATION;
+            int result = DataBaseManager.DAO.UserDAO.ValidateUserDAO(password, mail);
+
+            Assert.Equal(exceptionResult, result);
+        }
+
+        [Fact]
         public void UpdateUserProfile() {
             //¿Agregar usuario?
             int id = 4;
