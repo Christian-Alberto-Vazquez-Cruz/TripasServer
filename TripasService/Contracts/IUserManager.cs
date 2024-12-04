@@ -11,11 +11,17 @@ using TripasService.Logic;
 namespace TripasService.Contracts {
     [ServiceContract]
     public interface IUserManager {
-        [OperationContract]
-        int CreateAccount(LoginUser user, Profile profile);
+
+        /// <summary>
+        /// Creates the account of a new user into the database
+        /// </summary>
+        /// <param name="newUser">Player's email</param>
+        /// <param name="newProfile">New password that the player account will have</param>
+        /// <returns>>Returns 1 in success or -1 if it failed</returns>
+        int CreateAccount(LoginUser newUser, Profile newProfile);
 
         [OperationContract]
-        int UpdateProfile(int idProfile, string newUsername, string newPic);
+        int UpdateProfile(int idProfile, string newUsername, string newPicPath);
 
         [OperationContract]
         int VerifyLogin(string email, string password);
@@ -36,17 +42,6 @@ namespace TripasService.Contracts {
         [OperationContract]
         string GetPicPath(string username);
 
-    }
-
-
-    [DataContract]
-    public class LoginUser {
-        [DataMember]
-        public int idLoginUser { get; set; }
-        [DataMember]
-        public string mail { get; set; }
-        [DataMember]
-        public string password { get; set; }
     }
 
     [DataContract]

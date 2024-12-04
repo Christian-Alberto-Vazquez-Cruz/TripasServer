@@ -11,7 +11,7 @@ using System.Globalization;
 namespace TripasService.Services {
     public partial class TripasGameService : IEmailVerificationManager {
 
-        private static Dictionary<string, string> verificationCodesCreateAccount = new Dictionary<string, string>();
+        private static readonly Dictionary<string, string> _verificationCodesCreateAccount = new Dictionary<string, string>();
 
         public int SendVerificationCodeRegister(string email) {
             int operationResult = Constants.FAILED_OPERATION;
@@ -27,10 +27,10 @@ namespace TripasService.Services {
         }
 
         private void StoreVerificationCode(string email, string code) {
-            if (verificationCodesCreateAccount.ContainsKey(email)) {
-                verificationCodesCreateAccount[email] = code;
+            if (_verificationCodesCreateAccount.ContainsKey(email)) {
+                _verificationCodesCreateAccount[email] = code;
             } else {
-                verificationCodesCreateAccount.Add(email, code);
+                _verificationCodesCreateAccount.Add(email, code);
                 StartVerificationCodeTimer(email);
             }
         }
@@ -51,7 +51,7 @@ namespace TripasService.Services {
                 </html>";
         }
         private bool VerifyCodeUniqueness(string code) {
-            bool codeUniqueness = verificationCodesCreateAccount.ContainsValue(code);
+            bool codeUniqueness = _verificationCodesCreateAccount.ContainsValue(code);
             return codeUniqueness;
         }
 
@@ -66,15 +66,15 @@ namespace TripasService.Services {
         private void StartVerificationCodeTimer(string email) {
             Task.Run(async () => {
                 await Task.Delay(60000);
-                verificationCodesCreateAccount.Remove(email);
+                _verificationCodesCreateAccount.Remove(email);
             });
         }
 
         public bool VerifyCode(string email, string code) {
             bool verificationResult = false;
-            if (verificationCodesCreateAccount.TryGetValue(email, out string storedCode)) {
+            if (_verificationCodesCreateAccount.TryGetValue(email, out string storedCode)) {
                 if (storedCode.Equals(code)) {
-                    verificationCodesCreateAccount.Remove(email);
+                    _verificationCodesCreateAccount.Remove(email);
                     verificationResult = true;
                 }
             }

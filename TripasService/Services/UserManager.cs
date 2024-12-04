@@ -16,15 +16,17 @@ using System.Runtime.Remoting.Messaging;
 namespace TripasService.Services {
     [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single)]
     public partial class TripasGameService : IUserManager {
-        public int CreateAccount(LoginUser user, Profile profile) {
+        public int CreateAccount(LoginUser newUser, Profile newProfile) {
 
             DataBaseManager.Login newLogin = new DataBaseManager.Login() {
-                contrasena = user.password,
-                correo = user.mail
+                contrasena = newUser.Password,
+                correo = newUser.Mail
             };
 
             DataBaseManager.Perfil newPerfil = new DataBaseManager.Perfil() {
-                nombre = profile.Username,
+                nombre = newProfile.Username,
+                puntaje = Constants.INITIAL_SCORE,
+                fotoRuta = Constants.DEFAULT_PICPATH
             };
 
             int insertionResult = UserDAO.AddUserDAO(newPerfil, newLogin);
@@ -60,8 +62,6 @@ namespace TripasService.Services {
             return isRegistered;
         }
 
-
-        //===> AQUÍ SE ESTÁ EMPLEANDO LA VERIFICACIÓN DE NO NULOS 
         public int IsNameRegistered(string username) {
             int isRegistered = Constants.FAILED_OPERATION;
             if (!string.IsNullOrEmpty(username)) {

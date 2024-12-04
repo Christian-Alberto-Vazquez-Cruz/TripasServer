@@ -23,22 +23,24 @@ namespace TripasService.Logic {
 
         [DataMember]
         public List<TracePoint> TracePoints { get; set; } = new List<TracePoint>();
+
         [DataMember]
         public string Color { get; set; }
         public int Score {
             get {
                 int pointsCount = TracePoints.Count;
 
-                return pointsCount < Constants.MIN_POINTS_CRITERIA 
-                       ? Constants.MIN_TRACE_SCORE
-                       : TracePoints.Count > Constants.MAX_POINTS_CRITERIA 
-                       ? Constants.MAX_TRACE_SCORE
-                       : Constants.MIN_TRACE_SCORE + ((TracePoints.Count - Constants.MIN_POINTS_CRITERIA) * 
-                       Constants.MAX_MIN_TRACE_SCORE_DIFF) / Constants.MIN_MAX_POINTS_CRITERIA_DIFF;
+                if (pointsCount < Constants.MIN_POINTS_CRITERIA) {
+                    return Constants.MIN_TRACE_SCORE;
+                } else if (pointsCount > Constants.MAX_POINTS_CRITERIA) {
+                    return Constants.MAX_TRACE_SCORE;
+                } else {
+                    return Constants.MIN_TRACE_SCORE +
+                           ((pointsCount - Constants.MIN_POINTS_CRITERIA) * Constants.MAX_MIN_TRACE_SCORE_DIFF) /
+                           Constants.MIN_MAX_POINTS_CRITERIA_DIFF;
+                }
             }
         }
-
-
         public Trace() {
 
         }

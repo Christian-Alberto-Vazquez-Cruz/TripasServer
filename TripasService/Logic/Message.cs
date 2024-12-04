@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 namespace TripasService.Logic {
     [DataContract]
     public class Message {
-        [DataMember]
-        public DateTime TimeStamp { get; set; }
 
         [DataMember]
         public string ChatMessage { get; set; }
@@ -17,16 +15,16 @@ namespace TripasService.Logic {
         [DataMember]
         public string Username { get; set; }
 
-        public Message(string chatMessage) {
+        public Message(string chatMessage, string username) {
             this.ChatMessage = chatMessage;
-            this.TimeStamp = DateTime.Now;
+            this.Username = username;
         }
 
         public Message() {
 
         }
         public override string ToString() {
-            return $"{TimeStamp.ToLocalTime()} {Username}: {ChatMessage}";
+            return $"{Username}: {ChatMessage}";
         }
     }
 }
