@@ -20,31 +20,29 @@ namespace DataBaseManager.DAO {
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    try {
-                        Login newUserLogin = new Login {
-                            correo = newLogin.correo,
-                            contrasena = newLogin.contrasena
-                        };
-                        db.Login.Add(newUserLogin);
-                        db.SaveChanges();
+                    Login newUserLogin = new Login {
+                        correo = newLogin.correo,
+                        contrasena = newLogin.contrasena
+                    };
+                    db.Login.Add(newUserLogin);
+                    db.SaveChanges();
 
-                        Perfil newUserProfile = new Perfil {
-                            nombre = profile.nombre,
-                            puntaje = Constants.INITIAL_SCORE,
-                            fotoRuta = profile.fotoRuta,
-                            idPerfil = newUserLogin.idUsuario
-                        };
-                        db.Perfil.Add(newUserProfile);
-                        db.SaveChanges();
-                        operationStatus = Constants.SUCCESSFUL_OPERATION;
-                    } catch (DbEntityValidationException dbEntityValidationException) {
-                        operationStatus = Constants.FAILED_OPERATION;
-                    } catch (DbUpdateException dbUpdateException) {
-                        operationStatus = Constants.FAILED_OPERATION;
-                    }
+                    Perfil newUserProfile = new Perfil {
+                        nombre = profile.nombre,
+                        puntaje = Constants.INITIAL_SCORE,
+                        fotoRuta = profile.fotoRuta,
+                        idPerfil = newUserLogin.idUsuario
+                    };
+                    db.Perfil.Add(newUserProfile);
+                    db.SaveChanges();
+                    operationStatus = Constants.SUCCESSFUL_OPERATION;
                 }
+            } catch (DbEntityValidationException dbEntityValidationException) {
+                //LOGGEAR
+            } catch (DbUpdateException dbUpdateException) {
+                //LOGGEAR
             } catch (EntityException entityException) {
-                Console.WriteLine($"Error trying to register the user with {newLogin.correo} mail, {profile.idPerfil} idProfile. {entityException.Message}");
+                //LOGGEAR
             }
             return operationStatus;
         }
@@ -251,42 +249,63 @@ namespace DataBaseManager.DAO {
             }
         }
 
-        public static int AddUserWithSpecificIdDAO(Perfil profile, Login user) {
-            int operationStatus = Constants.FAILED_OPERATION;
+        /* public static int AddUserWithSpecificIdDAO(Perfil profile, Login user) {
+             int operationStatus = Constants.FAILED_OPERATION;
+             try {
+                 using (tripasEntities db = new tripasEntities()) {
+                     if (db.Login.Any(login   => login.idUsuario == user.idUsuario) ||
+                         db.Perfil.Any(userProfile => userProfile.idPerfil == userProfile.idPerfil)) {
+                         Console.WriteLine($"El ID de usuario {user.idUsuario} ya existe.");
+                         return Constants.FAILED_OPERATION;
+                     }
+
+                     db.Configuration.AutoDetectChangesEnabled = false;
+
+                     Login newUserLogin = new Login {
+                         idUsuario = user.idUsuario,
+                         correo = user.correo,
+                         contrasena = user.contrasena
+                     };
+                     db.Login.Add(newUserLogin);
+                     db.SaveChanges();
+
+                     Perfil newUserProfile = new Perfil {
+                         idPerfil = user.idUsuario, 
+                         nombre = profile.nombre,
+                         puntaje = Constants.INITIAL_SCORE,
+                         fotoRuta = Constants.INITIAL_PIC_PATH
+                     };
+                     db.Perfil.Add(newUserProfile);
+                     db.SaveChanges();
+
+                     db.Configuration.AutoDetectChangesEnabled = true;
+                     operationStatus = Constants.SUCCESSFUL_OPERATION;
+                 }
+             } catch (EntityException entityException) {
+                 Console.WriteLine($"Error trying to register the user with {user.correo} mail and specific ID {user.idUsuario}. {entityException.Message}");
+             }
+             return operationStatus;
+         }*/
+        public static int IsFriendAlreadyAddedDAO(int idProfile1, int idProfile2) {
+            int operationResult = Constants.FAILED_OPERATION;
+
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    if (db.Login.Any(login   => login.idUsuario == user.idUsuario) ||
-                        db.Perfil.Any(userProfile => userProfile.idPerfil == userProfile.idPerfil)) {
-                        Console.WriteLine($"El ID de usuario {user.idUsuario} ya existe.");
-                        return Constants.FAILED_OPERATION;
+                    var existingFriendship = db.Amistad.FirstOrDefault(a =>
+                        a.idJugadorUno == idProfile1 && a.idJugadorDos == idProfile2);
+
+                    if (existingFriendship != null) {
+                        operationResult = Constants.SUCCESSFUL_OPERATION;
+                    } else {
+                        operationResult = Constants.NO_MATCHES;
                     }
-
-                    db.Configuration.AutoDetectChangesEnabled = false;
-
-                    Login newUserLogin = new Login {
-                        idUsuario = user.idUsuario,
-                        correo = user.correo,
-                        contrasena = user.contrasena
-                    };
-                    db.Login.Add(newUserLogin);
-                    db.SaveChanges();
-
-                    Perfil newUserProfile = new Perfil {
-                        idPerfil = user.idUsuario, 
-                        nombre = profile.nombre,
-                        puntaje = Constants.INITIAL_SCORE,
-                        fotoRuta = Constants.INITIAL_PIC_PATH
-                    };
-                    db.Perfil.Add(newUserProfile);
-                    db.SaveChanges();
-
-                    db.Configuration.AutoDetectChangesEnabled = true;
-                    operationStatus = Constants.SUCCESSFUL_OPERATION;
                 }
-            } catch (EntityException entityException) {
-                Console.WriteLine($"Error trying to register the user with {user.correo} mail and specific ID {user.idUsuario}. {entityException.Message}");
+            } catch (SqlException sqlException) {
+                //Loggear
+            } catch (Exception ex) {
+                //loggear
             }
-            return operationStatus;
+            return operationResult;
         }
     }
 }

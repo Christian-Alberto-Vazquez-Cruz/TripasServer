@@ -34,6 +34,11 @@ namespace TripasService.Services {
             }
             return friendList;
         }
+
+        public int IsFriendAlreadyAdded(int idProfile1, int idProfile2) {
+            int operationResult = FriendsDAO.IsFriendAlreadyAddedDAO(idProfile1, idProfile2);
+            return operationResult;
+        }
     }
 }
     

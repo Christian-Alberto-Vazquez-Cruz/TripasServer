@@ -67,5 +67,27 @@ namespace DataBaseManager.DAO {
             }
             return friendList;
         }
+
+        public static int IsFriendAlreadyAddedDAO(int idProfile1, int idProfile2) {
+            int operationResult = Constants.FAILED_OPERATION;
+
+            try {
+                using (tripasEntities db = new tripasEntities()) {
+                    // Verificar si existe una relación de amistad con idJugadorUno = idProfile1 y idJugadorDos = idProfile2
+                    var existingFriendship = db.Amistad.FirstOrDefault(a =>
+                        a.idJugadorUno == idProfile1 && a.idJugadorDos == idProfile2);
+
+                    if (existingFriendship != null) {
+                        operationResult = Constants.SUCCESSFUL_OPERATION; // Ya son amigos
+                    } else {
+                        operationResult = Constants.NO_MATCHES; // No son amigos
+                    }
+                }
+            } catch (EntityException entityException) {
+                Console.WriteLine($"Error trying to verify friendship: {entityException.Message}");
+            }
+
+            return operationResult;
+        }
     }
 }
