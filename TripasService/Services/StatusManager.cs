@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Concurrent;
-using TripasService.Utils;
+﻿using TripasService.Utils;
 using TripasService.Contracts;
+using System.Collections.Concurrent;
 
 
 namespace TripasService.Services {
+
     public partial class TripasGameService : IStatusManager {
+
         private static readonly ConcurrentDictionary<int, GameEnums.PlayerStatus> _playerStatuses = new ConcurrentDictionary<int, GameEnums.PlayerStatus>();
 
         public GameEnums.PlayerStatus GetPlayerStatus(int idProfile) {

@@ -1,14 +1,10 @@
 ﻿using TripasService.Utils;
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Mail;
 using System.Threading.Tasks;
 using TripasService.Contracts;
-using DataBaseManager.DAO;
-using System.Globalization;
+using System.Collections.Generic;
 
 namespace TripasService.Services {
+
     public partial class TripasGameService : IEmailVerificationManager {
 
         private static readonly Dictionary<string, string> _verificationCodesCreateAccount = new Dictionary<string, string>();
@@ -17,12 +13,10 @@ namespace TripasService.Services {
             int operationResult = Constants.FAILED_OPERATION;
             string subject = "Your verification code";
             string displayName = "Verification-Code Tripas Game"; 
-
             string code = GenerateCode();
             StoreVerificationCode(email, code);
             string emailBody = CreateEmailBodyRegister(code);
             operationResult = EmailHelper.SendEmail(email, subject, emailBody, displayName);
-
             return operationResult;
         }
 
@@ -50,6 +44,7 @@ namespace TripasService.Services {
                 </body>
                 </html>";
         }
+
         private bool VerifyCodeUniqueness(string code) {
             bool codeUniqueness = _verificationCodesCreateAccount.ContainsValue(code);
             return codeUniqueness;

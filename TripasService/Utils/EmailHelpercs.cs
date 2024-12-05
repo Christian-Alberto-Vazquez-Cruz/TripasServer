@@ -6,6 +6,7 @@ using TripasService.Utils;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using TripasService.Logic;
 
 public static class EmailHelper {
     private const string SmtpServer = "smtp.gmail.com";
@@ -14,6 +15,7 @@ public static class EmailHelper {
     private const string EmailPassword = "fxllpkrxfgnzbpvy";
 
     public static int SendEmail(string recipientEmail, string subject, string emailBody, string displayName) {
+        LoggerManager logger = new LoggerManager(typeof(EmailHelper));
         try {
             MailMessage mailMessage = new MailMessage {
                 From = new MailAddress(EmailSender, displayName),
@@ -27,10 +29,10 @@ public static class EmailHelper {
                 Credentials = new NetworkCredential(EmailSender, EmailPassword),
                 EnableSsl = true
             };
-
             smtpClient.Send(mailMessage);
             return Constants.SUCCESSFUL_OPERATION;
         } catch (SmtpException smtpException) {
+            logger.LogError(smtpException);
             Console.WriteLine($"Email sending failed: {smtpException.Message}");
             return Constants.FAILED_OPERATION;
         }
