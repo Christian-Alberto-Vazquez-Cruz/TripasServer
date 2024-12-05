@@ -16,7 +16,7 @@ using static System.Net.Mime.MediaTypeNames;
 namespace TripasTests.DAO {
 
 
-    public class UserDAOShould: IClassFixture<DatabaseFixture> {
+    public class UserDAOShould : IClassFixture<DatabaseFixture> {
 
         [Fact]
         public void AddUser() {
@@ -27,13 +27,12 @@ namespace TripasTests.DAO {
 
             DataBaseManager.Perfil newPerfil = new DataBaseManager.Perfil() {
                 nombre = "Pedrinho",
-                fotoRuta = Constants.INITIAL_PIC_PATH,
             };
 
             int userAdded = Constants.SUCCESSFUL_OPERATION;
-            int result = DataBaseManager.DAO.UserDAO.AddUserDAO(newPerfil, newLogin);
+            int resultObtained = DataBaseManager.DAO.UserDAO.AddUserDAO(newPerfil, newLogin);
 
-            Assert.Equal(userAdded, result);
+            Assert.Equal(userAdded, resultObtained);
         }
 
 
@@ -42,15 +41,11 @@ namespace TripasTests.DAO {
             DataBaseManager.Login newLoginEmpty = new DataBaseManager.Login();
             DataBaseManager.Perfil newPerfilEmpty = new DataBaseManager.Perfil();
 
-
             int operationFailed = Constants.FAILED_OPERATION;
             int resultObtained = DataBaseManager.DAO.UserDAO.AddUserDAO(newPerfilEmpty, newLoginEmpty);
 
             Assert.Equal(operationFailed, resultObtained);
         }
-
-        // [FACT] ¿Debería haber un caso de prueba por valores nulos? ¿Debería haber un caso de prueba con un valor nulo y otro no?
-        // [FACT] Un caso de prueba por un error con la BD, ¿Cómo?
 
         [Fact]
         public void ValidateUser() {
@@ -58,26 +53,36 @@ namespace TripasTests.DAO {
             string password = "MiContrasena1!";
 
             int userExists = Constants.FOUND_MATCH;
-            int result = DataBaseManager.DAO.UserDAO.ValidateUserDAO(password, mail);
+            int resultObtained = DataBaseManager.DAO.UserDAO.ValidateUserDAO(password, mail);
 
-            Assert.Equal(userExists, result);
+            Assert.Equal(userExists, resultObtained);
         }
 
         [Fact]
         public void ValidateUserNotFound() {
-            string password = "4fc5e3e3a50b4b10a0b71cc5053b813d44bec408fd6c2f02eb520c5401d5c3a7";
+            string password = "Serpiente2!";
             string email = "j@gmail.com";
 
             int userDoesntExist = Constants.NO_MATCHES;
-            int result = DataBaseManager.DAO.UserDAO.ValidateUserDAO(password, email);
+            int resultObtained = DataBaseManager.DAO.UserDAO.ValidateUserDAO(password, email);
 
-            Assert.Equal(userDoesntExist, result);    
+            Assert.Equal(userDoesntExist, resultObtained);
         }
 
 
         [Fact]
+        public void ValidateUserException() {
+            string password = null;
+            string mail = null;
+
+            int exceptionResult = Constants.FAILED_OPERATION;
+            int resultObtained = DataBaseManager.DAO.UserDAO.ValidateUserDAO(password, mail);
+
+            Assert.Equal(exceptionResult, resultObtained);
+        }
+
+        [Fact]
         public void UpdateUserProfile() {
-            //¿Agregar usuario?
             int id = 4;
             string newPicPath = "/Images/Profiles/ImageProfile9.png";
             string newUsername = "Nombre";
@@ -90,81 +95,266 @@ namespace TripasTests.DAO {
 
         [Fact]
         public void UpdateUserProfileNotFound() {
-            //¿Eliminar usuario si existe?
             int id = 115;
             string newPicPath = Constants.INITIAL_PIC_PATH;
-            string newUsername = "Nombre";
+            string newUsername = "MathT";
 
             int userNotFound = Constants.NO_MATCHES;
-            int result = DataBaseManager.DAO.UserDAO.UpdateUserProfileDAO(id, newUsername, newPicPath);
+            int resultObtained = DataBaseManager.DAO.UserDAO.UpdateUserProfileDAO(id, newUsername, newPicPath);
 
-            Assert.Equal(userNotFound, result);
+            Assert.Equal(userNotFound, resultObtained);
+        }
+
+        [Fact]
+        public void UpdateUserProfileException() {
+            int id = 5;
+            string newPicPath = Constants.INITIAL_PIC_PATH;
+            string newUsername = "PapelHigienico";
+
+            int expectionResult = Constants.FAILED_OPERATION;
+            int resultObtained = DataBaseManager.DAO.UserDAO.UpdateUserProfileDAO(id, newUsername, newPicPath);
+
+            Assert.Equal(expectionResult, resultObtained);
         }
 
         [Fact]
         public void GetProfileByMail() {
-
             DataBaseManager.Perfil obtainedPerfil = UserDAO.GetProfileByMailDAO("a@gmail.com");
 
             Profile obtainedProfile = new Profile() {
-                IdProfile = obtainedPerfil.idPerfil,
                 Username = obtainedPerfil.nombre,
-                Score = obtainedPerfil.puntaje,
-                PicturePath = obtainedPerfil.fotoRuta,
-                status = GameEnumsPlayerStatus.Offline
             };
 
-
             Profile expectedProfile = new Profile() {
-                IdProfile = 1,
                 Username = "Alambrito",
-                Score = 0,
-                PicturePath = "/Images/Profiles/ImageProfile9.png",
-                status = GameEnumsPlayerStatus.Offline
             };
 
             Assert.Equal(obtainedProfile.Username, expectedProfile.Username);
         }
 
-        [Fact] 
+        [Fact]
+        public void GetProfileByMailNoMatches() {
+
+            string mail = "jerusalenAl@gmail.com";
+
+            DataBaseManager.Perfil obtainedPerfil = UserDAO.GetProfileByMailDAO(mail);
+
+            Profile noMatchesProfile = new Profile() {
+                IdProfile = Constants.NO_MATCHES
+            };
+
+            Profile obtainedProfile = new Profile() {
+                IdProfile = obtainedPerfil.idPerfil
+            };
+
+            Assert.Equal(noMatchesProfile.IdProfile, obtainedProfile.IdProfile);
+        }
+
+        [Fact]
+        public void GetProfileByMailDatabaseFailure() {
+            string testEmail = "zS22013636@mail.com";
+
+            DataBaseManager.Perfil obtainedPerfil = UserDAO.GetProfileByMailDAO(testEmail);
+
+            Profile failedRetrievalProfile = new Profile() {
+                IdProfile = Constants.FAILED_OPERATION
+            };
+
+            Profile obtainedProfile = new Profile() {
+                IdProfile = obtainedPerfil.idPerfil
+            };
+
+            Assert.Equal(failedRetrievalProfile.IdProfile, obtainedPerfil.idPerfil);
+        }
+
+
+        [Fact]
+        public void GetProfileById() {
+            string username = "Alambrito";
+
+            int expectedId = 1;
+            int resultObtained = UserDAO.GetProfileIdDAO(username);
+
+            Assert.Equal(expectedId, resultObtained);
+        }
+
+        [Fact]
+        public void GetProfileByIdNotFound() {
+            string username = "JuanElsabueso";
+
+            int idNoMatches = Constants.NO_MATCHES;
+            int resultObtained = UserDAO.GetProfileIdDAO(username);
+
+            Assert.Equal(idNoMatches, resultObtained);
+        }
+
+        [Fact]
+        public void GetProfileByException() {
+            string username = "Alambrito";
+
+            int idFailedOperation = Constants.FAILED_OPERATION;
+            int resultObtained = UserDAO.GetProfileIdDAO(username);
+
+            Assert.Equal(resultObtained, idFailedOperation);
+        }
+
+        [Fact]
+        public void GetPicPathByUsername() {
+            string username = "Alambrito";
+
+            string expectedPicPath = "/Images/Profiles/ImageProfile2.png";
+            string resultObtained = UserDAO.GetPicPathByUsername(username);
+
+            Assert.Equal(expectedPicPath, resultObtained);
+        }
+
+        [Fact]
+        public void GetPicPathByUsernameNoMatches() {
+            string username = "Conejo";
+
+            string noMatchesPicPath = Constants.NO_MATCHES_STRING;
+            string resultObtained = UserDAO.GetPicPathByUsername(username);
+
+            Assert.Equal(noMatchesPicPath, resultObtained);
+        }
+
+        [Fact]
+        public void GetPicPathByUsernameException() {
+            string username = "Pablo";
+
+            string failedPicPath = Constants.FAILED_OPERATION_STRING;
+            string resultObtained = UserDAO.GetPicPathByUsername(username);
+
+            Assert.Equal(failedPicPath, resultObtained);
+        }
+
+        [Fact]
+        public void GetMailByUsername() {
+            string username = "Pinguinela";
+
+            string expectedEmail = "Pinguinela@hotmail.com.mx";
+            string resultObtained = UserDAO.GetMailByUsername(username);
+
+            Assert.Equal(expectedEmail, resultObtained);
+        }
+
+        [Fact]
+        public void GetMailByUsernameNotFound() {
+            string username = "EmilianoZapata";
+
+            string expectedMail = Constants.NO_MATCHES_STRING;
+            string resultObtained = UserDAO.GetMailByUsername(username);
+
+            Assert.Equal(expectedMail, resultObtained);
+        }
+
+        [Fact]
+        public void GetMailByUsernameException() {
+            string username = "Pinguinela";
+
+            string emailRegistered = Constants.FAILED_OPERATION_STRING;
+            string resultObtained = UserDAO.GetMailByUsername(username);
+
+            Assert.Equal(emailRegistered, resultObtained);
+        }
+
+        [Fact]
         public void IsEmailRegistered() {
-            string testEmail = "zS22013636@estudiantes.uv.mx";
-            int result = UserDAO.IsEmailRegisteredDAO(testEmail);
+            string mail = "zS22013636@estudiantes.uv.mx";
 
             int emailRegistered = Constants.FOUND_MATCH;
-            Assert.Equal(emailRegistered, result);
+            int resultObtained = UserDAO.IsEmailRegisteredDAO(mail);
+
+            Assert.Equal(emailRegistered, resultObtained);
         }
 
         [Fact]
         public void IsEmailNotRegistered() {
-            string testEmail = "lkq@gmail.com";
-            int result = UserDAO.IsEmailRegisteredDAO(testEmail);
+            string mail = "lkq@gmail.com";
+
 
             int emailNotRegistered = Constants.NO_MATCHES;
-            Assert.Equal(emailNotRegistered, result);
+            int resultObtained = UserDAO.IsEmailRegisteredDAO(mail);
+
+            Assert.Equal(emailNotRegistered, resultObtained);
+        }
+
+        [Fact]
+        public void IsEmailRegisteredException() {
+            string mail = "Pinguinela";
+
+
+            int emailNotRegistered = Constants.FAILED_OPERATION;
+            int resultObtained = UserDAO.IsEmailRegisteredDAO(mail);
+
+            Assert.Equal(emailNotRegistered, resultObtained);
         }
 
 
         [Fact]
         public void IsUsernameRegistered() {
-            string testUsername = "test";
-            int result = UserDAO.IsNameRegistered(testUsername);
+            string username = "Alambrito";
 
             int usernameRegistered = Constants.FOUND_MATCH;
-            Assert.Equal(usernameRegistered, result);
-           
+            int resultObtained = UserDAO.IsNameRegisteredDAO(username);
+
+            Assert.Equal(usernameRegistered, resultObtained);
+
         }
 
         [Fact]
-        public void IsUsernameNotRegistered() {
-            string testUsername = "Sefirot";
-            int result = UserDAO.IsNameRegistered(testUsername);
+        public void IsUsernameRegisteredNoMatches() {
+            string username = "Sefirot";
 
             int usernameNotRegistered = Constants.NO_MATCHES;
-            Assert.Equal(usernameNotRegistered, result);
+            int resultObtained = UserDAO.IsNameRegisteredDAO(username);
+
+
+            Assert.Equal(usernameNotRegistered, resultObtained);
         }
 
-        //[Fact] IsUsernameRegisteredEntityException ¿Qué hago sin Mocks?
+        [Fact]
+        public void IsUsernameRegisteredException() {
+            string username = "Pinguinela";
+
+            int operationFailed = Constants.FAILED_OPERATION;
+            int resultObtained = UserDAO.IsNameRegisteredDAO(username);
+
+            Assert.Equal(operationFailed, resultObtained);
+        }
+
+        [Fact]
+        public void UpdateLoginPassword() {
+            string mail = "zS22013636@estudiantes.uv.mx";
+            string newPassword = "NuevaContrasena1!";
+
+            int operationSuccessful = Constants.SUCCESSFUL_OPERATION;
+            int resultObtained = DataBaseManager.DAO.UserDAO.UpdateLoginPasswordDAO(mail, newPassword);
+
+            Assert.Equal(operationSuccessful, resultObtained);
+        }
+
+        [Fact]
+        public void UpdateLoginPasswordNotFound() {
+            string mail = "garnachasDemoniacas.uv.mx";
+            string newPassword = "NuevaContrasena1!";
+
+            int noMatches = Constants.NO_MATCHES;
+            int resultObtained = DataBaseManager.DAO.UserDAO.UpdateLoginPasswordDAO(mail, newPassword);
+
+            Assert.Equal(noMatches, resultObtained);
+        }
+
+        [Fact]
+        public void UpdateLoginPasswordExceptionException() {
+            string mail = "zS22013636@estudiantes.uv.mx";
+            string newPassword = "NuevaContrasena1!";
+
+            int failedOperation = Constants.FAILED_OPERATION;
+            int resultObtained = DataBaseManager.DAO.UserDAO.UpdateLoginPasswordDAO(mail, newPassword);
+
+            Assert.Equal(failedOperation, resultObtained);
+        }
 
     }
 
@@ -179,11 +369,8 @@ namespace TripasTests.DAO {
 
             DataBaseManager.Perfil testProfile = new DataBaseManager.Perfil() {
                 nombre = "test",
-                puntaje = 0,
-                fotoRuta = Constants.INITIAL_PIC_PATH
             };
 
-            UserDAO.AddUserDAO(testProfile, testLogin);
 
             DataBaseManager.Login testLogin2 = new DataBaseManager.Login() {
                 correo = "Pablito@hotmail.com.mx",
@@ -192,17 +379,29 @@ namespace TripasTests.DAO {
 
             DataBaseManager.Perfil testProfile2 = new DataBaseManager.Perfil() {
                 nombre = "Pablo",
-                puntaje = 0,
-                fotoRuta = Constants.INITIAL_PIC_PATH
             };
 
             UserDAO.AddUserDAO(testProfile2, testLogin2);
 
+            DataBaseManager.Login testLogin3 = new DataBaseManager.Login() {
+                correo = "Pinguinela@hotmail.com.mx",
+                contrasena = "MiContrasena1!"
+            };
+
+            DataBaseManager.Perfil testProfile3 = new DataBaseManager.Perfil() {
+                nombre = "Pinguinela",
+            };
+
+            UserDAO.AddUserDAO(testProfile, testLogin);
+            UserDAO.AddUserDAO(testProfile2, testLogin2);
+            UserDAO.AddUserDAO(testProfile3, testLogin3);
         }
+
         public void Dispose() {
             UserDAO.DeleteAccountDAO("test@hotmail.com.mx");
             UserDAO.DeleteAccountDAO("zS22011132@estudiantes.uv.mx");
             UserDAO.DeleteAccountDAO("Pablito@hotmail.com.mx");
+            UserDAO.DeleteAccountDAO("Pinguinela@hotmail.com.mx");
         }
     }
 }
