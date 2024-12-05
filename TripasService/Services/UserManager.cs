@@ -1,34 +1,26 @@
 ﻿using DataBaseManager;
 using DataBaseManager.DAO;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
-using TripasService.Contracts;
 using TripasService.Utils;
 using TripasService.Logic;
-using System.Net.NetworkInformation;
-using System.Runtime.Remoting.Messaging;
-
+using TripasService.Contracts;
 
 namespace TripasService.Services {
-    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single)]
-    public partial class TripasGameService : IUserManager {
-        public int CreateAccount(LoginUser newUser, Profile newProfile) {
 
+    [ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single)]
+
+    public partial class TripasGameService : IUserManager {
+
+        public int CreateAccount(LoginUser newUser, Profile newProfile) {
             DataBaseManager.Login newLogin = new DataBaseManager.Login() {
                 contrasena = newUser.Password,
                 correo = newUser.Mail
             };
-
             DataBaseManager.Perfil newPerfil = new DataBaseManager.Perfil() {
                 nombre = newProfile.Username,
                 puntaje = Constants.INITIAL_SCORE,
                 fotoRuta = Constants.DEFAULT_PICPATH
             };
-
             int insertionResult = UserDAO.AddUserDAO(newPerfil, newLogin);
             return insertionResult;
         }
@@ -52,6 +44,7 @@ namespace TripasService.Services {
             };
             return profile;
         }
+
         public int GetProfileId(string userName) {
             int result = UserDAO.GetProfileIdDAO(userName);
             return result;
@@ -65,7 +58,7 @@ namespace TripasService.Services {
         public int IsNameRegistered(string username) {
             int isRegistered = Constants.FAILED_OPERATION;
             if (!string.IsNullOrEmpty(username)) {
-               isRegistered = UserDAO.IsNameRegisteredDAO(username);
+                isRegistered = UserDAO.IsNameRegisteredDAO(username);
             }
             return isRegistered;
         }

@@ -1,14 +1,17 @@
 ﻿using System;
 using log4net;
-namespace DataBaseManager.Utils {
-    public class LoggerManager {
-        public ILog Logger { get; set; }
+
+namespace TripasService.Logic {
+
+    internal class LoggerManager {
+
+        public ILog Logger { get; private set; }
 
         public LoggerManager(Type type) {
             Logger = LogManager.GetLogger(type);
         }
 
-        public ILog GetLogger(Type type) {
+        public static ILog GetLogger(Type type) {
             return LogManager.GetLogger(type);
         }
 
@@ -20,17 +23,16 @@ namespace DataBaseManager.Utils {
             Logger.Error(message, exception);
         }
 
-        public void LogFatal(Exception exception) {
-            Logger.Fatal(exception);
+        public void LogFatal(Exception ex) {
+            Logger.Fatal(ex);
         }
 
-        public void LogWarn(Exception exception) {
-            Logger.Warn(exception);
+        public void LogWarn(Exception ex) {
+            Logger.Warn(ex);
         }
 
-        public void LogDebug(Exception exception) {
-            Logger.Debug(exception);
+        public void LogDebug(Exception ex) {
+            Logger.Debug(ex);
         }
-
     }
 }

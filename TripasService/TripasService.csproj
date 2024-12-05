@@ -88,6 +88,7 @@
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\EmailHelpercs.cs" />
     <Compile Include="Utils\GameEnums.cs" />
+    <Compile Include="Utils\LoggerManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

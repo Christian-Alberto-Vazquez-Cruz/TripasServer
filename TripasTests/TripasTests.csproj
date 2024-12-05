@@ -46,6 +46,9 @@
       <Version>6.5.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+    <PackageReference Include="Moq">
+      <Version>4.20.72</Version>
+    </PackageReference>
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.extensibility.core">
       <Version>2.4.1</Version>
@@ -62,6 +65,7 @@
     <Compile Include="DAO\FriendsDAOShould.cs" />
     <Compile Include="DAO\LeaderboardDAOShould.cs" />
     <Compile Include="DAO\UserDAOShould.cs" />
+    <Compile Include="Services\ChatManagerTest.cs" />
     <Compile Include="Services\FriendsManagerTests.cs" />
     <Compile Include="Services\UserManager.cs" />
     <Compile Include="UnitTest1.cs" />
@@ -73,6 +77,10 @@
     <ProjectReference Include="..\DataBaseManager\DataBaseManager.csproj">
       <Project>{0d8c92eb-d320-4767-8fa5-23c18596caff}</Project>
       <Name>DataBaseManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TripasService\TripasService.csproj">
+      <Project>{ae25cc6b-b548-4ca0-8a5c-46e940df6094}</Project>
+      <Name>TripasService</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -27,6 +27,7 @@ namespace TripasTests.Utils {
 
             UserDAO.AddUserDAO(newPerfil, newLogin);
             _addedEmails.Add(email);
+            _addedEmails.Add("zS22011132@estudiantes.uv.mx");
         }
 
         public void Dispose() {

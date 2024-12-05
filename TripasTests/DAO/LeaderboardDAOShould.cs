@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Xunit;
 
 
-/*namespace TripasTests.DAO {
+namespace TripasTests.DAO {
 
     public class LeaderboardDAOShould : IClassFixture<DatabaseFixture> {
 
@@ -52,4 +52,4 @@ using Xunit;
             Assert.Null(highestScores); // Validamos que se maneje correctamente un fallo
         }
     }
-}*/
+}

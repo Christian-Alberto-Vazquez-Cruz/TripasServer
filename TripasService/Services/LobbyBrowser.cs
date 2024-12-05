@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
-using TripasService.Contracts;
+﻿using System.Linq;
 using TripasService.Logic;
 using TripasService.Utils;
+using TripasService.Contracts;
+using System.Collections.Generic;
 
 namespace TripasService.Services {
+
     public partial class TripasGameService : ILobbyBrowser {
+
         public List<Lobby> GetAvailableLobbies() {
             return _lobbies.Values.ToList();
         }
@@ -37,6 +35,7 @@ namespace TripasService.Services {
             }
             return null;
         }
+
         public Lobby GetLobbyByCode(string code) {
             if (!_lobbies.TryGetValue(code, out Lobby lobby)) {
                 throw new KeyNotFoundException($"Lobby with code '{code}' not found.");

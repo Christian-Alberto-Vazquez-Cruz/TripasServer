@@ -6,37 +6,35 @@ using DataBaseManager.DAO;
 using DataBaseManager.Utils;
 
 namespace TripasService.Services {
+
     public partial class TripasGameService : IEmailInvitationManager {
 
         public int SendInvitation(string username, string code) {
             int operationResult = Constants.FAILED_OPERATION;
             string emailReceiver = UserDAO.GetMailByUsername(username);
-
             if (emailReceiver != Constants.NO_MATCHES_STRING) {
                 operationResult = SendEmailInvitation(emailReceiver, code);
             }
-
             return operationResult;
         }
 
         private int SendEmailInvitation(string emailReceiver, string code) {
+            LoggerManager logger = new LoggerManager(this.GetType());
             int operationResult = Constants.FAILED_OPERATION;
-            string emailSender = "servicetripas@gmail.com";
-            string emailPassword = "fxllpkrxfgnzbpvy";
+            string emailSender = Environment.GetEnvironmentVariable("EMAIL_SENDER") ?? "servicetripas@gmail.com";
+            string emailPassword = Environment.GetEnvironmentVariable("EMAIL_PASSWORD") ?? "fxllpkrxfgnzbpvy";
             string displayName = "Tripas Game Invitation";
-
             try {
                 string emailBody = CreateEmailBodyInvitation(code);
                 MailMessage mailMessage = CreateMailMessage(emailSender, displayName, emailReceiver, emailBody);
-
                 SmtpClient smtpClient = CreateSmtpClient(emailSender, emailPassword);
                 smtpClient.Send(mailMessage);
                 operationResult = Constants.SUCCESSFUL_OPERATION;
             } catch (SmtpException smtpException) {
-                //LOGGUEAR ESTO
-                Console.WriteLine($"An exception involving EmailInvitationManager has ocurred {smtpException.ToString()}");
+                logger.LogError($"SmtpException: Error sending email invitation to {emailReceiver}. Exception: {smtpException.Message}", smtpException);
+            } catch (Exception ex) {
+                logger.LogError($"Exception: Unexpected error while sending email invitation to {emailReceiver}. Exception: {ex.Message}", ex);
             }
-
             return operationResult;
         }
 
