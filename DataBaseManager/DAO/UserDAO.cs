@@ -30,7 +30,7 @@ namespace DataBaseManager.DAO {
                     Perfil newUserProfile = new Perfil {
                         nombre = profile.nombre,
                         puntaje = Constants.INITIAL_SCORE,
-                        fotoRuta = profile.fotoRuta,
+                        fotoRuta = Constants.INITIAL_PIC_PATH,
                         idPerfil = newUserLogin.idUsuario
                     };
                     db.Perfil.Add(newUserProfile);
@@ -38,7 +38,7 @@ namespace DataBaseManager.DAO {
                     operationStatus = Constants.SUCCESSFUL_OPERATION;
                 }
             } catch (DbEntityValidationException dbEntityValidationException) {
-                //LOGGEAR
+                Console.WriteLine($"Error trying to register the user: {profile.nombre}, {dbEntityValidationException.Message}");
             } catch (DbUpdateException dbUpdateException) {
                 //LOGGEAR
             } catch (EntityException entityException) {
@@ -90,75 +90,94 @@ namespace DataBaseManager.DAO {
             return operationStatus;
         }
 
-        //Comprueba si Login no es nulo, después si Perfil no es nulo
         public static Perfil GetProfileByMailDAO(String mail) {
             Perfil userProfile = new Perfil {
-                idPerfil = Constants.NO_MATCHES
+                idPerfil = Constants.FAILED_OPERATION  // Asignar por defecto el valor de operación fallida
             };
 
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     Login userLogin = db.Login.FirstOrDefault(login => login.correo == mail);
+
                     if (userLogin != null) {
                         Perfil foundProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == userLogin.idUsuario);
                         if (foundProfile != null) {
                             userProfile = foundProfile;
+                        } else {
+                            userProfile.idPerfil = Constants.NO_MATCHES;
                         }
+                    } else {
+                        userProfile.idPerfil = Constants.NO_MATCHES;
                     }
                 }
+            } catch (SqlException sqlExcepion) {
+                //LOGGEAR
+                Console.WriteLine($"Error trying to get the Profile with {mail} mail, {sqlExcepion.Message}");
             } catch (EntityException entityException) {
-                Console.WriteLine($"Error trying to get the Profile with {mail} mail, {entityException.Message}");
+                //LOGGEAR
             }
             return userProfile;
         }
 
-        public static int GetProfileIdDAO(string userName) {
-            int profileId = Constants.NO_MATCHES;
+        public static int GetProfileIdDAO(string username) {
+            int profileId = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    profileId = db.Perfil.Where(u => u.nombre == userName).Select(u => u.idPerfil).FirstOrDefault();
+                    profileId = db.Perfil.Where(u => u.nombre == username).Select(u => u.idPerfil).FirstOrDefault();
+                    if (profileId == 0) {
+                        profileId = Constants.NO_MATCHES;
+                    }
                 }
+            } catch (SqlException sqlException) {
+                //LOG
+                Console.WriteLine("Error trying to get the user id with username {0}", sqlException.Message);
             } catch (EntityException entityException) {
-                Console.WriteLine("Error trying to get the user id with username {0}", entityException.Message);
+                //LOG
             }
             return profileId;
         }
 
-        //AQUÍ VERIFICAR QUÉ HACER CON PICPATH. ¿Puede ser nulo o asignar una por defecto? No tiene sentido regresar ToString();
         public static string GetPicPathByUsername(string username) {
-            string picPath = Constants.FAILED_OPERATION.ToString();
+            string picPath = Constants.FAILED_OPERATION_STRING;
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     Perfil userProfile = db.Perfil.FirstOrDefault(perfil => perfil.nombre == username);
-
                     if (userProfile != null) {
                         picPath = userProfile.fotoRuta;
                     } else {
-                        picPath = Constants.NO_MATCHES.ToString(); 
+                        picPath = Constants.NO_MATCHES_STRING;
                     }
                 }
+            } catch (SqlException sqlException) {
+                //LOGGEAR
+               Console.WriteLine($"Error trying to get the profile picture path for username {username}: {sqlException.Message}");
             } catch (EntityException entityException) {
-                Console.WriteLine($"Error trying to get the profile picture path for username {username}: {entityException.Message}");
+               //LOGGEAR
             }
-
+             
             return picPath;
         }
 
         public static string GetMailByUsername(string username) {
-            string mail = "";
+            string mail = Constants.FAILED_OPERATION_STRING;
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     Perfil userProfile = db.Perfil.FirstOrDefault(perfil => perfil.nombre == username);
-
                     if (userProfile != null) {
                         Login userLogin = db.Login.FirstOrDefault(login => login.idUsuario == userProfile.idPerfil);
                         if (userLogin != null) {
                             mail = userLogin.correo;
-                        } 
+                        } else {
+                            mail = Constants.NO_MATCHES_STRING;
+                        }
+                    } else {
+                        mail = Constants.NO_MATCHES_STRING;
                     }
                 }
+            } catch (SqlException sqlException) {
+                Console.WriteLine($"Error trying to get the mail for username {username}: {sqlException.Message}");
             } catch (EntityException entityException) {
-                Console.WriteLine($"Error trying to get the mail for username {username}: {entityException.Message}");
+
             }
             return mail;
         }
@@ -174,13 +193,15 @@ namespace DataBaseManager.DAO {
                         operationStatus = Constants.NO_MATCHES;
                     }
                 }
+            } catch (SqlException sqlException) {
+                Console.WriteLine($"Error checking if the email is already registered {sqlException.Message}");
             } catch (EntityException entityException) {
-                Console.WriteLine($"Error checking if the email is already registered {entityException.Message}");
+
             }
             return operationStatus;
         }
 
-        public static int IsNameRegistered(string username) {
+        public static int IsNameRegisteredDAO(string username) {
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -190,8 +211,9 @@ namespace DataBaseManager.DAO {
                         operationStatus = Constants.NO_MATCHES;
                     }
                 }
-            } catch (EntityException entityException) {
-                Console.WriteLine($"Error checking if the email is already registered {entityException.Message}");
+            } catch (SqlException sqlException) {
+                Console.WriteLine($"Error checking if the email is already registered {sqlException.Message}");
+            } catch (EntityException exception) {
             }
             return operationStatus;
         }
@@ -209,8 +231,10 @@ namespace DataBaseManager.DAO {
                         operationStatus = Constants.NO_MATCHES;
                     }
                 }
-            } catch (EntityException entityException) {
+            } catch (SqlException entityException) {
                 Console.WriteLine($"Error trying to update the login password with {mail} mail, {entityException.Message}");
+            } catch (EntityException exception) {
+
             }
             return operationStatus;
         }
@@ -231,9 +255,9 @@ namespace DataBaseManager.DAO {
                         operationStatus = Constants.SUCCESSFUL_OPERATION;
                     }
                 }
-            } catch (EntityException entityException) {
-                Console.WriteLine($"Error trying to delete the user with email {email}, {entityException.Message}");
-            }
+            } catch (SqlException sqlException) {
+                Console.WriteLine($"Error trying to delete the user with email {email}, {sqlException.Message}");
+            } 
             return operationStatus;
         }
 

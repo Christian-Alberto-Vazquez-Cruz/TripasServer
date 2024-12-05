@@ -65,7 +65,7 @@ namespace TripasService.Services {
         public int IsNameRegistered(string username) {
             int isRegistered = Constants.FAILED_OPERATION;
             if (!string.IsNullOrEmpty(username)) {
-               isRegistered = UserDAO.IsNameRegistered(username);
+               isRegistered = UserDAO.IsNameRegisteredDAO(username);
             }
             return isRegistered;
         }

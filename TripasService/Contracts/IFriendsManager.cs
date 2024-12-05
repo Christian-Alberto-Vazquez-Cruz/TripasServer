@@ -34,12 +34,22 @@ namespace TripasService.Contracts {
 
 
         /// <summary>
-        /// Return a Profile list with the content of the player's friends
+        /// Retrieves a Profile list with the content of the player's friends
         /// </summary>
         /// <param name="idProfile">Id of the player that will have his/her friendlist retrieved</param>
         /// <returns>Returns 1 in success and -1 in failure</returns>
         [OperationContract] 
         List<Profile> GetFriends(int idProfile);
+
+        /// <summary>
+        /// Verifies is a player had another player already added as a friend
+        /// </summary>
+        /// <param name="idProfile1">Id of the player whose friend association will be consulted</param>
+        /// <param name="idProfile2">Id of the player you want to know if is already added </param>
+        /// <returns>Returns 1 if it was already added, -2 if it han't been added and -1 in failure</returns>
+
+        [OperationContract]
+        int IsFriendAlreadyAdded(int idProfile1, int idProfile2); //FALTA PROBAR
 
     }
 }
