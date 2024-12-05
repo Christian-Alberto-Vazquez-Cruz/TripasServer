@@ -59,10 +59,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="DAO\FriendsDAOShould.cs" />
+    <Compile Include="DAO\LeaderboardDAOShould.cs" />
     <Compile Include="DAO\UserDAOShould.cs" />
     <Compile Include="Services\FriendsManagerTests.cs" />
+    <Compile Include="Services\UserManager.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\DatabaseFixtureUserDAOShould.cs" />
+    <Compile Include="Utils\DatabasFixtureLeaderboardDaoShould.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataBaseManager\DataBaseManager.csproj">
@@ -128,6 +133,7 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -5,18 +5,20 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using TripasTests.ProxyTripas;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.Sdk;
+using TripasTests.Utils;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace TripasTests.DAO {
 
 
-    public class UserDAOShould : IClassFixture<DatabaseFixture> {
+    public class UserDAOShould : IClassFixture<DatabaseFixtureUserDAOShould> {
 
         [Fact]
         public void AddUser() {
@@ -457,59 +459,33 @@ namespace TripasTests.DAO {
     }
 
     public class DatabaseFixture : IDisposable {
-
+        private readonly List<string> _addedEmails = new List<string>();
         public DatabaseFixture() {
-
-            DataBaseManager.Login testLogin = new DataBaseManager.Login() {
-                correo = "virtualbox@hotmail.com.mx",
-                contrasena = "MiContrasena1!"
-            };
-
-            DataBaseManager.Perfil testProfile = new DataBaseManager.Perfil() {
-                nombre = "vbox",
-            };
-
-
-            DataBaseManager.Login testLogin2 = new DataBaseManager.Login() {
-                correo = "Pablito@hotmail.com.mx",
-                contrasena = "MiContrasena1!"
-            };
-
-            DataBaseManager.Perfil testProfile2 = new DataBaseManager.Perfil() {
-                nombre = "Pablo",
-            };
-
-            UserDAO.AddUserDAO(testProfile2, testLogin2);
-
-            DataBaseManager.Login testLogin3 = new DataBaseManager.Login() {
-                correo = "Pinguinela@hotmail.com.mx",
-                contrasena = "MiContrasena1!"
-            };
-
-            DataBaseManager.Perfil testProfile3 = new DataBaseManager.Perfil() {
-                nombre = "Pinguinela",
-            };
-
-            DataBaseManager.Login testLogin4 = new DataBaseManager.Login() {
-                correo = "gamesa@gmail.com",
-                contrasena = "MiContrasena1!"
-            };
-
-            DataBaseManager.Perfil testProfile4 = new DataBaseManager.Perfil() {
-                nombre = "galletasGamesa",
-            };
-
-            UserDAO.AddUserDAO(testProfile, testLogin);
-            UserDAO.AddUserDAO(testProfile2, testLogin2);
-            UserDAO.AddUserDAO(testProfile3, testLogin3);
-            UserDAO.AddUserDAO(testProfile4, testLogin4);
+            AddTestUser("virtualbox@hotmail.com.mx", "vbox");
+            AddTestUser("Pablito@hotmail.com.mx", "Pablo");
+            AddTestUser("Pinguinela@hotmail.com.mx", "Pinguinela");
+            AddTestUser("gamesa@gmail.com", "galletasGamesa");
         }
 
-        public void Dispose() {
-            UserDAO.DeleteAccountDAO("virtualbox.com.mx");
-            UserDAO.DeleteAccountDAO("zS22011132@estudiantes.uv.mx");
-            UserDAO.DeleteAccountDAO("Pablito@hotmail.com.mx");
+        private void AddTestUser(string email, string username) {
+            DataBaseManager.Login newLogin = new DataBaseManager.Login() {
+                correo = email,
+                contrasena = "MiContrasena1!"
+            };
 
+            DataBaseManager.Perfil newPerfil = new DataBaseManager.Perfil() {
+                nombre = username
+            };
+
+            UserDAO.AddUserDAO(newPerfil, newLogin);
+            _addedEmails.Add(email);
+
+        }
+        public void Dispose() {
+
+            foreach (string email in _addedEmails) {
+                UserDAO.DeleteAccountDAO(email);
+            }
         }
     }
 }
