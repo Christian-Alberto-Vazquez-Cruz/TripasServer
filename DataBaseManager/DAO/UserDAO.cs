@@ -84,8 +84,10 @@ namespace DataBaseManager.DAO {
                         operationStatus = Constants.NO_MATCHES;
                     }
                 }
+            } catch (SqlException sqlException) {
+                Console.WriteLine($"Error trying to update the user profile with {idProfile} id, {sqlException.Message}");
             } catch (EntityException entittyException) {
-                Console.WriteLine($"Error trying to update the user profile with {idProfile} id, {entittyException.Message}");
+
             }
             return operationStatus;
         }
@@ -234,7 +236,7 @@ namespace DataBaseManager.DAO {
             } catch (SqlException entityException) {
                 Console.WriteLine($"Error trying to update the login password with {mail} mail, {entityException.Message}");
             } catch (EntityException exception) {
-
+                //LOG
             }
             return operationStatus;
         }
@@ -244,9 +246,10 @@ namespace DataBaseManager.DAO {
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     Login userLogin = db.Login.FirstOrDefault(login => login.correo == email);
-                    if (userLogin != null) {
+                    if (userLogin == null) {
+                        operationStatus = Constants.NO_MATCHES;
+                    } else {
                         Perfil userProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == userLogin.idUsuario);
-
                         if (userProfile != null) {
                             db.Perfil.Remove(userProfile);
                         }
@@ -257,62 +260,33 @@ namespace DataBaseManager.DAO {
                 }
             } catch (SqlException sqlException) {
                 Console.WriteLine($"Error trying to delete the user with email {email}, {sqlException.Message}");
-            } 
+            } catch (EntityException entityException) {
+
+            }
             return operationStatus;
         }
 
-        public static void UpdatePlayerScore(string userName, int additionalPoints) {
+        public static int UpdatePlayerScore(string username, int additionalPoints) {
+            int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    var userProfile = db.Perfil.FirstOrDefault(p => p.nombre == userName);
+                    Perfil userProfile = db.Perfil.FirstOrDefault(p => p.nombre == username);
                     if (userProfile != null) {
-                        userProfile.puntaje = userProfile.puntaje + additionalPoints;
+                        userProfile.puntaje += additionalPoints;
                         db.SaveChanges();
-                        Console.WriteLine($"Puntos actualizados para {userName}: {userProfile.puntaje}");
+                        operationStatus = Constants.SUCCESSFUL_OPERATION;
+                    } else {
+                        operationStatus = Constants.NO_MATCHES;
                     }
                 }   
-            } catch (EntityException ex) {
-                Console.WriteLine($"Error al actualizar los puntos del jugador {userName}: {ex.Message}");
+            } catch (SqlException sqlException) {
+                Console.WriteLine($"Error trying to update {username} score: {sqlException.Message}");
+            } catch (EntityException entityException) {
+
             }
+            return operationStatus;
         }
 
-        /* public static int AddUserWithSpecificIdDAO(Perfil profile, Login user) {
-             int operationStatus = Constants.FAILED_OPERATION;
-             try {
-                 using (tripasEntities db = new tripasEntities()) {
-                     if (db.Login.Any(login   => login.idUsuario == user.idUsuario) ||
-                         db.Perfil.Any(userProfile => userProfile.idPerfil == userProfile.idPerfil)) {
-                         Console.WriteLine($"El ID de usuario {user.idUsuario} ya existe.");
-                         return Constants.FAILED_OPERATION;
-                     }
-
-                     db.Configuration.AutoDetectChangesEnabled = false;
-
-                     Login newUserLogin = new Login {
-                         idUsuario = user.idUsuario,
-                         correo = user.correo,
-                         contrasena = user.contrasena
-                     };
-                     db.Login.Add(newUserLogin);
-                     db.SaveChanges();
-
-                     Perfil newUserProfile = new Perfil {
-                         idPerfil = user.idUsuario, 
-                         nombre = profile.nombre,
-                         puntaje = Constants.INITIAL_SCORE,
-                         fotoRuta = Constants.INITIAL_PIC_PATH
-                     };
-                     db.Perfil.Add(newUserProfile);
-                     db.SaveChanges();
-
-                     db.Configuration.AutoDetectChangesEnabled = true;
-                     operationStatus = Constants.SUCCESSFUL_OPERATION;
-                 }
-             } catch (EntityException entityException) {
-                 Console.WriteLine($"Error trying to register the user with {user.correo} mail and specific ID {user.idUsuario}. {entityException.Message}");
-             }
-             return operationStatus;
-         }*/
         public static int IsFriendAlreadyAddedDAO(int idProfile1, int idProfile2) {
             int operationResult = Constants.FAILED_OPERATION;
 
@@ -334,5 +308,7 @@ namespace DataBaseManager.DAO {
             }
             return operationResult;
         }
+
+
     }
 }
