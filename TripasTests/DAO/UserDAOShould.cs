@@ -49,7 +49,7 @@ namespace TripasTests.DAO {
 
         [Fact]
         public void ValidateUser() {
-            string mail = "test@hotmail.com.mx";
+            string mail = "virtualbox@hotmail.com.mx";
             string password = "MiContrasena1!";
 
             int userExists = Constants.FOUND_MATCH;
@@ -109,7 +109,7 @@ namespace TripasTests.DAO {
         public void UpdateUserProfileException() {
             int id = 5;
             string newPicPath = Constants.INITIAL_PIC_PATH;
-            string newUsername = "PapelHigienico";
+            string newUsername = "Mouse";
 
             int expectionResult = Constants.FAILED_OPERATION;
             int resultObtained = DataBaseManager.DAO.UserDAO.UpdateUserProfileDAO(id, newUsername, newPicPath);
@@ -230,9 +230,9 @@ namespace TripasTests.DAO {
 
         [Fact]
         public void GetMailByUsername() {
-            string username = "Pinguinela";
+            string username = "vbox";
 
-            string expectedEmail = "Pinguinela@hotmail.com.mx";
+            string expectedEmail = "virtualbox@hotmail.com.mx";
             string resultObtained = UserDAO.GetMailByUsername(username);
 
             Assert.Equal(expectedEmail, resultObtained);
@@ -356,6 +356,104 @@ namespace TripasTests.DAO {
             Assert.Equal(failedOperation, resultObtained);
         }
 
+        [Fact]
+        public void DeleteAccount() {
+            string email = "Pinguinela@hotmail.com.mx";
+
+
+            int expectedOperationStatus = Constants.SUCCESSFUL_OPERATION;
+            int resultObtained = DataBaseManager.DAO.UserDAO.DeleteAccountDAO(email);
+
+            Assert.Equal(expectedOperationStatus, resultObtained);
+        }
+
+        [Fact]
+        public void DeleteAccountNotFound() {
+            string email = "garnachasDemoniacas.uv.mx";
+
+            int expectedOperationStatus = Constants.NO_MATCHES;
+            int resultObtained = DataBaseManager.DAO.UserDAO.DeleteAccountDAO(email);
+
+            Assert.Equal(expectedOperationStatus, resultObtained);
+        }
+
+        [Fact]
+        public void DeleteAccountException() {
+            string email = "gamesa@gmail.com";  
+
+            int expectedOperationStatus = Constants.FAILED_OPERATION;
+            int resultObtained = DataBaseManager.DAO.UserDAO.DeleteAccountDAO(email);
+
+            Assert.Equal(expectedOperationStatus, resultObtained);
+        }
+
+        [Fact]
+        public void UpdatePlayerScore() {
+            string username = "Pablo";
+            int additionalPoints = 10;
+
+            int expected = Constants.SUCCESSFUL_OPERATION;
+            int resultObtained = UserDAO.UpdatePlayerScore(username, additionalPoints);
+
+            Assert.Equal(expected, resultObtained);
+        }
+
+        [Fact]
+        public void UpdatePlayerScoreNoMatches() {
+            string username = "garnachasDemoniacas";
+            int additionalPoints = 10;
+
+            int result = UserDAO.UpdatePlayerScore(username, additionalPoints);
+
+            int expected = Constants.NO_MATCHES;
+            Assert.Equal(expected, result);
+        }
+
+
+        [Fact]
+        public void UpdatePlayerScoreException() {
+            string username = "vbox"; 
+            int additionalPoints = 10;
+
+            int expected = Constants.FAILED_OPERATION;
+            int result = UserDAO.UpdatePlayerScore(username, additionalPoints);
+
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void IsFriendAlreadyAdded() {
+            int idProfile1 = 2002;  
+            int idProfile2 = 3;  
+
+            int expectedOperationResult = Constants.SUCCESSFUL_OPERATION;
+            int resultObtained = DataBaseManager.DAO.UserDAO.IsFriendAlreadyAddedDAO(idProfile1, idProfile2);
+
+            Assert.Equal(expectedOperationResult, resultObtained);
+        }
+
+        [Fact]
+        public void IsFriendAlreadyAddedNoMatches() {
+            int idProfile1 = 1;  
+            int idProfile2 = 99; 
+
+            int expectedOperationResult = Constants.NO_MATCHES;
+            int resultObtained = DataBaseManager.DAO.UserDAO.IsFriendAlreadyAddedDAO(idProfile1, idProfile2);
+
+            Assert.Equal(expectedOperationResult, resultObtained);
+        }
+
+        [Fact]
+        public void IsFriendAlreadyAddedException() {
+            int idProfile1 = 2002;
+            int idProfile2 = 3; 
+
+            int expectedOperationResult = Constants.FAILED_OPERATION;
+            int resultObtained = DataBaseManager.DAO.UserDAO.IsFriendAlreadyAddedDAO(idProfile1, idProfile2);
+
+            Assert.Equal(expectedOperationResult, resultObtained);
+        }
+
     }
 
     public class DatabaseFixture : IDisposable {
@@ -363,12 +461,12 @@ namespace TripasTests.DAO {
         public DatabaseFixture() {
 
             DataBaseManager.Login testLogin = new DataBaseManager.Login() {
-                correo = "test@hotmail.com.mx",
+                correo = "virtualbox@hotmail.com.mx",
                 contrasena = "MiContrasena1!"
             };
 
             DataBaseManager.Perfil testProfile = new DataBaseManager.Perfil() {
-                nombre = "test",
+                nombre = "vbox",
             };
 
 
@@ -392,16 +490,26 @@ namespace TripasTests.DAO {
                 nombre = "Pinguinela",
             };
 
+            DataBaseManager.Login testLogin4 = new DataBaseManager.Login() {
+                correo = "gamesa@gmail.com",
+                contrasena = "MiContrasena1!"
+            };
+
+            DataBaseManager.Perfil testProfile4 = new DataBaseManager.Perfil() {
+                nombre = "galletasGamesa",
+            };
+
             UserDAO.AddUserDAO(testProfile, testLogin);
             UserDAO.AddUserDAO(testProfile2, testLogin2);
             UserDAO.AddUserDAO(testProfile3, testLogin3);
+            UserDAO.AddUserDAO(testProfile4, testLogin4);
         }
 
         public void Dispose() {
-            UserDAO.DeleteAccountDAO("test@hotmail.com.mx");
+            UserDAO.DeleteAccountDAO("virtualbox.com.mx");
             UserDAO.DeleteAccountDAO("zS22011132@estudiantes.uv.mx");
             UserDAO.DeleteAccountDAO("Pablito@hotmail.com.mx");
-            UserDAO.DeleteAccountDAO("Pinguinela@hotmail.com.mx");
+
         }
     }
 }
