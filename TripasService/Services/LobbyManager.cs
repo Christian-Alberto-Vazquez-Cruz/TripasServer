@@ -18,15 +18,12 @@ namespace TripasService.Services {
                         callbackAction(callback);
                         return true;
                     }
-                } catch (CommunicationException comunicationException) {
-                    logger.LogError(comunicationException);
-                    Console.WriteLine($"Communication error with {username}: {comunicationException.Message}");
+                } catch (CommunicationException communicationException) {
+                    logger.LogError($"Communication error with {username}: {communicationException.Message}", communicationException);
                 } catch (TimeoutException timeoutException) {
-                    logger.LogError(timeoutException);
-                    Console.WriteLine($"Timeout while notifying {username}: {timeoutException.Message}");
-                } catch (ObjectDisposedException objectDisposedEception) {
-                    logger.LogError(objectDisposedEception);
-                    Console.WriteLine($"Channel was disposed for {username}: {objectDisposedEception.Message}");
+                    logger.LogError($"Timeout while notifying {username}: {timeoutException.Message}", timeoutException);
+                } catch (ObjectDisposedException objectDisposedException) {
+                    logger.LogError($"Channel was disposed for {username}: {objectDisposedException.Message}", objectDisposedException);
                 }
                 _lobbyPlayerCallback.TryRemove(username, out _);
                 Console.WriteLine($"Callback removed for {username} due to communication error");
@@ -174,16 +171,14 @@ namespace TripasService.Services {
                 try {
                     guestCallback.KickedFromLobby();
                 } catch (Exception exception) {
-                    logger.LogError(exception);
-                    Console.WriteLine($"Error al notificar al invitado {guest.Username} que fue expulsado: {exception.Message}");
+                    logger.LogError($"Error al notificar al invitado {guest.Username} que fue expulsado: {exception.Message}", exception);
                 }
             }
             if (_lobbyPlayerCallback.TryGetValue(host.Username, out var hostCallback)) {
                 try {
                     hostCallback.GuestLeftCallback();
                 } catch (Exception exception) {
-                    logger.LogError(exception);
-                    Console.WriteLine($"Error al notificar al anfitrión {host.Username} sobre la salida del invitado: {exception.Message}");
+                    logger.LogError($"Error al notificar al anfitrión {host.Username} sobre la salida del invitado: {exception.Message}", exception);
                 }
             }
             Console.WriteLine($"El invitado {guest.Username} ha sido expulsado del lobby {code}.");

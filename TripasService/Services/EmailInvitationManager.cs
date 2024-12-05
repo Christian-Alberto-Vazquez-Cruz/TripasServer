@@ -21,8 +21,8 @@ namespace TripasService.Services {
         private int SendEmailInvitation(string emailReceiver, string code) {
             LoggerManager logger = new LoggerManager(this.GetType());
             int operationResult = Constants.FAILED_OPERATION;
-            string emailSender = "servicetripas@gmail.com";
-            string emailPassword = "fxllpkrxfgnzbpvy";
+            string emailSender = Environment.GetEnvironmentVariable("EMAIL_SENDER") ?? "servicetripas@gmail.com";
+            string emailPassword = Environment.GetEnvironmentVariable("EMAIL_PASSWORD") ?? "fxllpkrxfgnzbpvy";
             string displayName = "Tripas Game Invitation";
             try {
                 string emailBody = CreateEmailBodyInvitation(code);
@@ -31,8 +31,9 @@ namespace TripasService.Services {
                 smtpClient.Send(mailMessage);
                 operationResult = Constants.SUCCESSFUL_OPERATION;
             } catch (SmtpException smtpException) {
-                logger.LogError(smtpException); 
-                Console.WriteLine($"An exception involving EmailInvitationManager has ocurred {smtpException.ToString()}");
+                logger.LogError($"SmtpException: Error sending email invitation to {emailReceiver}. Exception: {smtpException.Message}", smtpException);
+            } catch (Exception ex) {
+                logger.LogError($"Exception: Unexpected error while sending email invitation to {emailReceiver}. Exception: {ex.Message}", ex);
             }
             return operationResult;
         }

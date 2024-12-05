@@ -36,7 +36,7 @@ namespace TripasService.Services {
                     try {
                         user.BroadcastMessage(message);
                     } catch (Exception exception) {
-                        logger.LogError(exception);
+                        logger.LogError($"Error while broadcasting message to user in lobby {lobbyCode}: {exception.Message}", exception);
                         string disconnectedUser = lobbyUsers.FirstOrDefault(lobby => lobby.Value == user).Key;
                         if (disconnectedUser != null) {
                             //NUEVO

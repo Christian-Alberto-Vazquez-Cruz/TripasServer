@@ -32,8 +32,7 @@ public static class EmailHelper {
             smtpClient.Send(mailMessage);
             return Constants.SUCCESSFUL_OPERATION;
         } catch (SmtpException smtpException) {
-            logger.LogError(smtpException);
-            Console.WriteLine($"Email sending failed: {smtpException.Message}");
+            logger.LogError($"Email sending failed: {smtpException.Message}", smtpException);
             return Constants.FAILED_OPERATION;
         }
     }

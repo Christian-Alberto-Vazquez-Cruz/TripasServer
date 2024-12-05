@@ -13,6 +13,7 @@ namespace DataBaseManager.DAO {
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
+                    // Registrar login del nuevo usuario
                     Login newUserLogin = new Login {
                         correo = newLogin.correo,
                         contrasena = newLogin.contrasena
@@ -30,15 +31,18 @@ namespace DataBaseManager.DAO {
                     operationStatus = Constants.SUCCESSFUL_OPERATION;
                 }
             } catch (DbEntityValidationException dbEntityValidationException) {
-                logger.LogError(dbEntityValidationException);
-                Console.WriteLine($"Error trying to register the user: {profile.nombre}, {dbEntityValidationException.Message}");
+                logger.LogError($"DbEntityValidationException: Error trying to register user: {profile.nombre}. Exception: {dbEntityValidationException.Message}", dbEntityValidationException);
             } catch (DbUpdateException dbUpdateException) {
-                logger.LogError(dbUpdateException);
+                logger.LogError($"DbUpdateException: Error updating the database while registering user: {profile.nombre}. Exception: {dbUpdateException.Message}", dbUpdateException);
             } catch (EntityException entityException) {
-                logger.LogError(entityException);
+                logger.LogError($"EntityException: Error occurred while processing user registration for {profile.nombre}. Exception: {entityException.Message}", entityException);
+            } catch (Exception generalException) {
+                logger.LogError($"Exception: Unexpected error occurred while registering user {profile.nombre}. Exception: {generalException.Message}", generalException);
             }
+
             return operationStatus;
         }
+
 
         public static int ValidateUserDAO(string password, string mail) {
             LoggerManager logger = new LoggerManager(typeof(UserDAO));
@@ -53,12 +57,11 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
-                logger.LogError(sqlException);
-                Console.WriteLine($"Error trying to validate user: {mail}, {sqlException.Message}");
-                //operationStatus = Constants.FAILED_OPERATION;
+                logger.LogError($"SqlException: Error trying to validate user with email: {mail}. Exception: {sqlException.Message}", sqlException);
             } catch (EntityException entityException) {
-                logger.LogError(entityException);
-                //operationStatus = Constants.FAILED_OPERATION;
+                logger.LogError($"EntityException: Error while querying database to validate user with email: {mail}. Exception: {entityException.Message}", entityException);
+            } catch (Exception generalException) {
+                logger.LogError($"Exception: Unexpected error occurred while validating user with email: {mail}. Exception: {generalException.Message}", generalException);
             }
             return operationStatus;
         }
@@ -79,15 +82,16 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
-                logger.LogError(sqlException);
-                Console.WriteLine($"Error trying to update the user profile with {idProfile} id, {sqlException.Message}");
-            } catch (EntityException entittyException) {
-                logger.LogError(entittyException);
+                logger.LogError($"SqlException: Error trying to update user profile with id: {idProfile}. Exception: {sqlException.Message}", sqlException);
+            } catch (EntityException entityException) {
+                logger.LogError($"EntityException: Error occurred while querying the database to update user profile with id: {idProfile}. Exception: {entityException.Message}", entityException);
+            } catch (Exception generalException) {
+                logger.LogError($"Exception: Unexpected error occurred while updating user profile with id: {idProfile}. Exception: {generalException.Message}", generalException);
             }
             return operationStatus;
         }
 
-        public static Perfil GetProfileByMailDAO(String mail) {
+        public static Perfil GetProfileByMailDAO(string mail) {
             LoggerManager logger = new LoggerManager(typeof(UserDAO));
             Perfil userProfile = new Perfil {
                 idPerfil = Constants.FAILED_OPERATION  // Asignar por defecto el valor de operación fallida
@@ -107,14 +111,16 @@ namespace DataBaseManager.DAO {
                         userProfile.idPerfil = Constants.NO_MATCHES;
                     }
                 }
-            } catch (SqlException sqlExcepion) {
-                logger.LogError(sqlExcepion);
-                Console.WriteLine($"Error trying to get the Profile with {mail} mail, {sqlExcepion.Message}");
+            } catch (SqlException sqlException) {
+                logger.LogError($"SqlException: Error while retrieving profile by email: {mail}. Exception: {sqlException.Message}", sqlException);
             } catch (EntityException entityException) {
-                logger.LogError(entityException);
+                logger.LogError($"EntityException: Error occurred while querying the database to retrieve profile by email: {mail}. Exception: {entityException.Message}", entityException);
+            } catch (Exception generalException) {
+                logger.LogError($"Exception: Unexpected error occurred while retrieving profile by email: {mail}. Exception: {generalException.Message}", generalException);
             }
             return userProfile;
         }
+
 
         public static int GetProfileIdDAO(string username) {
             LoggerManager logger = new LoggerManager(typeof(UserDAO));
@@ -127,10 +133,11 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
-                logger.LogError(sqlException);
-                Console.WriteLine("Error trying to get the user id with username {0}", sqlException.Message);
+                logger.LogError($"SqlException: Error while retrieving profile ID for username: {username}. Exception: {sqlException.Message}", sqlException);
             } catch (EntityException entityException) {
-                logger.LogError(entityException);
+                logger.LogError($"EntityException: Error occurred while querying the database to retrieve profile ID for username: {username}. Exception: {entityException.Message}", entityException);
+            } catch (Exception generalException) {
+                logger.LogError($"Exception: Unexpected error occurred while retrieving profile ID for username: {username}. Exception: {generalException.Message}", generalException);
             }
             return profileId;
         }
@@ -148,12 +155,12 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
-                logger.LogError(sqlException);
-                Console.WriteLine($"Error trying to get the profile picture path for username {username}: {sqlException.Message}");
+                logger.LogError($"SqlException: Error while retrieving profile picture path for username: {username}. Exception: {sqlException.Message}", sqlException);
             } catch (EntityException entityException) {
-                logger.LogError(entityException);
+                logger.LogError($"EntityException: Error while accessing the database to retrieve profile picture path for username: {username}. Exception: {entityException.Message}", entityException);
+            } catch (Exception generalException) {
+                logger.LogError($"Exception: Unexpected error occurred while retrieving profile picture path for username: {username}. Exception: {generalException.Message}", generalException);
             }
-
             return picPath;
         }
 
@@ -175,10 +182,11 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
-                logger.LogError(sqlException);
-                Console.WriteLine($"Error trying to get the mail for username {username}: {sqlException.Message}");
+                logger.LogError($"SqlException: Error while retrieving email for username: {username}. Exception: {sqlException.Message}", sqlException);
             } catch (EntityException entityException) {
-                logger.LogError(entityException);
+                logger.LogError($"EntityException: Error while accessing the database to retrieve email for username: {username}. Exception: {entityException.Message}", entityException);
+            } catch (Exception generalException) {
+                logger.LogError($"Exception: Unexpected error occurred while retrieving email for username: {username}. Exception: {generalException.Message}", generalException);
             }
             return mail;
         }
@@ -186,7 +194,6 @@ namespace DataBaseManager.DAO {
         public static int IsEmailRegisteredDAO(string mail) {
             LoggerManager logger = new LoggerManager(typeof(UserDAO));
             int operationStatus = Constants.FAILED_OPERATION;
-
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     if (db.Login.Any(login => login.correo == mail)) {
@@ -196,10 +203,11 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
-                logger.LogError(sqlException);
-                Console.WriteLine($"Error checking if the email is already registered {sqlException.Message}");
+                logger.LogError($"SqlException: Error while checking if email {mail} is already registered. Exception: {sqlException.Message}", sqlException);
             } catch (EntityException entityException) {
-                logger.LogError(entityException);
+                logger.LogError($"EntityException: Error while accessing the database to check email registration for {mail}. Exception: {entityException.Message}", entityException);
+            } catch (Exception generalException) {
+                logger.LogError($"Exception: Unexpected error while checking email registration for {mail}. Exception: {generalException.Message}", generalException);
             }
             return operationStatus;
         }
@@ -216,10 +224,11 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
-                logger.LogError(sqlException);
-                Console.WriteLine($"Error checking if the email is already registered {sqlException.Message}");
-            } catch (EntityException exception) {
-                logger.LogError(exception);
+                logger.LogError($"SqlException: Error while checking if the username {username} is already registered. Exception: {sqlException.Message}", sqlException);
+            } catch (EntityException entityException) {
+                logger.LogError($"EntityException: Error while accessing the database to check username registration for {username}. Exception: {entityException.Message}", entityException);
+            } catch (Exception generalException) {
+                logger.LogError($"Exception: Unexpected error while checking username registration for {username}. Exception: {generalException.Message}", generalException);
             }
             return operationStatus;
         }
@@ -238,11 +247,12 @@ namespace DataBaseManager.DAO {
                         operationStatus = Constants.NO_MATCHES;
                     }
                 }
-            } catch (SqlException entityException) {
-                logger.LogError(entityException);
-                Console.WriteLine($"Error trying to update the login password with {mail} mail, {entityException.Message}");
-            } catch (EntityException exception) {
-                logger.LogError(exception);
+            } catch (SqlException sqlException) {
+                logger.LogError($"SqlException: Error while updating the password for email {mail}. Exception: {sqlException.Message}", sqlException);
+            } catch (EntityException entityException) {
+                logger.LogError($"EntityException: Error while accessing the database to update password for email {mail}. Exception: {entityException.Message}", entityException);
+            } catch (Exception generalException) {
+                logger.LogError($"Exception: Unexpected error while updating password for email {mail}. Exception: {generalException.Message}", generalException);
             }
             return operationStatus;
         }
@@ -258,18 +268,19 @@ namespace DataBaseManager.DAO {
                     } else {
                         Perfil userProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == userLogin.idUsuario);
                         if (userProfile != null) {
-                            db.Perfil.Remove(userProfile);
+                            db.Perfil.Remove(userProfile);  // Eliminar el perfil
                         }
-                        db.Login.Remove(userLogin);
-                        db.SaveChanges();
+                        db.Login.Remove(userLogin);  // Eliminar el login
+                        db.SaveChanges();  // Guardar los cambios en la base de datos
                         operationStatus = Constants.SUCCESSFUL_OPERATION;
                     }
                 }
             } catch (SqlException sqlException) {
-                logger.LogError(sqlException);
-                Console.WriteLine($"Error trying to delete the user with email {email}, {sqlException.Message}");
+                logger.LogError($"SqlException: Error while trying to delete the user with email {email}. Exception: {sqlException.Message}", sqlException);
             } catch (EntityException entityException) {
-                logger.LogError(entityException);
+                logger.LogError($"EntityException: Error while accessing the database to delete the user with email {email}. Exception: {entityException.Message}", entityException);
+            } catch (Exception generalException) {
+                logger.LogError($"Exception: Unexpected error while deleting the user with email {email}. Exception: {generalException.Message}", generalException);
             }
             return operationStatus;
         }
@@ -277,22 +288,24 @@ namespace DataBaseManager.DAO {
         public static int UpdatePlayerScore(string username, int additionalPoints) {
             LoggerManager logger = new LoggerManager(typeof(UserDAO));
             int operationStatus = Constants.FAILED_OPERATION;
+
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     Perfil userProfile = db.Perfil.FirstOrDefault(p => p.nombre == username);
                     if (userProfile != null) {
                         userProfile.puntaje += additionalPoints;
-                        db.SaveChanges();
+                        db.SaveChanges();  // Guardar los cambios en la base de datos
                         operationStatus = Constants.SUCCESSFUL_OPERATION;
                     } else {
-                        operationStatus = Constants.NO_MATCHES;
+                        operationStatus = Constants.NO_MATCHES;  // No se encontró el perfil
                     }
                 }
             } catch (SqlException sqlException) {
-                logger.LogError(sqlException);
-                Console.WriteLine($"Error trying to update {username} score: {sqlException.Message}");
+                logger.LogError($"SqlException: Error while updating score for player {username}. Exception: {sqlException.Message}", sqlException);
             } catch (EntityException entityException) {
-                logger.LogError(entityException);
+                logger.LogError($"EntityException: Error while accessing the database to update score for player {username}. Exception: {entityException.Message}", entityException);
+            } catch (Exception generalException) {
+                logger.LogError($"Exception: Unexpected error while updating score for player {username}. Exception: {generalException.Message}", generalException);
             }
             return operationStatus;
         }
@@ -303,8 +316,8 @@ namespace DataBaseManager.DAO {
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     var existingFriendship = db.Amistad.FirstOrDefault(a =>
-                        a.idJugadorUno == idProfile1 && a.idJugadorDos == idProfile2);
-
+                        (a.idJugadorUno == idProfile1 && a.idJugadorDos == idProfile2) ||
+                        (a.idJugadorUno == idProfile2 && a.idJugadorDos == idProfile1));  // También se considera la amistad en sentido inverso
                     if (existingFriendship != null) {
                         operationResult = Constants.SUCCESSFUL_OPERATION;
                     } else {
@@ -312,13 +325,11 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
-                logger.LogError(sqlException);
+                logger.LogError($"SqlException: Error while checking friendship status for profiles {idProfile1} and {idProfile2}. Exception: {sqlException.Message}", sqlException);
             } catch (Exception exception) {
-                logger.LogError(exception);
+                logger.LogError($"Exception: Unexpected error while checking friendship status for profiles {idProfile1} and {idProfile2}. Exception: {exception.Message}", exception);
             }
             return operationResult;
         }
-
-
     }
 }

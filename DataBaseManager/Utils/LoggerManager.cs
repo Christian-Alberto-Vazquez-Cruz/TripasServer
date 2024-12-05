@@ -16,8 +16,8 @@ namespace DataBaseManager.Utils {
             Logger.Info(message);
         }
 
-        public void LogError(Exception exception) {
-            Logger.Error(exception);
+        public void LogError(string message, Exception exception) {
+            Logger.Error(message, exception);
         }
 
         public void LogFatal(Exception exception) {

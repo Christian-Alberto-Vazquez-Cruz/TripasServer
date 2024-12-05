@@ -2,6 +2,7 @@
 using log4net;
 
 namespace TripasService.Logic {
+
     internal class LoggerManager {
 
         public ILog Logger { get; private set; }
@@ -18,12 +19,8 @@ namespace TripasService.Logic {
             Logger.Info(message);
         }
 
-        public void LogError(string message, Exception ex) {
-            Logger.Error(message, ex);
-        }
-
-        public void LogError(Exception ex) {
-            Logger.Error(ex);
+        public void LogError(string message, Exception exception) {
+            Logger.Error(message, exception);
         }
 
         public void LogFatal(Exception ex) {

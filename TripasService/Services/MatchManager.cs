@@ -39,11 +39,9 @@ namespace TripasService.Services {
         public bool EndTurn(string matchCode, string userName) {
             LoggerManager logger = new LoggerManager(this.GetType());
             if (!_activeMatches.TryGetValue(matchCode, out var match)) {
-                Console.WriteLine($"Partida {matchCode} no encontrada.");
                 return false;
             }
             match.SwitchTurn();
-            Console.WriteLine($"Cambio de turno en la partida {matchCode}. Turno actual: {match.CurrentTurn}.");
             foreach (var player in match.Players.Values) {
                 if (player != null && _matchPlayerCallback.TryGetValue(player.Username, out var callback)) {
                     try {
@@ -53,14 +51,14 @@ namespace TripasService.Services {
                             callback.NotifyNotYourTurn();
                         }
                     } catch (Exception exception) {
-                        logger.LogError(exception);
-                        Console.WriteLine($"Error al notificar al jugador {player.Username}: {exception.Message}");
+                        logger.LogError($"Error al notificar al jugador {player.Username}: {exception.Message}", exception);
                         _matchPlayerCallback.TryRemove(player.Username, out _);
                     }
                 }
             }
             return true;
         }
+
 
         public bool RegisterTrace(string matchCode, Trace trace) {
             LoggerManager logger = new LoggerManager(this.GetType());
@@ -74,8 +72,7 @@ namespace TripasService.Services {
                     try {
                         callback.TraceReceived(trace);
                     } catch (Exception exception) {
-                        logger.LogError(exception);
-                        Console.WriteLine($"Error al notificar al jugador {player.Username}: {exception.Message}");
+                        logger.LogError($"Error al notificar al jugador {player.Username}: {exception.Message}", exception);
                         _matchPlayerCallback.TryRemove(player.Username, out _);
                     }
                 }
@@ -144,18 +141,14 @@ namespace TripasService.Services {
                         callbackAction(callback);
                         return true;
                     }
-                } catch (CommunicationException comunicationException) {
-                    logger.LogError(comunicationException);
-                    Console.WriteLine($"Communication error with {userName}: {comunicationException.Message}");
+                } catch (CommunicationException communicationException) {
+                    logger.LogError($"Communication error with {userName}: {communicationException.Message}", communicationException);
                 } catch (TimeoutException timeoutException) {
-                    logger.LogError(timeoutException);
-                    Console.WriteLine($"Timeout while notifying {userName}: {timeoutException.Message}");
+                    logger.LogError($"Timeout while notifying {userName}: {timeoutException.Message}", timeoutException);
                 } catch (ObjectDisposedException objectDisposedException) {
-                    logger.LogError(objectDisposedException);
-                    Console.WriteLine($"Channel was disposed for {userName}: {objectDisposedException.Message}");
+                    logger.LogError($"Channel was disposed for {userName}: {objectDisposedException.Message}", objectDisposedException);
                 } catch (Exception exception) {
-                    logger.LogError(exception);
-                    Console.WriteLine($"Unexpected error notifying {userName}: {exception.Message}");
+                    logger.LogError($"Unexpected error notifying {userName}: {exception.Message}", exception);
                 }
                 _matchPlayerCallback.TryRemove(userName, out _);
                 Console.WriteLine($"Callback removed for {userName} due to communication error.");
@@ -180,8 +173,7 @@ namespace TripasService.Services {
                     callback.NotifyPlayerLeft();
                     Console.WriteLine($"El jugador {opponent.Username} ha sido notificado de que debe abandonar la partida {matchCode}.");
                 } catch (Exception exception) {
-                    logger.LogError(exception);
-                    Console.WriteLine($"Error al notificar al jugador {opponent.Username}: {exception.Message}");
+                    logger.LogError($"Error notifying player {opponent.Username} about departure: {exception.Message}", exception);
                     _matchPlayerCallback.TryRemove(opponent.Username, out _);
                 }
             }
