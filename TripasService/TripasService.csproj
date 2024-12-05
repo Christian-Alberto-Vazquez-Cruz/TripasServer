@@ -36,10 +36,15 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.3.0.3\lib\net462\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -60,6 +65,7 @@
     <Compile Include="Contracts\IUserManager.cs" />
     <Compile Include="Contracts\IEmailVerificationManager.cs" />
     <Compile Include="Logic\Lobby.cs" />
+    <Compile Include="Logic\LoggerManager.cs" />
     <Compile Include="Logic\LoginUser.cs" />
     <Compile Include="Logic\Match.cs" />
     <Compile Include="Logic\Message.cs" />
@@ -86,10 +92,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataBaseManager\DataBaseManager.csproj">
-      <Project>{8edfb12f-8fe4-4a72-9f92-a34c60536193}</Project>
+      <Project>{a1aa8fb4-ecea-4a49-838d-51e3cde7d630}</Project>
       <Name>DataBaseManager</Name>
     </ProjectReference>
   </ItemGroup>

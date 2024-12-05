@@ -3,12 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataBaseManager.DAO {
     public static class FriendsDAO {
         public static int StrikeUpFriendshipDAO(int idProfile1, int idProfile2) {
+            LoggerManager logger = new LoggerManager(typeof(FriendsDAO));
             int operationResult = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -22,12 +21,14 @@ namespace DataBaseManager.DAO {
                     operationResult = Constants.SUCCESSFUL_OPERATION;
                 }
             } catch (EntityException entityException) {
+                logger.LogError(entityException);
                 Console.WriteLine($"Error trying to register the friendship {entityException.Message}");
             }
             return operationResult;
         }
 
         public static int DeleteFriendshipDAO(int idProfile1, int idProfile2) {
+            LoggerManager logger = new LoggerManager(typeof(FriendsDAO));
             int operationResult = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -43,12 +44,14 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (EntityException entityException) {
+                logger.LogError(entityException);
                 Console.WriteLine(entityException.Message);
             }
             return operationResult;
         }
 
         public static List<Perfil> GetFriendsDAO(int idProfile) {
+            LoggerManager logger = new LoggerManager(typeof(FriendsDAO));
             List<Perfil> friendList = new List<Perfil>();
             Perfil operationFailed = new Perfil();
             operationFailed.idPerfil = Constants.FAILED_OPERATION;
@@ -62,6 +65,7 @@ namespace DataBaseManager.DAO {
                     friendList = friends;
                 }
             } catch (EntityException entityException) {
+                logger.LogError(entityException);
                 friendList.Add(operationFailed);
                 Console.WriteLine($"Error trying to retrieve the friend list {entityException.Message}");
             }
@@ -69,6 +73,7 @@ namespace DataBaseManager.DAO {
         }
 
         public static int IsFriendAlreadyAddedDAO(int idProfile1, int idProfile2) {
+            LoggerManager logger = new LoggerManager(typeof(FriendsDAO));
             int operationResult = Constants.FAILED_OPERATION;
 
             try {
@@ -83,6 +88,7 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (EntityException entityException) {
+                logger.LogError(entityException);
                 Console.WriteLine($"Error trying to verify friendship: {entityException.Message}");
             }
 

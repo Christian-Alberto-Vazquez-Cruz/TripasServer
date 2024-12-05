@@ -11,6 +11,13 @@ using TripasService.Utils;
 namespace TripasService.Contracts {
     [ServiceContract]
     public interface IUserManager {
+
+        /// <summary>
+        /// Creates the account of a new user into the database
+        /// </summary>
+        /// <param name="newUser">Player's email</param>
+        /// <param name="newProfile">New password that the player account will have</param>
+        /// <returns>>Returns 1 in success or -1 if it failed</returns>
         [OperationContract]
         int CreateAccount(LoginUser newUser, Profile newProfile);
 

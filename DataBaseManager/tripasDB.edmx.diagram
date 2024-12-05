@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="d4805a378b7742c4b608da40e26d85e6" Name="Diagram1">
+      <Diagram DiagramId="4b185a2b8bff41718def3882cdfb960a" Name="Diagram1">
         <EntityTypeShape EntityType="tripasDBModel.Amistad" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
         <EntityTypeShape EntityType="tripasDBModel.Login" Width="1.5" PointX="0.75" PointY="1.25" IsExpanded="true" />
         <EntityTypeShape EntityType="tripasDBModel.Perfil" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />

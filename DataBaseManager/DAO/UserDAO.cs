@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity.Core;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
-using System.Data.SqlClient;
-using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Net.NetworkInformation;
-using System.Runtime;
-using System.Text;
-using System.Threading.Tasks;
 using DataBaseManager.Utils;
-
+using System.Data.SqlClient;
+using System.Data.Entity.Core;
+using System.Data.Entity.Validation;
+using System.Data.Entity.Infrastructure;
 
 namespace DataBaseManager.DAO {
     public static class UserDAO {
         public static int AddUserDAO(Perfil profile, Login newLogin) {
+            LoggerManager logger = new LoggerManager(typeof(UserDAO));
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -26,7 +19,6 @@ namespace DataBaseManager.DAO {
                     };
                     db.Login.Add(newUserLogin);
                     db.SaveChanges();
-
                     Perfil newUserProfile = new Perfil {
                         nombre = profile.nombre,
                         puntaje = Constants.INITIAL_SCORE,
@@ -38,22 +30,22 @@ namespace DataBaseManager.DAO {
                     operationStatus = Constants.SUCCESSFUL_OPERATION;
                 }
             } catch (DbEntityValidationException dbEntityValidationException) {
+                logger.LogError(dbEntityValidationException);
                 Console.WriteLine($"Error trying to register the user: {profile.nombre}, {dbEntityValidationException.Message}");
             } catch (DbUpdateException dbUpdateException) {
-                //LOGGEAR
+                logger.LogError(dbUpdateException);
             } catch (EntityException entityException) {
-                //LOGGEAR
+                logger.LogError(entityException);
             }
             return operationStatus;
         }
 
         public static int ValidateUserDAO(string password, string mail) {
+            LoggerManager logger = new LoggerManager(typeof(UserDAO));
             int operationStatus = Constants.FAILED_OPERATION;
-
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     bool userExists = db.Login.Any(login => login.correo == mail && login.contrasena == password);
-
                     if (userExists) {
                         operationStatus = Constants.FOUND_MATCH;
                     } else {
@@ -61,16 +53,18 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
+                logger.LogError(sqlException);
                 Console.WriteLine($"Error trying to validate user: {mail}, {sqlException.Message}");
                 //operationStatus = Constants.FAILED_OPERATION;
             } catch (EntityException entityException) {
-                //LOGGEAR
+                logger.LogError(entityException);
                 //operationStatus = Constants.FAILED_OPERATION;
             }
             return operationStatus;
         }
 
         public static int UpdateUserProfileDAO(int idProfile, string newUsername, string newPicPath) {
+            LoggerManager logger = new LoggerManager(typeof(UserDAO));
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -85,18 +79,19 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
+                logger.LogError(sqlException);
                 Console.WriteLine($"Error trying to update the user profile with {idProfile} id, {sqlException.Message}");
             } catch (EntityException entittyException) {
-
+                logger.LogError(entittyException);
             }
             return operationStatus;
         }
 
         public static Perfil GetProfileByMailDAO(String mail) {
+            LoggerManager logger = new LoggerManager(typeof(UserDAO));
             Perfil userProfile = new Perfil {
                 idPerfil = Constants.FAILED_OPERATION  // Asignar por defecto el valor de operación fallida
             };
-
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     Login userLogin = db.Login.FirstOrDefault(login => login.correo == mail);
@@ -113,15 +108,16 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlExcepion) {
-                //LOGGEAR
+                logger.LogError(sqlExcepion);
                 Console.WriteLine($"Error trying to get the Profile with {mail} mail, {sqlExcepion.Message}");
             } catch (EntityException entityException) {
-                //LOGGEAR
+                logger.LogError(entityException);
             }
             return userProfile;
         }
 
         public static int GetProfileIdDAO(string username) {
+            LoggerManager logger = new LoggerManager(typeof(UserDAO));
             int profileId = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -131,15 +127,16 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
-                //LOG
+                logger.LogError(sqlException);
                 Console.WriteLine("Error trying to get the user id with username {0}", sqlException.Message);
             } catch (EntityException entityException) {
-                //LOG
+                logger.LogError(entityException);
             }
             return profileId;
         }
 
         public static string GetPicPathByUsername(string username) {
+            LoggerManager logger = new LoggerManager(typeof(UserDAO));
             string picPath = Constants.FAILED_OPERATION_STRING;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -151,16 +148,17 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
-                //LOGGEAR
-               Console.WriteLine($"Error trying to get the profile picture path for username {username}: {sqlException.Message}");
+                logger.LogError(sqlException);
+                Console.WriteLine($"Error trying to get the profile picture path for username {username}: {sqlException.Message}");
             } catch (EntityException entityException) {
-               //LOGGEAR
+                logger.LogError(entityException);
             }
-             
+
             return picPath;
         }
 
         public static string GetMailByUsername(string username) {
+            LoggerManager logger = new LoggerManager(typeof(UserDAO));
             string mail = Constants.FAILED_OPERATION_STRING;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -177,14 +175,16 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
+                logger.LogError(sqlException);
                 Console.WriteLine($"Error trying to get the mail for username {username}: {sqlException.Message}");
             } catch (EntityException entityException) {
-
+                logger.LogError(entityException);
             }
             return mail;
         }
 
         public static int IsEmailRegisteredDAO(string mail) {
+            LoggerManager logger = new LoggerManager(typeof(UserDAO));
             int operationStatus = Constants.FAILED_OPERATION;
 
             try {
@@ -196,14 +196,16 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
+                logger.LogError(sqlException);
                 Console.WriteLine($"Error checking if the email is already registered {sqlException.Message}");
             } catch (EntityException entityException) {
-
+                logger.LogError(entityException);
             }
             return operationStatus;
         }
 
         public static int IsNameRegisteredDAO(string username) {
+            LoggerManager logger = new LoggerManager(typeof(UserDAO));
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -214,13 +216,16 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
+                logger.LogError(sqlException);
                 Console.WriteLine($"Error checking if the email is already registered {sqlException.Message}");
             } catch (EntityException exception) {
+                logger.LogError(exception);
             }
             return operationStatus;
         }
 
         public static int UpdateLoginPasswordDAO(string mail, string newPassword) {
+            LoggerManager logger = new LoggerManager(typeof(UserDAO));
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -234,14 +239,16 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException entityException) {
+                logger.LogError(entityException);
                 Console.WriteLine($"Error trying to update the login password with {mail} mail, {entityException.Message}");
             } catch (EntityException exception) {
-                //LOG
+                logger.LogError(exception);
             }
             return operationStatus;
         }
 
         public static int DeleteAccountDAO(string email) {
+            LoggerManager logger = new LoggerManager(typeof(UserDAO));
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -259,14 +266,16 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
+                logger.LogError(sqlException);
                 Console.WriteLine($"Error trying to delete the user with email {email}, {sqlException.Message}");
             } catch (EntityException entityException) {
-
+                logger.LogError(entityException);
             }
             return operationStatus;
         }
 
         public static int UpdatePlayerScore(string username, int additionalPoints) {
+            LoggerManager logger = new LoggerManager(typeof(UserDAO));
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
@@ -278,18 +287,19 @@ namespace DataBaseManager.DAO {
                     } else {
                         operationStatus = Constants.NO_MATCHES;
                     }
-                }   
+                }
             } catch (SqlException sqlException) {
+                logger.LogError(sqlException);
                 Console.WriteLine($"Error trying to update {username} score: {sqlException.Message}");
             } catch (EntityException entityException) {
-
+                logger.LogError(entityException);
             }
             return operationStatus;
         }
 
         public static int IsFriendAlreadyAddedDAO(int idProfile1, int idProfile2) {
+            LoggerManager logger = new LoggerManager(typeof(UserDAO));
             int operationResult = Constants.FAILED_OPERATION;
-
             try {
                 using (tripasEntities db = new tripasEntities()) {
                     var existingFriendship = db.Amistad.FirstOrDefault(a =>
@@ -302,9 +312,9 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
-                //Loggear
-            } catch (Exception ex) {
-                //loggear
+                logger.LogError(sqlException);
+            } catch (Exception exception) {
+                logger.LogError(exception);
             }
             return operationResult;
         }
