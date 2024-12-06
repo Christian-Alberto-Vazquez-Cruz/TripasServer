@@ -32,8 +32,6 @@ namespace TripasService.Logic {
             NodeCount = nodeCount;
             Players["PlayerOne"] = host;
         }
-
-        //CAMBIAR
         public bool HasSpace => !Players.ContainsKey("PlayerTwo");
     }
 }

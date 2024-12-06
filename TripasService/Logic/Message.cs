@@ -19,12 +19,8 @@ namespace TripasService.Logic {
             this.ChatMessage = chatMessage;
             this.Username = username;
         }
-
         public Message() {
-
-        }
-        public override string ToString() {
-            return $"{Username}: {ChatMessage}";
+        
         }
     }
 }

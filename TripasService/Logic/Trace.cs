@@ -19,9 +19,6 @@ namespace TripasService.Logic {
         public Node EndNode { get; set; }
 
         [DataMember]
-        public DateTime Timestamp { get; set; }
-
-        [DataMember]
         public List<TracePoint> TracePoints { get; set; } = new List<TracePoint>();
 
         [DataMember]

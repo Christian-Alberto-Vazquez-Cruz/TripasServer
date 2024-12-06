@@ -16,12 +16,12 @@ namespace TripasService.Services {
         private static readonly ConcurrentDictionary<string, IMatchManagerCallback> _matchPlayerCallback = new ConcurrentDictionary<string, IMatchManagerCallback>();
 
         public Dictionary<string, string> GetNodePairs(string matchCode) {
-            if (!_activeMatches.TryGetValue(matchCode, out var match)) return null;
+            if (!_activeMatches.TryGetValue(matchCode, out Match match)) return null;
             return match.GetNodePairs();
         }
 
         public bool RegisterPlayerCallback(string matchCode, string username) {
-            if (!_activeMatches.TryGetValue(matchCode, out var match)) return false;
+            if (!_activeMatches.TryGetValue(matchCode, out Match match)) return false;
             var callback = OperationContext.Current.GetCallbackChannel<IMatchManagerCallback>();
             if (match.Players.Values.Any(player => player.Username == username)) {
                 return _matchPlayerCallback.TryAdd(username, callback);
@@ -31,7 +31,7 @@ namespace TripasService.Services {
 
         public bool EndTurn(string matchCode, string userName) {
             LoggerManager logger = new LoggerManager(this.GetType());
-            if (!_activeMatches.TryGetValue(matchCode, out var match)) {
+            if (!_activeMatches.TryGetValue(matchCode, out Match match)) {
                 return false;
             }
             match.SwitchTurn();
@@ -58,10 +58,10 @@ namespace TripasService.Services {
 
         public bool RegisterTrace(string matchCode, Trace trace) {
             LoggerManager logger = new LoggerManager(this.GetType());
-            if (!_activeMatches.TryGetValue(matchCode, out var match)) {
+            if (!_activeMatches.TryGetValue(matchCode, out Match match)) {
                 return false;
             }
-            match.AddTrace(trace);
+
             int tracePoints = trace.Score;
             match.AddPoints(trace.Player, tracePoints);
             foreach (var player in match.Players.Values) {
@@ -88,7 +88,7 @@ namespace TripasService.Services {
 
 
         public string GetCurrentTurn(string matchCode) {
-            if (!_activeMatches.TryGetValue(matchCode, out var match)) {
+            if (!_activeMatches.TryGetValue(matchCode, out Match match)) {
                 return null;  
             }
             return match.CurrentTurn;
@@ -175,27 +175,35 @@ namespace TripasService.Services {
             if (opponent != null && _matchPlayerCallback.TryGetValue(opponent.Username, out var callback)) {
                 try {
                     callback.NotifyPlayerLeft();
+                } catch (CommunicationException communicationException) {
+                    logger.LogError($"Error notifying player {opponent.Username} about departure: {communicationException.Message}", communicationException);
+                    _matchPlayerCallback.TryRemove(opponent.Username, out _);
+                } catch (TimeoutException timeoutException) {
+                    logger.LogError($"Error notifying player {opponent.Username} about departure: {timeoutException.Message}", timeoutException);
+                    _matchPlayerCallback.TryRemove(opponent.Username, out _);
                 } catch (Exception exception) {
                     logger.LogError($"Error notifying player {opponent.Username} about departure: {exception.Message}", exception);
-                    _matchPlayerCallback.TryRemove(opponent.Username, out _);
+                    _matchPlayerCallback.TryRemove(opponent.Username, out _););
                 }
             }
             RemoveMatchCallbacks(matchCode);
             EndMatchByAbandonment(matchCode);
         }
 
+
+
         private void EndMatchByAbandonment(string matchCode) {
-            if (!_activeMatches.TryRemove(matchCode, out var match)) {
+            if (!_activeMatches.TryRemove(matchCode, out Match match)) {
                 return;
             }
             SavePlayerScores(match); 
         }
 
         private void RemoveMatchCallbacks(string matchCode) {
-            if (!_activeMatches.TryGetValue(matchCode, out var match)) {
+            if (!_activeMatches.TryGetValue(matchCode, out Match match)) {
                 return;
             }
-            foreach (var player in match.Players.Values.Where(p => p != null)) {
+            foreach (var player in match.Players.Values.Where(player => player != null)) {
                 _matchPlayerCallback.TryRemove(player.Username, out _); 
             }
         }
@@ -204,7 +212,7 @@ namespace TripasService.Services {
             Match match = new Match() {
                 Code = Constants.NO_MATCHES_STRING
             };
-            if (_activeMatches.TryGetValue(matchCode, out var matchSearched)) {
+            if (_activeMatches.TryGetValue(matchCode, out Match matchSearched)) {
                 match = matchSearched;
             }
             return match;

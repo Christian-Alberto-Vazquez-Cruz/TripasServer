@@ -28,7 +28,6 @@ namespace TripasService.Services {
                     logger.LogError($"Channel was disposed for {username}: {objectDisposedException.Message}", objectDisposedException);
                 }
                 _lobbyPlayerCallback.TryRemove(username, out _);
-                Console.WriteLine($"Callback removed for {username} due to communication error");
             }
             return false;
         }
@@ -36,7 +35,7 @@ namespace TripasService.Services {
         public bool ConnectPlayerToLobby(string code, int playerId) {
             var callback = OperationContext.Current.GetCallbackChannel<ILobbyManagerCallback>();
             bool operationResult = false;
-            if (!_lobbies.TryGetValue(code, out var lobby)) {
+            if (!_lobbies.TryGetValue(code, out Lobby lobby)) {
                 return operationResult;
             }
             if (TryRegisterCallbackForHost(lobby, playerId, callback) || TryRegisterCallbackForGuest(lobby, playerId, callback)) {
@@ -90,9 +89,8 @@ namespace TripasService.Services {
         }
 
         private bool TryRegisterCallbackForHost(Lobby lobby, int playerId, ILobbyManagerCallback callback) {
-            if (lobby.Players.TryGetValue("PlayerOne", out var host) && host.IdProfile == playerId) {
+            if (lobby.Players.TryGetValue("PlayerOne", out Profile host) && host.IdProfile == playerId) {
                 if (_lobbyPlayerCallback.TryAdd(host.Username, callback)) {
-                    Console.WriteLine($"Host {host.Username} callback registered successfully.");
                     return true;
                 }
             }
@@ -100,9 +98,8 @@ namespace TripasService.Services {
         }
 
         private bool TryRegisterCallbackForGuest(Lobby lobby, int playerId, ILobbyManagerCallback callback) {
-            if (lobby.Players.TryGetValue("PlayerTwo", out var guest) && guest.IdProfile == playerId) {
+            if (lobby.Players.TryGetValue("PlayerTwo", out Profile guest) && guest.IdProfile == playerId) {
                 if (_lobbyPlayerCallback.TryAdd(guest.Username, callback)) {
-                    Console.WriteLine($"Guest {guest.Username} callback registered successfully.");
                     NotifyHostAboutGuest(lobby, guest);
                     return true;
                 }
@@ -170,7 +167,6 @@ namespace TripasService.Services {
 
         private bool TryAddMatchToActiveMatches(string code, Match match) {
             if (!_activeMatches.TryAdd(code, match)) {
-                Console.WriteLine($"Unable to register match with {code} code. Verify duplicity.");
                 return false;
             }
             return true;
@@ -189,9 +185,7 @@ namespace TripasService.Services {
                     _lobbyPlayerCallback.TryRemove(player.Username, out _);
                 }
                 DeleteLobby(code);
-            } else {
-                Console.WriteLine($"No se encontró ningún lobby con el código {code}.");
-            }
+            } 
         }
 
         public bool DeleteLobby(string code) {

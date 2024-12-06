@@ -41,10 +41,10 @@ namespace TripasService.Contracts {
     [DataContract]
     public class ProfileNotFoundFault {
         [DataMember]
-        public string errorMessage { get; set; }
+        public string ErrorMessage { get; set; }
 
         public ProfileNotFoundFault(string errorMessage) {
-            this.errorMessage = errorMessage;
+            this.ErrorMessage = errorMessage;
         }
 
         public ProfileNotFoundFault() {
