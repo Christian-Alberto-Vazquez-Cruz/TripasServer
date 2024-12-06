@@ -2,6 +2,7 @@
 using System.ServiceModel;
 using Xunit;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TripasService.Tests {
 
@@ -49,15 +50,22 @@ namespace TripasService.Tests {
             [Fact]
             public async void ConnectPlayerToLobby() {
                 LobbyBrowserClient lobbyBrowser = new LobbyBrowserClient();
-                Profile host = new Profile();
-                host.IdProfile = 1;
-                host.Username = "erick1";
+                Profile host = new Profile() {
+                    IdProfile = 1,
+                    Username = "Erick1"
+                };
+
                 string lobbycode = lobbyBrowser.CreateLobby("game1", 8, host);
                 await Task.Delay(1000);
-                Profile guest = new Profile();
-                guest.IdProfile = 2;
-                guest.Username = "Chistian1";
-                guest.PicturePath = "/imagen";
+                Profile guest = new Profile() {
+                    IdProfile = 2,
+                    Username = "Christian1",
+                    PicturePath = "/Images/Profiles/ImageProfile1.png"
+                };
+
+                lobbyBrowser.JoinLobby(lobbycode, guest);   
+            
+                _clientManager.ConnectPlayerToLobby(lobbycode, host.IdProfile);
                 _clientManager.ConnectPlayerToLobby(lobbycode, guest.IdProfile);
                 await Task.Delay(10000);
                 Assert.True(_clientCallback.guestJoinedCallback);

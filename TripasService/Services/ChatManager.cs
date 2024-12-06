@@ -30,18 +30,30 @@ namespace TripasService.Services {
 
         private void BroadcastMessageToLobby(Message message, string lobbyCode) {
             LoggerManager logger = new LoggerManager(this.GetType());
-            Console.WriteLine($"Broadcasting message to lobby {lobbyCode}: {message}");
             if (_connectedUsersByLobby.TryGetValue(lobbyCode, out var lobbyUsers)) {
                 foreach (var user in lobbyUsers.Values) {
                     try {
                         user.BroadcastMessage(message);
+                    } catch (CommunicationException communicationException) {
+                        logger.LogError($"Error while broadcasting message to user in lobby {lobbyCode}: {communicationException.Message}", communicationException);
+                        string disconnectedUser = lobbyUsers.FirstOrDefault(lobby => lobby.Value == user).Key;
+                        if (disconnectedUser != null) {
+                            LeaveChat(disconnectedUser, lobbyCode);
+                            LeaveLobby(lobbyCode, disconnectedUser);
+                        }
+                    } catch (TimeoutException timeoutException) {
+                        logger.LogError($"Error while broadcasting message to user in lobby {lobbyCode}: {timeoutException.Message}", timeoutException);
+                        string disconnectedUser = lobbyUsers.FirstOrDefault(lobby => lobby.Value == user).Key;
+                        if (disconnectedUser != null) {
+                            LeaveChat(disconnectedUser, lobbyCode);
+                            LeaveLobby(lobbyCode, disconnectedUser);
+                        }
                     } catch (Exception exception) {
                         logger.LogError($"Error while broadcasting message to user in lobby {lobbyCode}: {exception.Message}", exception);
                         string disconnectedUser = lobbyUsers.FirstOrDefault(lobby => lobby.Value == user).Key;
                         if (disconnectedUser != null) {
                             LeaveChat(disconnectedUser, lobbyCode);
                             LeaveLobby(lobbyCode, disconnectedUser);
-                            Console.WriteLine($"Excepción durante el broadcast para {disconnectedUser} en el lobby {lobbyCode}: {exception.Message}");
                         }
                     }
                 }
