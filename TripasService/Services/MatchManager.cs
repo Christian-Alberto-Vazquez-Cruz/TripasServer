@@ -183,7 +183,7 @@ namespace TripasService.Services {
                     _matchPlayerCallback.TryRemove(opponent.Username, out _);
                 } catch (Exception exception) {
                     logger.LogError($"Error notifying player {opponent.Username} about departure: {exception.Message}", exception);
-                    _matchPlayerCallback.TryRemove(opponent.Username, out _););
+                    _matchPlayerCallback.TryRemove(opponent.Username, out _);
                 }
             }
             RemoveMatchCallbacks(matchCode);
