@@ -14,7 +14,7 @@ namespace TripasService.Services {
 
         public bool JoinLobby(string code, Profile guest) {
             bool result = false;
-            if (_lobbies.TryGetValue(code, out var lobby) && lobby.HasSpace) {
+            if (_lobbies.TryGetValue(code, out Lobby lobby) && lobby.HasSpace) {
                 lobby.Players["PlayerTwo"] = guest;
                 result = true;
             }
@@ -22,16 +22,21 @@ namespace TripasService.Services {
         }
 
         public string CreateLobby(string gameName, int nodeCount, Profile owner) {
-            string code;
-            do {
-                code = CodesGeneratorHelper.GenerateLobbyCode();
-            } while (_lobbies.ContainsKey(code));
+            string code = GenerateUniqueLobbyCode();
 
             Lobby newLobby = new Lobby(code, gameName, nodeCount, owner);
             if (_lobbies.TryAdd(code, newLobby)) {
                 return code;
             }
             return Constants.FAILED_OPERATION_STRING;
+        }
+
+        private string GenerateUniqueLobbyCode() {
+            string code;
+            do {
+                code = CodesGeneratorHelper.GenerateLobbyCode();
+            } while (_lobbies.ContainsKey(code));
+            return code; 
         }
 
         public Lobby GetLobbyByCode(string code) {

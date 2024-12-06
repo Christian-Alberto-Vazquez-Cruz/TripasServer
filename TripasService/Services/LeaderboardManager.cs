@@ -15,7 +15,7 @@ namespace TripasService.Services {
         public List<Profile> GetHighestScores() {
             List<Perfil> highestScoreProfiles = LeaderboardDAO.GetHighestScoresDAO();
             List<Profile> highestScoresList = new List<Profile>();
-            foreach (var profileData in highestScoreProfiles) {
+            foreach (Perfil profileData in highestScoreProfiles) {
                 Profile profile = new Profile() {
                     IdProfile = profileData.idPerfil,
                     Username = profileData.nombre,
