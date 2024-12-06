@@ -1,5 +1,6 @@
-﻿/*using DataBaseManager.DAO;
+﻿using DataBaseManager.DAO;
 using DataBaseManager;
+using TripasTests.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,46 +12,14 @@ using TripasTests.ProxyTripas;
 
 namespace TripasTests.DAO {
 
-    public class LeaderboardDAOShould : IClassFixture<DBFixtureLeaderboard> {
-
+    public class LeaderboardDAOShould {
         [Fact]
-        public void GetHighestScores_ReturnsExpectedPlayers() {
-            List<string> expectedUsernames = new List<string> { "Pablo", "Pinguinela", "vbox" };
+        public void GetHighestScoresDAO() {
 
-            List<Perfil> highestScores = LeaderboardDAO.GetHighestScoresDAO();
+            int expetedResult = 10;
+            List<Perfil> result = LeaderboardDAO.GetHighestScoresDAO();
 
-            Assert.NotEmpty(highestScores);
-            Assert.Equal(expectedUsernames.Count, highestScores.Count); 
-            for (int i = 0; i < expectedUsernames.Count; i++) {
-                Assert.Equal(expectedUsernames[i], highestScores[i].nombre);
-            }
-        }
-
-        [Fact]
-        public void GetHighestScores_ReturnsEmptyListWhenNoProfiles() {
-            // Arrange: Elimina todos los perfiles antes de ejecutar
-            using (var db = new tripasEntities()) {
-                var allProfiles = db.Perfil.ToList();
-                db.Perfil.RemoveRange(allProfiles);
-                db.SaveChanges();
-            }
-
-            List<Perfil> highestScores = LeaderboardDAO.GetHighestScoresDAO();
-
-            Assert.Empty(highestScores); 
-        }
-
-        [Fact]
-        public void GetHighestScores_HandlesDatabaseErrorGracefully() {
-            List<Perfil> highestScores = null;
-            try {
-                highestScores = LeaderboardDAO.GetHighestScoresDAO();
-            } catch (Exception ex) {
-                Assert.Contains("Error trying to retrieve the highest score players", ex.Message);
-            }
-
-            // Assert
-            Assert.Null(highestScores); // Validamos que se maneje correctamente un fallo
+            Assert.Equal(expetedResult, result.Count());
         }
     }
-}*/
+}

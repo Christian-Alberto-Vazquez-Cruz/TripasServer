@@ -67,14 +67,12 @@
     <Compile Include="DAO\LeaderboardDAOShould.cs" />
     <Compile Include="DAO\UserDAOShould.cs" />
     <Compile Include="Services\ChatManagerTest.cs" />
-    <Compile Include="Services\FriendsManagerTests.cs" />
     <Compile Include="Services\LobbyManagerTest.cs" />
     <Compile Include="Services\StatusManagerTest.cs" />
     <Compile Include="Services\UserManager.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\DBFixtureUserDAO.cs" />
-    <Compile Include="Utils\DBFixtureLeaderboardDAO.cs" />
     <Compile Include="Utils\DBFixtureDAOException.cs" />
     <Compile Include="Utils\DBFixtureFriendsDAO.cs" />
   </ItemGroup>

@@ -94,7 +94,7 @@ namespace DataBaseManager.DAO {
         public static Perfil GetProfileByMailDAO(string mail) {
             LoggerManager logger = new LoggerManager(typeof(UserDAO));
             Perfil userProfile = new Perfil {
-                idPerfil = Constants.FAILED_OPERATION  // Asignar por defecto el valor de operación fallida
+                idPerfil = Constants.FAILED_OPERATION  
             };
             try {
                 using (tripasEntities db = new tripasEntities()) {

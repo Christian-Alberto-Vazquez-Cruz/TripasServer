@@ -4,6 +4,7 @@ using TripasService.Logic;
 using TripasService.Contracts;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using TripasService.Utils;
 
 namespace TripasService.Services {
     public partial class TripasGameService : ILobbyManager {
@@ -146,22 +147,22 @@ namespace TripasService.Services {
 
         public void KickPlayer(string code) {
             LoggerManager logger = new LoggerManager(this.GetType());
-            if (!_lobbies.TryGetValue(code, out var lobby)) {
-                Console.WriteLine($"Lobby con código {code} no encontrado.");
+
+            Lobby lobby = GetLobby(code);
+            if (lobby.Code == Constants.NO_MATCHES_STRING) return;
+
+            Profile host = GetPlayer(lobby, "PlayerOne");
+            Profile guest = GetPlayer(lobby, "PlayerTwo");
+            if (host.IdProfile == Constants.NO_MATCHES || guest.IdProfile == Constants.NO_MATCHES) {
                 return;
             }
-            if (!lobby.Players.TryGetValue("PlayerOne", out var host)) {
-                Console.WriteLine($"El anfitrión del lobby {code} no es válido o no existe.");
-                return;
-            }
-            if (!lobby.Players.TryGetValue("PlayerTwo", out var guest)) {
-                Console.WriteLine($"No hay invitado en el lobby {code} para ser expulsado.");
-                return;
-            }
-            lobby.Players.Remove("PlayerTwo");
+
+            RemoveGuestFromLobby(lobby);
+
             if (_lobbyPlayerCallback.TryRemove(guest.Username, out var guestCallback)) {
                 try {
                     guestCallback.KickedFromLobby();
+                    _lobbyPlayerCallback.TryRemove(guest.Username, out _);
                 } catch (Exception exception) {
                     logger.LogError($"Error al notificar al invitado {guest.Username} que fue expulsado: {exception.Message}", exception);
                 }
@@ -175,5 +176,31 @@ namespace TripasService.Services {
             }
             Console.WriteLine($"El invitado {guest.Username} ha sido expulsado del lobby {code}.");
         }
+
+        private Lobby GetLobby(string code) {
+            Lobby lobbyRetrieved = new Lobby() {
+                Code = Constants.NO_MATCHES_STRING
+            };
+            if (_lobbies.TryGetValue(code, out Lobby lobby)) {
+                lobbyRetrieved = lobby;
+            }
+            return lobbyRetrieved;
+        }
+
+        private Profile GetPlayer(Lobby lobby, string role) {
+            Profile profileRetrieved = new Profile() {
+                IdProfile = Constants.NO_MATCHES
+            };
+            if (lobby.Players.TryGetValue(role, out Profile player)) {
+                profileRetrieved = player;
+            }
+            return profileRetrieved;
+        }
+
+        private void RemoveGuestFromLobby(Lobby lobby) {
+            lobby.Players.Remove("PlayerTwo");
+        }
+
+
     }
 }

@@ -38,7 +38,7 @@ namespace TripasService.Services {
             Lobby lobbyRetrieved = new Lobby {
                 Code = Constants.FAILED_OPERATION_STRING
             };
-            if (!_lobbies.TryGetValue(code, out Lobby lobby)) {
+            if (_lobbies.TryGetValue(code, out Lobby lobby)) {
                 lobbyRetrieved = lobby;
             }
             return lobbyRetrieved;
