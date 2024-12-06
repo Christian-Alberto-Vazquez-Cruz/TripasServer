@@ -18,10 +18,10 @@ namespace TripasTests.DAO {
             string password = null;
             string mail = null;
 
-            int exceptionResult = Constants.FAILED_OPERATION;
+            int expectedResult = Constants.FAILED_OPERATION;
             int resultObtained = DataBaseManager.DAO.UserDAO.ValidateUserDAO(password, mail);
 
-            Assert.Equal(exceptionResult, resultObtained);
+            Assert.Equal(expectedResult, resultObtained);
         }
 
 
@@ -31,10 +31,10 @@ namespace TripasTests.DAO {
             string newPicPath = Constants.INITIAL_PIC_PATH;
             string newUsername = "Mouse";
 
-            int expectionResult = Constants.FAILED_OPERATION;
+            int expectedResult = Constants.FAILED_OPERATION;
             int resultObtained = DataBaseManager.DAO.UserDAO.UpdateUserProfileDAO(id, newUsername, newPicPath);
 
-            Assert.Equal(expectionResult, resultObtained);
+            Assert.Equal(expectedResult, resultObtained);
         }
 
         [Fact]
@@ -134,9 +134,9 @@ namespace TripasTests.DAO {
             int additionalPoints = 10;
 
             int expected = Constants.FAILED_OPERATION;
-            int result = UserDAO.UpdatePlayerScore(username, additionalPoints);
+            int resultObtained = UserDAO.UpdatePlayerScore(username, additionalPoints);
 
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, resultObtained);
         }
 
 
@@ -147,9 +147,9 @@ namespace TripasTests.DAO {
             int idProfile2 = 8219;
 
             var expected = Constants.FAILED_OPERATION;
-            var result = FriendsDAO.StrikeUpFriendshipDAO(idProfile1, idProfile2);
+            var resultObtained = FriendsDAO.StrikeUpFriendshipDAO(idProfile1, idProfile2);
 
-            Assert.Equal(expected, result);
+            Assert.Equal(expected, resultObtained);
         }
 
         [Fact]
@@ -182,6 +182,15 @@ namespace TripasTests.DAO {
             int obtainedResult = FriendsDAO.IsFriendAlreadyAddedDAO(idProfile1, idProfile2);
 
             Assert.Equal(expectedResult, obtainedResult);
+        }
+
+        [Fact]
+        public void GetHighestScoresDAOException() {
+
+            int expectedProfileId = Constants.FAILED_OPERATION;
+            List<Perfil> leaderboardPlayers = LeaderboardDAO.GetHighestScoresDAO();
+
+            Assert.Contains(leaderboardPlayers, player => player.idPerfil == expectedProfileId);
         }
     }
 }
