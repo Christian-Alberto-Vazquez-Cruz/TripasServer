@@ -94,7 +94,7 @@ namespace TripasService.Services {
                 if (_lobbyPlayerCallback.TryAdd(host.Username, callback)) {
                     Console.WriteLine($"Host {host.Username} callback registered successfully.");
                     return true;
-                } 
+                }
             }
             return false;
         }
@@ -105,7 +105,7 @@ namespace TripasService.Services {
                     Console.WriteLine($"Guest {guest.Username} callback registered successfully.");
                     NotifyHostAboutGuest(lobby, guest);
                     return true;
-                } 
+                }
             }
             return false;
         }
@@ -118,10 +118,10 @@ namespace TripasService.Services {
         }
 
         public void StartMatch(string code) {
-            if (!TryGetLobby(code, out var lobby)) {
+            if (!TryGetLobby(code, out Lobby lobby)) {
                 return;
             }
-            if (!TryGetHost(lobby, out var host) || !TryGetGuest(lobby, out var guest)) {
+            if (!TryGetHost(lobby, out Profile host) || !TryGetGuest(lobby, out Profile guest)) {
                 return;
             }
             Match match = CreateMatch(code, lobby, host, guest);
@@ -200,21 +200,33 @@ namespace TripasService.Services {
         }
 
         public void KickPlayer(string code) {
-
-        }
-
-
-
-        private Lobby GetLobby(string code) {
-            Lobby lobbyRetrieved = new Lobby() {
-                Code = Constants.NO_MATCHES_STRING
-            };
-            if (_lobbies.TryGetValue(code, out Lobby lobby)) {
-                lobbyRetrieved = lobby;
+            if (!TryGetLobby(code, out Lobby lobby)) {
+                return;
             }
-            return lobbyRetrieved;
+            if (!lobby.Players.TryGetValue("PlayerTwo", out Profile guest)) {
+                return;
+            }
+
+            RemoveGuestFromLobby(guest, code, lobby);
+            NotifyHostGuestLeft(lobby);
+
+            if (lobby.Players.TryGetValue("PlayerOne", out Profile host)) {
+                TryNotifyCallback(host.Username, callback => callback.GuestLeftCallback());
+            }
         }
 
+        private void RemoveGuestFromLobby(Profile guest, string lobbyCode, Lobby lobby) {
+            TryNotifyCallback(guest.Username, callback => callback.KickedFromLobby());
+            lobby.Players.Remove("PlayerTwo");
+            _lobbyPlayerCallback.TryRemove(guest.Username, out _);
+            LeaveChat(guest.Username, lobbyCode);
+        }
+
+        private void NotifyHostGuestLeft(Lobby lobby) {
+            if (lobby.Players.TryGetValue("PlayerOne", out Profile host)) {
+                TryNotifyCallback(host.Username, callback => callback.GuestLeftCallback());
+            }
+        }
         private string GetPlayer(Lobby lobby, string role) {
             string usernameRetrieved = Constants.NO_MATCHES_STRING;
             if (lobby.Players.TryGetValue(role, out Profile player)) {
