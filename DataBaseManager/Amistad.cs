@@ -15,8 +15,8 @@ namespace DataBaseManager
     public partial class Amistad
     {
         public int idAmistad { get; set; }
-        public Nullable<int> idJugadorUno { get; set; }
-        public Nullable<int> idJugadorDos { get; set; }
+        public int idJugadorUno { get; set; }
+        public int idJugadorDos { get; set; }
     
         public virtual Perfil Perfil { get; set; }
         public virtual Perfil Perfil1 { get; set; }

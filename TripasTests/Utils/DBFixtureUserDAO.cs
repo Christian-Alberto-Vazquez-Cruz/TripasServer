@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace TripasTests.Utils {
-    public class DatabaseFixtureUserDAOShould : IDisposable {
+    public class DBFixtureUserDAO : IDisposable {
         private readonly List<string> _addedEmails = new List<string>();
-        public DatabaseFixtureUserDAOShould() {
+        public DBFixtureUserDAO() {
             AddTestUser("virtualbox@hotmail.com.mx", "vbox");
             AddTestUser("Pablito@hotmail.com.mx", "Pablo");
             AddTestUser("Pinguinela@hotmail.com.mx", "Pinguinela");

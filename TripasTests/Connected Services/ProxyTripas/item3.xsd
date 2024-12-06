@@ -1,86 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/TripasService.Logic" xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/TripasService.Logic" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:import schemaLocation="http://localhost:8082/?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/TripasService.Utils" />
-  <xs:import schemaLocation="http://localhost:8082/?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
-  <xs:import schemaLocation="http://localhost:8082/?xsd=xsd5" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
-  <xs:complexType name="Profile">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="IdProfile" type="xs:int" />
-      <xs:element minOccurs="0" name="PicturePath" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Score" type="xs:int" />
-      <xs:element minOccurs="0" name="Username" nillable="true" type="xs:string" />
-      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/TripasService.Utils" minOccurs="0" name="status" type="q1:GameEnums.PlayerStatus" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Profile" nillable="true" type="tns:Profile" />
-  <xs:complexType name="ArrayOfProfile">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="Profile" nillable="true" type="tns:Profile" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfProfile" nillable="true" type="tns:ArrayOfProfile" />
-  <xs:complexType name="ArrayOfLobby">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="Lobby" nillable="true" type="tns:Lobby" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfLobby" nillable="true" type="tns:ArrayOfLobby" />
-  <xs:complexType name="Lobby">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Code" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Duration" type="ser:duration" />
-      <xs:element minOccurs="0" name="GameName" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="NodeCount" type="xs:int" />
-      <xs:element xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays" minOccurs="0" name="Players" nillable="true" type="q2:ArrayOfKeyValueOfstringProfileNMlWG8Ac" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Lobby" nillable="true" type="tns:Lobby" />
-  <xs:complexType name="Trace">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Color" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="EndNode" nillable="true" type="tns:Node" />
-      <xs:element minOccurs="0" name="Player" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="StartNode" nillable="true" type="tns:Node" />
-      <xs:element minOccurs="0" name="Timestamp" type="xs:dateTime" />
-      <xs:element minOccurs="0" name="TracePoints" nillable="true" type="tns:ArrayOfTracePoint" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Trace" nillable="true" type="tns:Trace" />
-  <xs:complexType name="Node">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="Color" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:string" />
-      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/TripasService.Utils" minOccurs="0" name="Status" type="q3:GameEnums.NodeStatus" />
-      <xs:element minOccurs="0" name="X" type="xs:double" />
-      <xs:element minOccurs="0" name="Y" type="xs:double" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Node" nillable="true" type="tns:Node" />
-  <xs:complexType name="ArrayOfTracePoint">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="TracePoint" nillable="true" type="tns:TracePoint" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfTracePoint" nillable="true" type="tns:ArrayOfTracePoint" />
-  <xs:complexType name="TracePoint">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="X" type="xs:double" />
-      <xs:element minOccurs="0" name="Y" type="xs:double" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="TracePoint" nillable="true" type="tns:TracePoint" />
-  <xs:complexType name="ArrayOfNode">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="unbounded" name="Node" nillable="true" type="tns:Node" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="ArrayOfNode" nillable="true" type="tns:ArrayOfNode" />
-  <xs:complexType name="GameResult">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="IsDraw" type="xs:boolean" />
-      <xs:element minOccurs="0" name="IsWinner" type="xs:boolean" />
-      <xs:element minOccurs="0" name="Score" type="xs:int" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="GameResult" nillable="true" type="tns:GameResult" />
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/TripasService.Utils" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/TripasService.Utils" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="GameEnums.PlayerStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Offline" />
+      <xs:enumeration value="Online" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="GameEnums.PlayerStatus" nillable="true" type="tns:GameEnums.PlayerStatus" />
+  <xs:simpleType name="GameEnums.NodeStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Free" />
+      <xs:enumeration value="Occupied" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="GameEnums.NodeStatus" nillable="true" type="tns:GameEnums.NodeStatus" />
 </xs:schema>

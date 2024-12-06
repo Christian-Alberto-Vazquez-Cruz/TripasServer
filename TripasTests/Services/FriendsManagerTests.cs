@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TripasService.Logic;
 using Xunit;
 
 namespace TripasTests.Services {
@@ -91,5 +90,4 @@ namespace TripasTests.Services {
             Assert.Equal(resultExpected, resultObtained);
         }
     }
-}
-*/
+}*/

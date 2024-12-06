@@ -10,8 +10,8 @@
             <PropertyRef Name="idAmistad" />
           </Key>
           <Property Name="idAmistad" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="idJugadorUno" Type="int" />
-          <Property Name="idJugadorDos" Type="int" />
+          <Property Name="idJugadorUno" Type="int" Nullable="false" />
+          <Property Name="idJugadorDos" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Login">
           <Key>
@@ -41,7 +41,7 @@
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
         <Association Name="FK_Amistad_JugadorDos">
-          <End Role="Perfil" Type="Self.Perfil" Multiplicity="0..1" />
+          <End Role="Perfil" Type="Self.Perfil" Multiplicity="1" />
           <End Role="Amistad" Type="Self.Amistad" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Perfil">
@@ -53,7 +53,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Amistad_JugadorUno">
-          <End Role="Perfil" Type="Self.Perfil" Multiplicity="0..1" />
+          <End Role="Perfil" Type="Self.Perfil" Multiplicity="1" />
           <End Role="Amistad" Type="Self.Amistad" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Perfil">
@@ -104,8 +104,8 @@
             <PropertyRef Name="idAmistad" />
           </Key>
           <Property Name="idAmistad" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="idJugadorUno" Type="Int32" />
-          <Property Name="idJugadorDos" Type="Int32" />
+          <Property Name="idJugadorUno" Type="Int32" Nullable="false" />
+          <Property Name="idJugadorDos" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Perfil" Relationship="Self.FK_Amistad_JugadorDos" FromRole="Amistad" ToRole="Perfil" />
           <NavigationProperty Name="Perfil1" Relationship="Self.FK_Amistad_JugadorUno" FromRole="Amistad" ToRole="Perfil" />
         </EntityType>
@@ -141,7 +141,7 @@
           <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <Association Name="FK_Amistad_JugadorDos">
-          <End Role="Perfil" Type="Self.Perfil" Multiplicity="0..1" />
+          <End Role="Perfil" Type="Self.Perfil" Multiplicity="1" />
           <End Role="Amistad" Type="Self.Amistad" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Perfil">
@@ -153,7 +153,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Amistad_JugadorUno">
-          <End Role="Perfil" Type="Self.Perfil" Multiplicity="0..1" />
+          <End Role="Perfil" Type="Self.Perfil" Multiplicity="1" />
           <End Role="Amistad" Type="Self.Amistad" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Perfil">

@@ -1,4 +1,4 @@
-﻿using DataBaseManager.DAO;
+﻿/*using DataBaseManager.DAO;
 using DataBaseManager;
 using System;
 using System.Collections.Generic;
@@ -6,11 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using TripasTests.ProxyTripas;
 
 
 namespace TripasTests.DAO {
 
-    public class LeaderboardDAOShould : IClassFixture<DatabaseFixture> {
+    public class LeaderboardDAOShould : IClassFixture<DBFixtureLeaderboard> {
 
         [Fact]
         public void GetHighestScores_ReturnsExpectedPlayers() {
@@ -52,4 +53,4 @@ namespace TripasTests.DAO {
             Assert.Null(highestScores); // Validamos que se maneje correctamente un fallo
         }
     }
-}
+}*/

@@ -23,6 +23,9 @@ namespace TripasService.Logic {
         [DataMember]
         public Dictionary<string, Profile> Players { get; set; } = new Dictionary<string, Profile>();
 
+        public Lobby() {
+
+        }
         public Lobby(string code, string gameName, int nodeCount, Profile host) {
             Code = code;
             GameName = gameName;
@@ -32,6 +35,5 @@ namespace TripasService.Logic {
 
         //CAMBIAR
         public bool HasSpace => !Players.ContainsKey("PlayerTwo");
-
     }
 }

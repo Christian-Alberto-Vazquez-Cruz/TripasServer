@@ -16,7 +16,6 @@ namespace TripasService.Services {
         private static readonly ConcurrentDictionary<string, IMatchManagerCallback> _matchPlayerCallback = new ConcurrentDictionary<string, IMatchManagerCallback>();
 
         public List<Node> GetNodes(string matchCode) {
-            //INICIALIZAR UNA LISTA VACÍA. EN EL CLIENTE PREGUNTAR SI HAY MÁS DE 0 ITEMS
             if (!_activeMatches.TryGetValue(matchCode, out var match)) return null;
             return match.GetAllNodes();
         }
@@ -52,7 +51,7 @@ namespace TripasService.Services {
                         }
                     } catch (Exception exception) {
                         logger.LogError($"Error al notificar al jugador {player.Username}: {exception.Message}", exception);
-                        _matchPlayerCallback.TryRemove(player.Username, out _);
+                        LeaveMatch(matchCode, userName);
                     }
                 }
             }
@@ -80,11 +79,10 @@ namespace TripasService.Services {
             return true;
         }
 
-        //REGRESAR TURNO STRING VACÍO?
         public string GetCurrentTurn(string matchCode) {
             if (!_activeMatches.TryGetValue(matchCode, out var match)) {
                 Console.WriteLine($"Partida {matchCode} no encontrada.");
-                return null;  // O devolver un mensaje de error o valor especial si no se encuentra la partida
+                return null;  
             }
             return match.CurrentTurn;
         }
@@ -187,7 +185,7 @@ namespace TripasService.Services {
                 return;
             }
             Console.WriteLine($"La partida {matchCode} ha sido eliminada debido al abandono.");
-            SavePlayerScores(match); // Registrar los puntajes si es necesario
+            SavePlayerScores(match); 
         }
 
         private void RemoveMatchCallbacks(string matchCode) {

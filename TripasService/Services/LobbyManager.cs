@@ -31,17 +31,14 @@ namespace TripasService.Services {
             return false;
         }
 
-        public void LeaveLobby(string code, int playerId) {
+        public void LeaveLobby(string code, string username) {  
             if (_lobbies.TryGetValue(code, out var lobby)) {
-                if (lobby.Players.TryGetValue("PlayerOne", out var host) && host.IdProfile == playerId) {
-                    // Eliminar el callback del host
+                if (lobby.Players.TryGetValue("PlayerOne", out var host) && host.Username == username) {
                     _lobbyPlayerCallback.TryRemove(host.Username, out _);
                     OnHostDisconnect(code);
-                } else if (lobby.Players.TryGetValue("PlayerTwo", out var guest) && guest.IdProfile == playerId) {
+                } else if (lobby.Players.TryGetValue("PlayerTwo", out var guest) && guest.Username == username) {
                     lobby.Players.Remove("PlayerTwo");
-                    // Eliminar el callback del guest
                     _lobbyPlayerCallback.TryRemove(guest.Username, out _);
-                    // Notificar al host que Guest abandonó
                     if (host != null) {
                         TryNotifyCallback(host.Username, callback => callback.GuestLeftCallback());
                     }
@@ -52,9 +49,7 @@ namespace TripasService.Services {
         private void OnHostDisconnect(string code) {
             if (_lobbies.TryGetValue(code, out var lobby)) {
                 if (lobby.Players.TryGetValue("PlayerTwo", out var guest) && guest != null) {
-                    // Notificar al guest que Host abadonó
                     TryNotifyCallback(guest.Username, callback => callback.HostLeftCallback());
-                    // Eliminar el callback del guest ya que el lobby se cerrará
                     _lobbyPlayerCallback.TryRemove(guest.Username, out _);
                 }
                 DeleteLobby(code);
@@ -97,12 +92,10 @@ namespace TripasService.Services {
                 Console.WriteLine($"Lobby con código {code} no encontrado.");
                 return;
             }
-            //Aquí no debería ser un Profile tampoco
             if (!lobby.Players.TryGetValue("PlayerOne", out Profile host)) {
                 Console.WriteLine($"El lobby {code} no tiene un anfitrión válido.");
                 return;
             }
-            //Aquí no debería ser un Profile tampoco
             if (!lobby.Players.TryGetValue("PlayerTwo", out Profile guest)) {
                 Console.WriteLine($"El lobby {code} no tiene suficientes jugadores para iniciar la partida.");
                 return;
@@ -113,12 +106,11 @@ namespace TripasService.Services {
                 lobby.NodeCount,
                 new Dictionary<string, Profile>
                 {
-        { "PlayerOne", host },
-        { "PlayerTwo", guest }
+                  { "PlayerOne", host },
+                  { "PlayerTwo", guest }
                 }
             );
             match.StartGame();
-            // Registrar la partida en el sistema
             if (!_activeMatches.TryAdd(code, match)) {
                 Console.WriteLine($"Unable to register match with {code} code. Verify duplicity.");
                 return;

@@ -15,7 +15,7 @@ namespace TripasTests.ProxyTripas {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="LoginUser", Namespace="http://schemas.datacontract.org/2004/07/TripasService.Contracts")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="LoginUser", Namespace="http://schemas.datacontract.org/2004/07/TripasService.Logic")]
     [System.SerializableAttribute()]
     public partial class LoginUser : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
@@ -23,13 +23,13 @@ namespace TripasTests.ProxyTripas {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int idLoginUserField;
+        private int IdLoginUserField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string mailField;
+        private string MailField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string passwordField;
+        private string PasswordField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -42,40 +42,40 @@ namespace TripasTests.ProxyTripas {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public int idLoginUser {
+        public int IdLoginUser {
             get {
-                return this.idLoginUserField;
+                return this.IdLoginUserField;
             }
             set {
-                if ((this.idLoginUserField.Equals(value) != true)) {
-                    this.idLoginUserField = value;
-                    this.RaisePropertyChanged("idLoginUser");
+                if ((this.IdLoginUserField.Equals(value) != true)) {
+                    this.IdLoginUserField = value;
+                    this.RaisePropertyChanged("IdLoginUser");
                 }
             }
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public string mail {
+        public string Mail {
             get {
-                return this.mailField;
+                return this.MailField;
             }
             set {
-                if ((object.ReferenceEquals(this.mailField, value) != true)) {
-                    this.mailField = value;
-                    this.RaisePropertyChanged("mail");
+                if ((object.ReferenceEquals(this.MailField, value) != true)) {
+                    this.MailField = value;
+                    this.RaisePropertyChanged("Mail");
                 }
             }
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public string password {
+        public string Password {
             get {
-                return this.passwordField;
+                return this.PasswordField;
             }
             set {
-                if ((object.ReferenceEquals(this.passwordField, value) != true)) {
-                    this.passwordField = value;
-                    this.RaisePropertyChanged("password");
+                if ((object.ReferenceEquals(this.PasswordField, value) != true)) {
+                    this.PasswordField = value;
+                    this.RaisePropertyChanged("Password");
                 }
             }
         }
@@ -109,10 +109,10 @@ namespace TripasTests.ProxyTripas {
         private int ScoreField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string UsernameField;
+        private TripasTests.ProxyTripas.GameEnumsPlayerStatus StatusField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private TripasTests.ProxyTripas.GameEnumsPlayerStatus statusField;
+        private string UsernameField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -164,6 +164,19 @@ namespace TripasTests.ProxyTripas {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public TripasTests.ProxyTripas.GameEnumsPlayerStatus Status {
+            get {
+                return this.StatusField;
+            }
+            set {
+                if ((this.StatusField.Equals(value) != true)) {
+                    this.StatusField = value;
+                    this.RaisePropertyChanged("Status");
+                }
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public string Username {
             get {
                 return this.UsernameField;
@@ -172,19 +185,6 @@ namespace TripasTests.ProxyTripas {
                 if ((object.ReferenceEquals(this.UsernameField, value) != true)) {
                     this.UsernameField = value;
                     this.RaisePropertyChanged("Username");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public TripasTests.ProxyTripas.GameEnumsPlayerStatus status {
-            get {
-                return this.statusField;
-            }
-            set {
-                if ((this.statusField.Equals(value) != true)) {
-                    this.statusField = value;
-                    this.RaisePropertyChanged("status");
                 }
             }
         }
@@ -208,9 +208,6 @@ namespace TripasTests.ProxyTripas {
         
         [System.Runtime.Serialization.EnumMemberAttribute()]
         Online = 1,
-        
-        [System.Runtime.Serialization.EnumMemberAttribute()]
-        InGame = 2,
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -260,7 +257,7 @@ namespace TripasTests.ProxyTripas {
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="Message", Namespace="http://schemas.datacontract.org/2004/07/TripasService.Contracts")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="Message", Namespace="http://schemas.datacontract.org/2004/07/TripasService.Logic")]
     [System.SerializableAttribute()]
     public partial class Message : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
         
@@ -268,13 +265,10 @@ namespace TripasTests.ProxyTripas {
         private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string chatMessageField;
+        private string ChatMessageField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.DateTime timeStampField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string userNameField;
+        private string UsernameField;
         
         [global::System.ComponentModel.BrowsableAttribute(false)]
         public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
@@ -287,40 +281,27 @@ namespace TripasTests.ProxyTripas {
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public string chatMessage {
+        public string ChatMessage {
             get {
-                return this.chatMessageField;
+                return this.ChatMessageField;
             }
             set {
-                if ((object.ReferenceEquals(this.chatMessageField, value) != true)) {
-                    this.chatMessageField = value;
-                    this.RaisePropertyChanged("chatMessage");
+                if ((object.ReferenceEquals(this.ChatMessageField, value) != true)) {
+                    this.ChatMessageField = value;
+                    this.RaisePropertyChanged("ChatMessage");
                 }
             }
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.DateTime timeStamp {
+        public string Username {
             get {
-                return this.timeStampField;
+                return this.UsernameField;
             }
             set {
-                if ((this.timeStampField.Equals(value) != true)) {
-                    this.timeStampField = value;
-                    this.RaisePropertyChanged("timeStamp");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string userName {
-            get {
-                return this.userNameField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.userNameField, value) != true)) {
-                    this.userNameField = value;
-                    this.RaisePropertyChanged("userName");
+                if ((object.ReferenceEquals(this.UsernameField, value) != true)) {
+                    this.UsernameField = value;
+                    this.RaisePropertyChanged("Username");
                 }
             }
         }
@@ -346,9 +327,6 @@ namespace TripasTests.ProxyTripas {
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string CodeField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private System.TimeSpan DurationField;
         
         [System.Runtime.Serialization.OptionalFieldAttribute()]
         private string GameNameField;
@@ -378,19 +356,6 @@ namespace TripasTests.ProxyTripas {
                 if ((object.ReferenceEquals(this.CodeField, value) != true)) {
                     this.CodeField = value;
                     this.RaisePropertyChanged("Code");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public System.TimeSpan Duration {
-            get {
-                return this.DurationField;
-            }
-            set {
-                if ((this.DurationField.Equals(value) != true)) {
-                    this.DurationField = value;
-                    this.RaisePropertyChanged("Duration");
                 }
             }
         }
@@ -750,98 +715,21 @@ namespace TripasTests.ProxyTripas {
         Occupied = 1,
     }
     
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="GameResult", Namespace="http://schemas.datacontract.org/2004/07/TripasService.Logic")]
-    [System.SerializableAttribute()]
-    public partial class GameResult : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool IsDrawField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private bool IsWinnerField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private int ScoreField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool IsDraw {
-            get {
-                return this.IsDrawField;
-            }
-            set {
-                if ((this.IsDrawField.Equals(value) != true)) {
-                    this.IsDrawField = value;
-                    this.RaisePropertyChanged("IsDraw");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public bool IsWinner {
-            get {
-                return this.IsWinnerField;
-            }
-            set {
-                if ((this.IsWinnerField.Equals(value) != true)) {
-                    this.IsWinnerField = value;
-                    this.RaisePropertyChanged("IsWinner");
-                }
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public int Score {
-            get {
-                return this.ScoreField;
-            }
-            set {
-                if ((this.ScoreField.Equals(value) != true)) {
-                    this.ScoreField = value;
-                    this.RaisePropertyChanged("Score");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
-    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ProxyTripas.IUserManager")]
     public interface IUserManager {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserManager/CreateAccount", ReplyAction="http://tempuri.org/IUserManager/CreateAccountResponse")]
-        int CreateAccount(TripasTests.ProxyTripas.LoginUser user, TripasTests.ProxyTripas.Profile profile);
+        int CreateAccount(TripasTests.ProxyTripas.LoginUser newUser, TripasTests.ProxyTripas.Profile newProfile);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserManager/CreateAccount", ReplyAction="http://tempuri.org/IUserManager/CreateAccountResponse")]
-        System.Threading.Tasks.Task<int> CreateAccountAsync(TripasTests.ProxyTripas.LoginUser user, TripasTests.ProxyTripas.Profile profile);
+        System.Threading.Tasks.Task<int> CreateAccountAsync(TripasTests.ProxyTripas.LoginUser newUser, TripasTests.ProxyTripas.Profile newProfile);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserManager/UpdateProfile", ReplyAction="http://tempuri.org/IUserManager/UpdateProfileResponse")]
-        int UpdateProfile(int idProfile, string newUsername, string newPic);
+        int UpdateProfile(int idProfile, string newUsername, string newPicPath);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserManager/UpdateProfile", ReplyAction="http://tempuri.org/IUserManager/UpdateProfileResponse")]
-        System.Threading.Tasks.Task<int> UpdateProfileAsync(int idProfile, string newUsername, string newPic);
+        System.Threading.Tasks.Task<int> UpdateProfileAsync(int idProfile, string newUsername, string newPicPath);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IUserManager/VerifyLogin", ReplyAction="http://tempuri.org/IUserManager/VerifyLoginResponse")]
         int VerifyLogin(string email, string password);
@@ -908,20 +796,20 @@ namespace TripasTests.ProxyTripas {
                 base(binding, remoteAddress) {
         }
         
-        public int CreateAccount(TripasTests.ProxyTripas.LoginUser user, TripasTests.ProxyTripas.Profile profile) {
-            return base.Channel.CreateAccount(user, profile);
+        public int CreateAccount(TripasTests.ProxyTripas.LoginUser newUser, TripasTests.ProxyTripas.Profile newProfile) {
+            return base.Channel.CreateAccount(newUser, newProfile);
         }
         
-        public System.Threading.Tasks.Task<int> CreateAccountAsync(TripasTests.ProxyTripas.LoginUser user, TripasTests.ProxyTripas.Profile profile) {
-            return base.Channel.CreateAccountAsync(user, profile);
+        public System.Threading.Tasks.Task<int> CreateAccountAsync(TripasTests.ProxyTripas.LoginUser newUser, TripasTests.ProxyTripas.Profile newProfile) {
+            return base.Channel.CreateAccountAsync(newUser, newProfile);
         }
         
-        public int UpdateProfile(int idProfile, string newUsername, string newPic) {
-            return base.Channel.UpdateProfile(idProfile, newUsername, newPic);
+        public int UpdateProfile(int idProfile, string newUsername, string newPicPath) {
+            return base.Channel.UpdateProfile(idProfile, newUsername, newPicPath);
         }
         
-        public System.Threading.Tasks.Task<int> UpdateProfileAsync(int idProfile, string newUsername, string newPic) {
-            return base.Channel.UpdateProfileAsync(idProfile, newUsername, newPic);
+        public System.Threading.Tasks.Task<int> UpdateProfileAsync(int idProfile, string newUsername, string newPicPath) {
+            return base.Channel.UpdateProfileAsync(idProfile, newUsername, newPicPath);
         }
         
         public int VerifyLogin(string email, string password) {
@@ -994,6 +882,12 @@ namespace TripasTests.ProxyTripas {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IFriendsManager/GetFriends", ReplyAction="http://tempuri.org/IFriendsManager/GetFriendsResponse")]
         System.Threading.Tasks.Task<TripasTests.ProxyTripas.Profile[]> GetFriendsAsync(int idProfile);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IFriendsManager/IsFriendAlreadyAdded", ReplyAction="http://tempuri.org/IFriendsManager/IsFriendAlreadyAddedResponse")]
+        int IsFriendAlreadyAdded(int idProfile1, int idProfile2);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IFriendsManager/IsFriendAlreadyAdded", ReplyAction="http://tempuri.org/IFriendsManager/IsFriendAlreadyAddedResponse")]
+        System.Threading.Tasks.Task<int> IsFriendAlreadyAddedAsync(int idProfile1, int idProfile2);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -1046,6 +940,14 @@ namespace TripasTests.ProxyTripas {
         public System.Threading.Tasks.Task<TripasTests.ProxyTripas.Profile[]> GetFriendsAsync(int idProfile) {
             return base.Channel.GetFriendsAsync(idProfile);
         }
+        
+        public int IsFriendAlreadyAdded(int idProfile1, int idProfile2) {
+            return base.Channel.IsFriendAlreadyAdded(idProfile1, idProfile2);
+        }
+        
+        public System.Threading.Tasks.Task<int> IsFriendAlreadyAddedAsync(int idProfile1, int idProfile2) {
+            return base.Channel.IsFriendAlreadyAddedAsync(idProfile1, idProfile2);
+        }
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -1053,22 +955,22 @@ namespace TripasTests.ProxyTripas {
     public interface IChatManager {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatManager/SendMessage")]
-        void SendMessage(string userName, TripasTests.ProxyTripas.Message message, string lobbyCode);
+        void SendMessage(string username, TripasTests.ProxyTripas.Message message, string lobbyCode);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatManager/SendMessage")]
-        System.Threading.Tasks.Task SendMessageAsync(string userName, TripasTests.ProxyTripas.Message message, string lobbyCode);
+        System.Threading.Tasks.Task SendMessageAsync(string username, TripasTests.ProxyTripas.Message message, string lobbyCode);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatManager/ConnectToChat")]
-        void ConnectToChat(string userName, string lobbyCode);
+        void ConnectToChat(string username, string lobbyCode);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatManager/ConnectToChat")]
-        System.Threading.Tasks.Task ConnectToChatAsync(string userName, string lobbyCode);
+        System.Threading.Tasks.Task ConnectToChatAsync(string username, string lobbyCode);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatManager/LeaveChat")]
-        void LeaveChat(string userName, string lobbyCode);
+        void LeaveChat(string username, string lobbyCode);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IChatManager/LeaveChat")]
-        System.Threading.Tasks.Task LeaveChatAsync(string userName, string lobbyCode);
+        System.Threading.Tasks.Task LeaveChatAsync(string username, string lobbyCode);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -1106,28 +1008,28 @@ namespace TripasTests.ProxyTripas {
                 base(callbackInstance, binding, remoteAddress) {
         }
         
-        public void SendMessage(string userName, TripasTests.ProxyTripas.Message message, string lobbyCode) {
-            base.Channel.SendMessage(userName, message, lobbyCode);
+        public void SendMessage(string username, TripasTests.ProxyTripas.Message message, string lobbyCode) {
+            base.Channel.SendMessage(username, message, lobbyCode);
         }
         
-        public System.Threading.Tasks.Task SendMessageAsync(string userName, TripasTests.ProxyTripas.Message message, string lobbyCode) {
-            return base.Channel.SendMessageAsync(userName, message, lobbyCode);
+        public System.Threading.Tasks.Task SendMessageAsync(string username, TripasTests.ProxyTripas.Message message, string lobbyCode) {
+            return base.Channel.SendMessageAsync(username, message, lobbyCode);
         }
         
-        public void ConnectToChat(string userName, string lobbyCode) {
-            base.Channel.ConnectToChat(userName, lobbyCode);
+        public void ConnectToChat(string username, string lobbyCode) {
+            base.Channel.ConnectToChat(username, lobbyCode);
         }
         
-        public System.Threading.Tasks.Task ConnectToChatAsync(string userName, string lobbyCode) {
-            return base.Channel.ConnectToChatAsync(userName, lobbyCode);
+        public System.Threading.Tasks.Task ConnectToChatAsync(string username, string lobbyCode) {
+            return base.Channel.ConnectToChatAsync(username, lobbyCode);
         }
         
-        public void LeaveChat(string userName, string lobbyCode) {
-            base.Channel.LeaveChat(userName, lobbyCode);
+        public void LeaveChat(string username, string lobbyCode) {
+            base.Channel.LeaveChat(username, lobbyCode);
         }
         
-        public System.Threading.Tasks.Task LeaveChatAsync(string userName, string lobbyCode) {
-            return base.Channel.LeaveChatAsync(userName, lobbyCode);
+        public System.Threading.Tasks.Task LeaveChatAsync(string username, string lobbyCode) {
+            return base.Channel.LeaveChatAsync(username, lobbyCode);
         }
     }
     
@@ -1219,10 +1121,10 @@ namespace TripasTests.ProxyTripas {
         System.Threading.Tasks.Task<int> SendVerificationCodeRegisterAsync(string email);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IEmailVerificationManager/VerifyCode", ReplyAction="http://tempuri.org/IEmailVerificationManager/VerifyCodeResponse")]
-        bool VerifyCode(string email, string code);
+        bool VerifyCode(string email, string verificationCode);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IEmailVerificationManager/VerifyCode", ReplyAction="http://tempuri.org/IEmailVerificationManager/VerifyCodeResponse")]
-        System.Threading.Tasks.Task<bool> VerifyCodeAsync(string email, string code);
+        System.Threading.Tasks.Task<bool> VerifyCodeAsync(string email, string verificationCode);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -1260,12 +1162,12 @@ namespace TripasTests.ProxyTripas {
             return base.Channel.SendVerificationCodeRegisterAsync(email);
         }
         
-        public bool VerifyCode(string email, string code) {
-            return base.Channel.VerifyCode(email, code);
+        public bool VerifyCode(string email, string verificationCode) {
+            return base.Channel.VerifyCode(email, verificationCode);
         }
         
-        public System.Threading.Tasks.Task<bool> VerifyCodeAsync(string email, string code) {
-            return base.Channel.VerifyCodeAsync(email, code);
+        public System.Threading.Tasks.Task<bool> VerifyCodeAsync(string email, string verificationCode) {
+            return base.Channel.VerifyCodeAsync(email, verificationCode);
         }
     }
     
@@ -1396,10 +1298,10 @@ namespace TripasTests.ProxyTripas {
     public interface ILobbyManager {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ILobbyManager/LeaveLobby")]
-        void LeaveLobby(string code, int playerId);
+        void LeaveLobby(string code, string username);
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ILobbyManager/LeaveLobby")]
-        System.Threading.Tasks.Task LeaveLobbyAsync(string code, int playerId);
+        System.Threading.Tasks.Task LeaveLobbyAsync(string code, string username);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILobbyManager/ConnectPlayerToLobby", ReplyAction="http://tempuri.org/ILobbyManager/ConnectPlayerToLobbyResponse")]
         bool ConnectPlayerToLobby(string code, int playerId);
@@ -1412,24 +1314,30 @@ namespace TripasTests.ProxyTripas {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ILobbyManager/StartMatch")]
         System.Threading.Tasks.Task StartMatchAsync(string code);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ILobbyManager/KickPlayer")]
+        void KickPlayer(string code);
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ILobbyManager/KickPlayer")]
+        System.Threading.Tasks.Task KickPlayerAsync(string code);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface ILobbyManagerCallback {
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILobbyManager/RemoveFromLobby", ReplyAction="http://tempuri.org/ILobbyManager/RemoveFromLobbyResponse")]
-        void RemoveFromLobby();
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ILobbyManager/KickedFromLobby")]
+        void KickedFromLobby();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILobbyManager/HostLeftCallback", ReplyAction="http://tempuri.org/ILobbyManager/HostLeftCallbackResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ILobbyManager/HostLeftCallback")]
         void HostLeftCallback();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILobbyManager/GuestLeftCallback", ReplyAction="http://tempuri.org/ILobbyManager/GuestLeftCallbackResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ILobbyManager/GuestLeftCallback")]
         void GuestLeftCallback();
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILobbyManager/GuestJoinedCallback", ReplyAction="http://tempuri.org/ILobbyManager/GuestJoinedCallbackResponse")]
-        void GuestJoinedCallback(string guestName);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ILobbyManager/GuestJoinedCallback")]
+        void GuestJoinedCallback(string guestName, string picturePath, int idProfile);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILobbyManager/GameStarted", ReplyAction="http://tempuri.org/ILobbyManager/GameStartedResponse")]
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/ILobbyManager/GameStarted")]
         void GameStarted();
     }
     
@@ -1461,12 +1369,12 @@ namespace TripasTests.ProxyTripas {
                 base(callbackInstance, binding, remoteAddress) {
         }
         
-        public void LeaveLobby(string code, int playerId) {
-            base.Channel.LeaveLobby(code, playerId);
+        public void LeaveLobby(string code, string username) {
+            base.Channel.LeaveLobby(code, username);
         }
         
-        public System.Threading.Tasks.Task LeaveLobbyAsync(string code, int playerId) {
-            return base.Channel.LeaveLobbyAsync(code, playerId);
+        public System.Threading.Tasks.Task LeaveLobbyAsync(string code, string username) {
+            return base.Channel.LeaveLobbyAsync(code, username);
         }
         
         public bool ConnectPlayerToLobby(string code, int playerId) {
@@ -1483,6 +1391,14 @@ namespace TripasTests.ProxyTripas {
         
         public System.Threading.Tasks.Task StartMatchAsync(string code) {
             return base.Channel.StartMatchAsync(code);
+        }
+        
+        public void KickPlayer(string code) {
+            base.Channel.KickPlayer(code);
+        }
+        
+        public System.Threading.Tasks.Task KickPlayerAsync(string code) {
+            return base.Channel.KickPlayerAsync(code);
         }
     }
     
@@ -1503,10 +1419,10 @@ namespace TripasTests.ProxyTripas {
         System.Threading.Tasks.Task<bool> JoinLobbyAsync(string code, TripasTests.ProxyTripas.Profile guest);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILobbyBrowser/CreateLobby", ReplyAction="http://tempuri.org/ILobbyBrowser/CreateLobbyResponse")]
-        string CreateLobby(string gameName, int nodeCount, TripasTests.ProxyTripas.Profile owner, System.TimeSpan duration);
+        string CreateLobby(string gameName, int nodeCount, TripasTests.ProxyTripas.Profile host);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILobbyBrowser/CreateLobby", ReplyAction="http://tempuri.org/ILobbyBrowser/CreateLobbyResponse")]
-        System.Threading.Tasks.Task<string> CreateLobbyAsync(string gameName, int nodeCount, TripasTests.ProxyTripas.Profile owner, System.TimeSpan duration);
+        System.Threading.Tasks.Task<string> CreateLobbyAsync(string gameName, int nodeCount, TripasTests.ProxyTripas.Profile host);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/ILobbyBrowser/GetLobbyByCode", ReplyAction="http://tempuri.org/ILobbyBrowser/GetLobbyByCodeResponse")]
         TripasTests.ProxyTripas.Lobby GetLobbyByCode(string code);
@@ -1558,12 +1474,12 @@ namespace TripasTests.ProxyTripas {
             return base.Channel.JoinLobbyAsync(code, guest);
         }
         
-        public string CreateLobby(string gameName, int nodeCount, TripasTests.ProxyTripas.Profile owner, System.TimeSpan duration) {
-            return base.Channel.CreateLobby(gameName, nodeCount, owner, duration);
+        public string CreateLobby(string gameName, int nodeCount, TripasTests.ProxyTripas.Profile host) {
+            return base.Channel.CreateLobby(gameName, nodeCount, host);
         }
         
-        public System.Threading.Tasks.Task<string> CreateLobbyAsync(string gameName, int nodeCount, TripasTests.ProxyTripas.Profile owner, System.TimeSpan duration) {
-            return base.Channel.CreateLobbyAsync(gameName, nodeCount, owner, duration);
+        public System.Threading.Tasks.Task<string> CreateLobbyAsync(string gameName, int nodeCount, TripasTests.ProxyTripas.Profile host) {
+            return base.Channel.CreateLobbyAsync(gameName, nodeCount, host);
         }
         
         public TripasTests.ProxyTripas.Lobby GetLobbyByCode(string code) {
@@ -1615,24 +1531,21 @@ namespace TripasTests.ProxyTripas {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchManager/GetCurrentTurn", ReplyAction="http://tempuri.org/IMatchManager/GetCurrentTurnResponse")]
         System.Threading.Tasks.Task<string> GetCurrentTurnAsync(string matchCode);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchManager/EndMatch", ReplyAction="http://tempuri.org/IMatchManager/EndMatchResponse")]
-        bool EndMatch(string matchCode);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMatchManager/EndMatch")]
+        void EndMatch(string matchCode);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchManager/EndMatch", ReplyAction="http://tempuri.org/IMatchManager/EndMatchResponse")]
-        System.Threading.Tasks.Task<bool> EndMatchAsync(string matchCode);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMatchManager/EndMatch")]
+        System.Threading.Tasks.Task EndMatchAsync(string matchCode);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchManager/GetGameResult", ReplyAction="http://tempuri.org/IMatchManager/GetGameResultResponse")]
-        TripasTests.ProxyTripas.GameResult GetGameResult(string matchCode, string userName);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMatchManager/LeaveMatch")]
+        void LeaveMatch(string matchCode, string username);
         
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IMatchManager/GetGameResult", ReplyAction="http://tempuri.org/IMatchManager/GetGameResultResponse")]
-        System.Threading.Tasks.Task<TripasTests.ProxyTripas.GameResult> GetGameResultAsync(string matchCode, string userName);
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMatchManager/LeaveMatch")]
+        System.Threading.Tasks.Task LeaveMatchAsync(string matchCode, string username);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface IMatchManagerCallback {
-        
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMatchManager/NotifyMatchEnded")]
-        void NotifyMatchEnded();
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMatchManager/TraceReceived")]
         void TraceReceived(TripasTests.ProxyTripas.Trace trace);
@@ -1640,8 +1553,20 @@ namespace TripasTests.ProxyTripas {
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMatchManager/NotifyYourTurn")]
         void NotifyYourTurn();
         
-        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMatchManager/NotifyNotYouTurn")]
-        void NotifyNotYouTurn();
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMatchManager/NotifyNotYourTurn")]
+        void NotifyNotYourTurn();
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMatchManager/NotifyYouLost")]
+        void NotifyYouLost();
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMatchManager/NotifyYouWon")]
+        void NotifyYouWon();
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMatchManager/NotifyDraw")]
+        void NotifyDraw();
+        
+        [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMatchManager/NotifyPlayerLeft")]
+        void NotifyPlayerLeft();
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -1720,20 +1645,20 @@ namespace TripasTests.ProxyTripas {
             return base.Channel.GetCurrentTurnAsync(matchCode);
         }
         
-        public bool EndMatch(string matchCode) {
-            return base.Channel.EndMatch(matchCode);
+        public void EndMatch(string matchCode) {
+            base.Channel.EndMatch(matchCode);
         }
         
-        public System.Threading.Tasks.Task<bool> EndMatchAsync(string matchCode) {
+        public System.Threading.Tasks.Task EndMatchAsync(string matchCode) {
             return base.Channel.EndMatchAsync(matchCode);
         }
         
-        public TripasTests.ProxyTripas.GameResult GetGameResult(string matchCode, string userName) {
-            return base.Channel.GetGameResult(matchCode, userName);
+        public void LeaveMatch(string matchCode, string username) {
+            base.Channel.LeaveMatch(matchCode, username);
         }
         
-        public System.Threading.Tasks.Task<TripasTests.ProxyTripas.GameResult> GetGameResultAsync(string matchCode, string userName) {
-            return base.Channel.GetGameResultAsync(matchCode, userName);
+        public System.Threading.Tasks.Task LeaveMatchAsync(string matchCode, string username) {
+            return base.Channel.LeaveMatchAsync(matchCode, username);
         }
     }
     

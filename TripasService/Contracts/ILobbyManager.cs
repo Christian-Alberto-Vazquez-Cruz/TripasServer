@@ -11,7 +11,7 @@ namespace TripasService.Contracts {
     public interface ILobbyManager {
 
         [OperationContract(IsOneWay = true)]
-        void LeaveLobby(string code, int playerId);
+        void LeaveLobby(string code, string username);
 
         [OperationContract]
         bool ConnectPlayerToLobby(string code, int playerId);

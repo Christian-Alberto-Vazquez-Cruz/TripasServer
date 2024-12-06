@@ -39,7 +39,7 @@ namespace DataBaseManager.DAO {
             int operationResult = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    var friendshipToDelete = db.Amistad.FirstOrDefault(a =>
+                    Amistad friendshipToDelete = db.Amistad.FirstOrDefault(a =>
                         a.idJugadorUno == idProfile1 && a.idJugadorDos == idProfile2);
 
                     if (friendshipToDelete != null) {
@@ -69,7 +69,7 @@ namespace DataBaseManager.DAO {
 
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    var friends = (from friendship in db.Amistad
+                    List<Perfil> friends = (from friendship in db.Amistad
                                    where friendship.idJugadorUno == idProfile
                                    join profile in db.Perfil on friendship.idJugadorDos equals profile.idPerfil
                                    select profile).ToList();

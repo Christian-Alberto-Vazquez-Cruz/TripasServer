@@ -1,15 +1,15 @@
-﻿using DataBaseManager.DAO;
+﻿/*using DataBaseManager.DAO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-/*namespace TripasTests.Utils {
-    public class DatabaseFixtureLeaderboardDAOShould : IDisposable {
+namespace TripasTests.Utils {
+    public class DBFixtureLeaderboard : IDisposable {
         private readonly List<int> _addedLeaderboardEntries = new List<int>();
 
-        public DatabaseFixtureLeaderboardDAOShould() {
+        public DBFixtureLeaderboard() {
             // Agregar entradas al leaderboard para las pruebas de LeaderboardDAO
             AddLeaderboardEntry(1, 100);  // ID de usuario 1, con 100 puntos
             AddLeaderboardEntry(2, 200);  // ID de usuario 2, con 200 puntos

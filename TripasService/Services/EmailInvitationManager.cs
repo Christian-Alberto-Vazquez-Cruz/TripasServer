@@ -13,27 +13,10 @@ namespace TripasService.Services {
             int operationResult = Constants.FAILED_OPERATION;
             string emailReceiver = UserDAO.GetMailByUsername(username);
             if (emailReceiver != Constants.NO_MATCHES_STRING) {
-                operationResult = SendEmailInvitation(emailReceiver, code);
-            }
-            return operationResult;
-        }
-
-        private int SendEmailInvitation(string emailReceiver, string code) {
-            LoggerManager logger = new LoggerManager(this.GetType());
-            int operationResult = Constants.FAILED_OPERATION;
-            string emailSender = Environment.GetEnvironmentVariable("EMAIL_SENDER") ?? "servicetripas@gmail.com";
-            string emailPassword = Environment.GetEnvironmentVariable("EMAIL_PASSWORD") ?? "fxllpkrxfgnzbpvy";
-            string displayName = "Tripas Game Invitation";
-            try {
+                string subject = "A friend has invited you to a match!";
+                string displayName = "Tripas Game Invitation";
                 string emailBody = CreateEmailBodyInvitation(code);
-                MailMessage mailMessage = CreateMailMessage(emailSender, displayName, emailReceiver, emailBody);
-                SmtpClient smtpClient = CreateSmtpClient(emailSender, emailPassword);
-                smtpClient.Send(mailMessage);
-                operationResult = Constants.SUCCESSFUL_OPERATION;
-            } catch (SmtpException smtpException) {
-                logger.LogError($"SmtpException: Error sending email invitation to {emailReceiver}. Exception: {smtpException.Message}", smtpException);
-            } catch (Exception ex) {
-                logger.LogError($"Exception: Unexpected error while sending email invitation to {emailReceiver}. Exception: {ex.Message}", ex);
+                operationResult = EmailHelper.SendEmail(emailReceiver, subject, emailBody, displayName);
             }
             return operationResult;
         }
@@ -52,25 +35,6 @@ namespace TripasService.Services {
                     <p><strong>Tripas Game Team</strong></p>
                 </body>
                 </html>";
-        }
-
-        private MailMessage CreateMailMessage(string emailSender, string displayName, string emailReceiver, string emailBody) {
-            MailMessage mailMessage = new MailMessage {
-                From = new MailAddress(emailSender, displayName),
-                Subject = "A friend has invited you to a match!",
-                Body = emailBody,
-                IsBodyHtml = true
-            };
-            mailMessage.To.Add(emailReceiver);
-            return mailMessage;
-        }
-
-        private SmtpClient CreateSmtpClient(string emailSender, string emailPassword) {
-            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587) {
-                Credentials = new NetworkCredential(emailSender, emailPassword),
-                EnableSsl = true
-            };
-            return smtpClient;
         }
     }
 }

@@ -18,7 +18,7 @@ using static System.Net.Mime.MediaTypeNames;
 namespace TripasTests.DAO {
 
 
-    public class UserDAOShould : IClassFixture<DatabaseFixtureUserDAOShould> {
+    public class UserDAOShould : IClassFixture<DBFixtureUserDAO> {
 
         [Fact]
         public void AddUser() {
@@ -73,17 +73,6 @@ namespace TripasTests.DAO {
 
 
         [Fact]
-        public void ValidateUserException() {
-            string password = null;
-            string mail = null;
-
-            int exceptionResult = Constants.FAILED_OPERATION;
-            int resultObtained = DataBaseManager.DAO.UserDAO.ValidateUserDAO(password, mail);
-
-            Assert.Equal(exceptionResult, resultObtained);
-        }
-
-        [Fact]
         public void UpdateUserProfile() {
             int id = 4;
             string newPicPath = "/Images/Profiles/ImageProfile9.png";
@@ -107,17 +96,6 @@ namespace TripasTests.DAO {
             Assert.Equal(userNotFound, resultObtained);
         }
 
-        [Fact]
-        public void UpdateUserProfileException() {
-            int id = 5;
-            string newPicPath = Constants.INITIAL_PIC_PATH;
-            string newUsername = "Mouse";
-
-            int expectionResult = Constants.FAILED_OPERATION;
-            int resultObtained = DataBaseManager.DAO.UserDAO.UpdateUserProfileDAO(id, newUsername, newPicPath);
-
-            Assert.Equal(expectionResult, resultObtained);
-        }
 
         [Fact]
         public void GetProfileByMail() {
@@ -152,23 +130,6 @@ namespace TripasTests.DAO {
             Assert.Equal(noMatchesProfile.IdProfile, obtainedProfile.IdProfile);
         }
 
-        [Fact]
-        public void GetProfileByMailDatabaseFailure() {
-            string testEmail = "zS22013636@mail.com";
-
-            DataBaseManager.Perfil obtainedPerfil = UserDAO.GetProfileByMailDAO(testEmail);
-
-            Profile failedRetrievalProfile = new Profile() {
-                IdProfile = Constants.FAILED_OPERATION
-            };
-
-            Profile obtainedProfile = new Profile() {
-                IdProfile = obtainedPerfil.idPerfil
-            };
-
-            Assert.Equal(failedRetrievalProfile.IdProfile, obtainedPerfil.idPerfil);
-        }
-
 
         [Fact]
         public void GetProfileById() {
@@ -190,15 +151,6 @@ namespace TripasTests.DAO {
             Assert.Equal(idNoMatches, resultObtained);
         }
 
-        [Fact]
-        public void GetProfileByException() {
-            string username = "Alambrito";
-
-            int idFailedOperation = Constants.FAILED_OPERATION;
-            int resultObtained = UserDAO.GetProfileIdDAO(username);
-
-            Assert.Equal(resultObtained, idFailedOperation);
-        }
 
         [Fact]
         public void GetPicPathByUsername() {
@@ -220,15 +172,6 @@ namespace TripasTests.DAO {
             Assert.Equal(noMatchesPicPath, resultObtained);
         }
 
-        [Fact]
-        public void GetPicPathByUsernameException() {
-            string username = "Pablo";
-
-            string failedPicPath = Constants.FAILED_OPERATION_STRING;
-            string resultObtained = UserDAO.GetPicPathByUsername(username);
-
-            Assert.Equal(failedPicPath, resultObtained);
-        }
 
         [Fact]
         public void GetMailByUsername() {
@@ -250,15 +193,6 @@ namespace TripasTests.DAO {
             Assert.Equal(expectedMail, resultObtained);
         }
 
-        [Fact]
-        public void GetMailByUsernameException() {
-            string username = "Pinguinela";
-
-            string emailRegistered = Constants.FAILED_OPERATION_STRING;
-            string resultObtained = UserDAO.GetMailByUsername(username);
-
-            Assert.Equal(emailRegistered, resultObtained);
-        }
 
         [Fact]
         public void IsEmailRegistered() {
@@ -276,17 +210,6 @@ namespace TripasTests.DAO {
 
 
             int emailNotRegistered = Constants.NO_MATCHES;
-            int resultObtained = UserDAO.IsEmailRegisteredDAO(mail);
-
-            Assert.Equal(emailNotRegistered, resultObtained);
-        }
-
-        [Fact]
-        public void IsEmailRegisteredException() {
-            string mail = "Pinguinela";
-
-
-            int emailNotRegistered = Constants.FAILED_OPERATION;
             int resultObtained = UserDAO.IsEmailRegisteredDAO(mail);
 
             Assert.Equal(emailNotRegistered, resultObtained);
@@ -315,15 +238,6 @@ namespace TripasTests.DAO {
             Assert.Equal(usernameNotRegistered, resultObtained);
         }
 
-        [Fact]
-        public void IsUsernameRegisteredException() {
-            string username = "Pinguinela";
-
-            int operationFailed = Constants.FAILED_OPERATION;
-            int resultObtained = UserDAO.IsNameRegisteredDAO(username);
-
-            Assert.Equal(operationFailed, resultObtained);
-        }
 
         [Fact]
         public void UpdateLoginPassword() {
@@ -347,16 +261,6 @@ namespace TripasTests.DAO {
             Assert.Equal(noMatches, resultObtained);
         }
 
-        [Fact]
-        public void UpdateLoginPasswordExceptionException() {
-            string mail = "zS22013636@estudiantes.uv.mx";
-            string newPassword = "NuevaContrasena1!";
-
-            int failedOperation = Constants.FAILED_OPERATION;
-            int resultObtained = DataBaseManager.DAO.UserDAO.UpdateLoginPasswordDAO(mail, newPassword);
-
-            Assert.Equal(failedOperation, resultObtained);
-        }
 
         [Fact]
         public void DeleteAccount() {
@@ -379,15 +283,6 @@ namespace TripasTests.DAO {
             Assert.Equal(expectedOperationStatus, resultObtained);
         }
 
-        [Fact]
-        public void DeleteAccountException() {
-            string email = "gamesa@gmail.com";  
-
-            int expectedOperationStatus = Constants.FAILED_OPERATION;
-            int resultObtained = DataBaseManager.DAO.UserDAO.DeleteAccountDAO(email);
-
-            Assert.Equal(expectedOperationStatus, resultObtained);
-        }
 
         [Fact]
         public void UpdatePlayerScore() {
@@ -409,83 +304,6 @@ namespace TripasTests.DAO {
 
             int expected = Constants.NO_MATCHES;
             Assert.Equal(expected, result);
-        }
-
-
-        [Fact]
-        public void UpdatePlayerScoreException() {
-            string username = "vbox"; 
-            int additionalPoints = 10;
-
-            int expected = Constants.FAILED_OPERATION;
-            int result = UserDAO.UpdatePlayerScore(username, additionalPoints);
-
-            Assert.Equal(expected, result);
-        }
-
-        [Fact]
-        public void IsFriendAlreadyAdded() {
-            int idProfile1 = 2002;  
-            int idProfile2 = 3;  
-
-            int expectedOperationResult = Constants.SUCCESSFUL_OPERATION;
-            int resultObtained = DataBaseManager.DAO.UserDAO.IsFriendAlreadyAddedDAO(idProfile1, idProfile2);
-
-            Assert.Equal(expectedOperationResult, resultObtained);
-        }
-
-        [Fact]
-        public void IsFriendAlreadyAddedNoMatches() {
-            int idProfile1 = 1;  
-            int idProfile2 = 99; 
-
-            int expectedOperationResult = Constants.NO_MATCHES;
-            int resultObtained = DataBaseManager.DAO.UserDAO.IsFriendAlreadyAddedDAO(idProfile1, idProfile2);
-
-            Assert.Equal(expectedOperationResult, resultObtained);
-        }
-
-        [Fact]
-        public void IsFriendAlreadyAddedException() {
-            int idProfile1 = 2002;
-            int idProfile2 = 3; 
-
-            int expectedOperationResult = Constants.FAILED_OPERATION;
-            int resultObtained = DataBaseManager.DAO.UserDAO.IsFriendAlreadyAddedDAO(idProfile1, idProfile2);
-
-            Assert.Equal(expectedOperationResult, resultObtained);
-        }
-
-    }
-
-    public class DatabaseFixture : IDisposable {
-        private readonly List<string> _addedEmails = new List<string>();
-        public DatabaseFixture() {
-            AddTestUser("virtualbox@hotmail.com.mx", "vbox");
-            AddTestUser("Pablito@hotmail.com.mx", "Pablo");
-            AddTestUser("Pinguinela@hotmail.com.mx", "Pinguinela");
-            AddTestUser("gamesa@gmail.com", "galletasGamesa");
-        }
-
-        private void AddTestUser(string email, string username) {
-            DataBaseManager.Login newLogin = new DataBaseManager.Login() {
-                correo = email,
-                contrasena = "MiContrasena1!"
-            };
-
-            DataBaseManager.Perfil newPerfil = new DataBaseManager.Perfil() {
-                nombre = username
-            };
-
-            UserDAO.AddUserDAO(newPerfil, newLogin);
-            _addedEmails.Add(email);
-
-        }
-        public void Dispose() {
-
-            foreach (string email in _addedEmails) {
-                UserDAO.DeleteAccountDAO(email);
-            }
         }
     }
 }

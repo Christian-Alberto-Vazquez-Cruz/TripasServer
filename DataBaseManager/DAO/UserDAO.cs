@@ -309,27 +309,5 @@ namespace DataBaseManager.DAO {
             }
             return operationStatus;
         }
-
-        public static int IsFriendAlreadyAddedDAO(int idProfile1, int idProfile2) {
-            LoggerManager logger = new LoggerManager(typeof(UserDAO));
-            int operationResult = Constants.FAILED_OPERATION;
-            try {
-                using (tripasEntities db = new tripasEntities()) {
-                    var existingFriendship = db.Amistad.FirstOrDefault(a =>
-                        (a.idJugadorUno == idProfile1 && a.idJugadorDos == idProfile2) ||
-                        (a.idJugadorUno == idProfile2 && a.idJugadorDos == idProfile1));  // También se considera la amistad en sentido inverso
-                    if (existingFriendship != null) {
-                        operationResult = Constants.SUCCESSFUL_OPERATION;
-                    } else {
-                        operationResult = Constants.NO_MATCHES;
-                    }
-                }
-            } catch (SqlException sqlException) {
-                logger.LogError($"SqlException: Error while checking friendship status for profiles {idProfile1} and {idProfile2}. Exception: {sqlException.Message}", sqlException);
-            } catch (Exception exception) {
-                logger.LogError($"Exception: Unexpected error while checking friendship status for profiles {idProfile1} and {idProfile2}. Exception: {exception.Message}", exception);
-            }
-            return operationResult;
-        }
     }
 }

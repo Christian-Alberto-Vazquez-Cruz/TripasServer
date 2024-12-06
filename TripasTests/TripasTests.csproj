@@ -62,26 +62,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="DAO\DAOExceptionTest.cs" />
     <Compile Include="DAO\FriendsDAOShould.cs" />
     <Compile Include="DAO\LeaderboardDAOShould.cs" />
     <Compile Include="DAO\UserDAOShould.cs" />
     <Compile Include="Services\ChatManagerTest.cs" />
     <Compile Include="Services\FriendsManagerTests.cs" />
+    <Compile Include="Services\LobbyManagerTest.cs" />
+    <Compile Include="Services\StatusManagerTest.cs" />
     <Compile Include="Services\UserManager.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\DatabaseFixtureUserDAOShould.cs" />
-    <Compile Include="Utils\DatabasFixtureLeaderboardDaoShould.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DataBaseManager\DataBaseManager.csproj">
-      <Project>{0d8c92eb-d320-4767-8fa5-23c18596caff}</Project>
-      <Name>DataBaseManager</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TripasService\TripasService.csproj">
-      <Project>{ae25cc6b-b548-4ca0-8a5c-46e940df6094}</Project>
-      <Name>TripasService</Name>
-    </ProjectReference>
+    <Compile Include="Utils\DBFixtureUserDAO.cs" />
+    <Compile Include="Utils\DBFixtureLeaderboardDAO.cs" />
+    <Compile Include="Utils\DBFixtureDAOException.cs" />
+    <Compile Include="Utils\DBFixtureFriendsDAO.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
@@ -110,9 +105,6 @@
     <None Include="Connected Services\ProxyTripas\TripasTests.ProxyTripas.GameEnumsPlayerStatus.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
-    <None Include="Connected Services\ProxyTripas\TripasTests.ProxyTripas.GameResult.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
     <None Include="Connected Services\ProxyTripas\TripasTests.ProxyTripas.Lobby.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -122,6 +114,9 @@
     <None Include="Connected Services\ProxyTripas\TripasTests.ProxyTripas.Profile.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Properties\DataSources\TripasService.Logic.Lobby.datasource" />
+    <None Include="Properties\DataSources\TripasService.Logic.Node.datasource" />
+    <None Include="Properties\DataSources\TripasService.Logic.Profile.datasource" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Connected Services\ProxyTripas\" />
@@ -141,7 +136,12 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\DataBaseManager\DataBaseManager.csproj">
+      <Project>{3776ad51-3226-4083-8311-985827e37890}</Project>
+      <Name>DataBaseManager</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

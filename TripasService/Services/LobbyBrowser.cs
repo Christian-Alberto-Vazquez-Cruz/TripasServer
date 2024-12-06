@@ -21,26 +21,27 @@ namespace TripasService.Services {
             return result;
         }
 
-        //AQUÍ SE DEBE INICIALIZAR UNA CADENA VACÍA. ¿CÓMO SE HACE?
-        //TAMBIÉN QUITAR EL TIMESPAN
         public string CreateLobby(string gameName, int nodeCount, Profile owner) {
             string code;
             do {
                 code = CodesGeneratorHelper.GenerateLobbyCode();
             } while (_lobbies.ContainsKey(code));
 
-            var newLobby = new Lobby(code, gameName, nodeCount, owner);
+            Lobby newLobby = new Lobby(code, gameName, nodeCount, owner);
             if (_lobbies.TryAdd(code, newLobby)) {
                 return code;
             }
-            return null;
+            return Constants.FAILED_OPERATION_STRING;
         }
 
         public Lobby GetLobbyByCode(string code) {
+            Lobby lobbyRetrieved = new Lobby {
+                Code = Constants.FAILED_OPERATION_STRING
+            };
             if (!_lobbies.TryGetValue(code, out Lobby lobby)) {
-                throw new KeyNotFoundException($"Lobby with code '{code}' not found.");
+                lobbyRetrieved = lobby;
             }
-            return lobby;
+            return lobbyRetrieved;
         }
     }
 }

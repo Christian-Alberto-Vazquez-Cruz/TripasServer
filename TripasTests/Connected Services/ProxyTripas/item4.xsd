@@ -1,18 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/TripasService.Utils" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/TripasService.Utils" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:simpleType name="GameEnums.PlayerStatus">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="Offline" />
-      <xs:enumeration value="Online" />
-      <xs:enumeration value="InGame" />
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:element name="GameEnums.PlayerStatus" nillable="true" type="tns:GameEnums.PlayerStatus" />
-  <xs:simpleType name="GameEnums.NodeStatus">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="Free" />
-      <xs:enumeration value="Occupied" />
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:element name="GameEnums.NodeStatus" nillable="true" type="tns:GameEnums.NodeStatus" />
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/TripasService.Contracts" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/TripasService.Contracts" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:complexType name="ProfileNotFoundFault">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="errorMessage" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ProfileNotFoundFault" nillable="true" type="tns:ProfileNotFoundFault" />
 </xs:schema>
