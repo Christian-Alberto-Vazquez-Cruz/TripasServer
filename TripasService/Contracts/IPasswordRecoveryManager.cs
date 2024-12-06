@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace TripasService.Contracts {
     [ServiceContract]
     public interface IPasswordRecoveryManager {
+
         /// <summary>
         /// Sends an email with a a needed verification code to change the player password that expires in 60s
         /// </summary>

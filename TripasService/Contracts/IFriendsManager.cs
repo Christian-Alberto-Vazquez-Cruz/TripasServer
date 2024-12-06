@@ -11,7 +11,6 @@ namespace TripasService.Contracts {
     [ServiceContract]
     public interface IFriendsManager {
 
-
         /// <summary>
         /// Creates a "local" friendship between a player and another
         /// </summary>
@@ -30,8 +29,6 @@ namespace TripasService.Contracts {
         /// <returns>Returns 1 in success and -1 in failure</returns>
         [OperationContract]
         int DeleteFriend(int idProfile1, int idProfile2);
-
-
 
         /// <summary>
         /// Retrieves a Profile list with the content of the player's friends

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace TripasService.Contracts {
     [ServiceContract]
     public interface IEmailVerificationManager {
+
         /// <summary>
         /// Sends an email with a a needed verification code to register 
         /// </summary>

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 namespace TripasService.Contracts {
     [ServiceContract]
     public interface IEmailInvitationManager {
+
         /// <summary>
         /// Sends an email with the current lobby code for a friend to join
         /// </summary>
