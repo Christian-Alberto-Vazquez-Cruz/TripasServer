@@ -10,7 +10,7 @@ using TripasTests.Utils;
 using Xunit;
 
 namespace TripasTests.DAO {
-    public class FriendsDAOShould : IClassFixture<DBFixtureFriendsDAO> {
+    public class FriendsDAOSTest : IClassFixture<DBFixtureFriendsDAO> {
 
         [Fact]
         public void StrikeUpFriendshipDAO() {

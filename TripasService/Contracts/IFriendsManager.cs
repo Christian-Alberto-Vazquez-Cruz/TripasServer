@@ -15,7 +15,7 @@ namespace TripasService.Contracts {
         /// Creates a "local" friendship between a player and another
         /// </summary>
         /// <param name="idProfile1">Id of the player that wants to add a friend</param>
-        /// <param name="idProfile2">Id of the player that will be added to the friednlist</param>
+        /// <param name="idProfile2">Id of the player that will be added to the friend list</param>
         /// <returns>Returns 1 in success and -1 in failure</returns>
 
         [OperationContract]
@@ -33,7 +33,7 @@ namespace TripasService.Contracts {
         /// <summary>
         /// Retrieves a Profile list with the content of the player's friends
         /// </summary>
-        /// <param name="idProfile">Id of the player that will have his/her friendlist retrieved</param>
+        /// <param name="idProfile">Id of the player that will have his/her friend list retrieved</param>
         /// <returns>Returns 1 in success and -1 in failure</returns>
         [OperationContract] 
         List<Profile> GetFriends(int idProfile);
@@ -43,7 +43,7 @@ namespace TripasService.Contracts {
         /// </summary>
         /// <param name="idProfile1">Id of the player whose friend association will be consulted</param>
         /// <param name="idProfile2">Id of the player you want to know if is already added </param>
-        /// <returns>Returns 1 if it was already added, -2 if it han't been added and -1 in failure</returns>
+        /// <returns>Returns 1 if it was already added, -2 if it hasn't been added and -1 in failure</returns>
 
         [OperationContract]
         int IsFriendAlreadyAdded(int idProfile1, int idProfile2); //FALTA PROBAR

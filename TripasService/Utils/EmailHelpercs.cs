@@ -10,7 +10,7 @@ using TripasService.Logic;
 
 public static class EmailHelper {
     private const string SmtpServer = "smtp.gmail.com";
-    private const int SmtpPort = 587;
+    private static string SmtpPort => Environment.GetEnvironmentVariable("PORT");
     private static string EmailSender => Environment.GetEnvironmentVariable("EMAIL_SENDER");
     private static string EmailPassword => Environment.GetEnvironmentVariable("EMAIL_PASSWORD");
 
@@ -40,7 +40,9 @@ public static class EmailHelper {
     }
 
     private static SmtpClient CreateSmtpClient() {
-        SmtpClient smtpClient = new SmtpClient(SmtpServer, SmtpPort) {
+        int SmptServer = int.Parse(SmtpPort);
+
+        SmtpClient smtpClient = new SmtpClient(SmtpServer, SmptServer) {
             Credentials = new NetworkCredential(EmailSender, EmailPassword),
             EnableSsl = true
         };

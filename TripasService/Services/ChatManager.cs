@@ -9,7 +9,7 @@ namespace TripasService.Services {
 
     public partial class TripasGameService : IChatManager {
 
-        private ConcurrentDictionary<string, ConcurrentDictionary<string, IChatManagerCallBack>> _connectedUsersByLobby =
+        private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, IChatManagerCallBack>> _connectedUsersByLobby =
             new ConcurrentDictionary<string, ConcurrentDictionary<string, IChatManagerCallBack>>();
 
         public void ConnectToChat(string username, string lobbyCode) {

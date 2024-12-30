@@ -60,7 +60,7 @@ namespace TripasService.Services {
 
         private void StartVerificationCodeTimer(string email) {
             Task.Run(async () => {
-                await Task.Delay(60000);
+                await Task.Delay(600000);
                 _verificationCodesCreateAccount.Remove(email);
             });
         }

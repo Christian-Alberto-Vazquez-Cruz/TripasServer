@@ -33,7 +33,6 @@ namespace DataBaseManager.DAO {
             return operationResult;
         }
 
-
         public static int DeleteFriendshipDAO(int idProfile1, int idProfile2) {
             LoggerManager logger = new LoggerManager(typeof(FriendsDAO));
             int operationResult = Constants.FAILED_OPERATION;
@@ -59,7 +58,6 @@ namespace DataBaseManager.DAO {
             }
             return operationResult;
         }
-
 
         public static List<Perfil> GetFriendsDAO(int idProfile) {
             LoggerManager logger = new LoggerManager(typeof(FriendsDAO));

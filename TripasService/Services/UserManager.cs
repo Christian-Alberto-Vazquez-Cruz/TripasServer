@@ -22,6 +22,11 @@ namespace TripasService.Services {
                 fotoRuta = Constants.DEFAULT_PICPATH
             };
             int insertionResult = UserDAO.AddUserDAO(newPerfil, newLogin);
+            if (insertionResult == Constants.FAILED_OPERATION) {
+                ServiceNotAvailable serviceException = new ServiceNotAvailable() {
+                    ErrorMessage = "An error has ocurred, please try again later"
+                };
+            }
             return insertionResult;
         }
 

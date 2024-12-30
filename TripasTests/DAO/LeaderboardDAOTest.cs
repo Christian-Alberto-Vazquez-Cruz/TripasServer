@@ -12,7 +12,7 @@ using TripasTests.ProxyTripas;
 
 namespace TripasTests.DAO {
 
-    public class LeaderboardDAOShould {
+    public class LeaderboardDAOTest {
         [Fact]
         public void GetHighestScoresDAO() {
 

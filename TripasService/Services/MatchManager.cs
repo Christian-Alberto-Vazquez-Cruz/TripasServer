@@ -35,7 +35,7 @@ namespace TripasService.Services {
                 return false;
             }
             match.SwitchTurn();
-            foreach (var player in match.Players.Values) {
+            foreach (Profile player in match.Players.Values) {
                 if (player != null && _matchPlayerCallback.TryGetValue(player.Username, out var callback)) {
                     try {
                         if (player.Username == match.CurrentTurn) {
@@ -64,7 +64,7 @@ namespace TripasService.Services {
 
             int tracePoints = trace.Score;
             match.AddPoints(trace.Player, tracePoints);
-            foreach (var player in match.Players.Values) {
+            foreach (Profile player in match.Players.Values) {
                 if (player.Username != trace.Player && _matchPlayerCallback.TryGetValue(player.Username, out var callback)) {
                     try {
                         callback.TraceReceived(trace);
@@ -110,7 +110,7 @@ namespace TripasService.Services {
         }
 
         private void SavePlayerScores(Match match) {
-            foreach (var player in match.Players.Values.Where(player => player.IdProfile < Constants.MIN_ID_GUEST ||
+            foreach (Profile player in match.Players.Values.Where(player => player.IdProfile < Constants.MIN_ID_GUEST ||
             player.IdProfile > Constants.MAX_ID_GUEST)) {
                 int finalScore = match.GetPlayerScore(player.Username);
                 UserDAO.UpdatePlayerScore(player.Username, finalScore);

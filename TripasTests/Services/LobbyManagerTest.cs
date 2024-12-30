@@ -7,31 +7,31 @@ using static System.Net.Mime.MediaTypeNames;
 namespace TripasService.Tests {
 
     public class LobbyManagerCallback : ILobbyManagerCallback {
-        public bool kickedFromLobby { get; set; }
-        public bool hostLeftCallback { get; set; }
-        public bool guestLeftCallback { get; set; }
-        public bool guestJoinedCallback { get; set; }
+        public bool Kicked { get; set; }
+        public bool HostCallbackLeft { get; set; }
+        public bool GuestCallbackLeft { get; set; }
+        public bool GuestCallbackJoined { get; set; }
 
-        public bool gameStarted { get; set; }
+        public bool GameStartedNow { get; set; }
 
         public void KickedFromLobby() {
-            kickedFromLobby = true;
+            Kicked = true;
         }
 
         public void HostLeftCallback() {
-            hostLeftCallback = true;
+            HostCallbackLeft = true;
         }
 
         public void GuestLeftCallback() {
-            guestLeftCallback = true;
+            GuestCallbackLeft = true;
         }
 
         public void GuestJoinedCallback(string guestName, string picturePath, int idProfile) {
-            guestJoinedCallback = true;
+            GuestCallbackJoined = true;
         }
 
         public void GameStarted() {
-            gameStarted = true;
+            GameStartedNow = true;
         }
         public class LobbyManagerTest {
             public static LobbyManagerClient _clientManager;
@@ -40,11 +40,11 @@ namespace TripasService.Tests {
             public LobbyManagerTest() {
                 _clientCallback = new LobbyManagerCallback();
                 _clientManager = new LobbyManagerClient(new InstanceContext(_clientCallback));
-                _clientCallback.kickedFromLobby = false;
-                _clientCallback.hostLeftCallback = false;
-                _clientCallback.guestLeftCallback = false;
-                _clientCallback.guestJoinedCallback = false;
-                _clientCallback.gameStarted = false;
+                _clientCallback.Kicked = false;
+                _clientCallback.HostCallbackLeft = false;
+                _clientCallback.GuestCallbackLeft = false;
+                _clientCallback.GuestCallbackJoined = false;
+                _clientCallback.GameStartedNow = false;
             }
 
             [Fact]
@@ -68,7 +68,7 @@ namespace TripasService.Tests {
                 _clientManager.ConnectPlayerToLobby(lobbycode, host.IdProfile);
                 _clientManager.ConnectPlayerToLobby(lobbycode, guest.IdProfile);
                 await Task.Delay(10000);
-                Assert.True(_clientCallback.guestJoinedCallback);
+                Assert.True(_clientCallback.GuestCallbackJoined);
             }
         }
     }

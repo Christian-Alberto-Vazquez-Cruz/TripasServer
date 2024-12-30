@@ -18,7 +18,7 @@ using static System.Net.Mime.MediaTypeNames;
 namespace TripasTests.DAO {
 
 
-    public class UserDAOShould : IClassFixture<DBFixtureUserDAO> {
+    public class UserDAOTest : IClassFixture<DBFixtureUserDAO> {
 
         [Fact]
         public void AddUser() {

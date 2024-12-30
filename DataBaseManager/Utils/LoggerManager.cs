@@ -1,5 +1,8 @@
 ﻿using System;
 using log4net;
+
+[assembly: log4net.Config.XmlConfigurator(Watch = true)]
+
 namespace DataBaseManager.Utils {
     public class LoggerManager {
         public ILog Logger { get; set; }
@@ -18,6 +21,9 @@ namespace DataBaseManager.Utils {
 
         public void LogError(string message, Exception exception) {
             Logger.Error(message, exception);
+        }
+        public void LogError(string message) {
+            Logger.Error(message);
         }
 
         public void LogFatal(Exception exception) {

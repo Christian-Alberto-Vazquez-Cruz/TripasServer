@@ -13,7 +13,6 @@ namespace DataBaseManager.DAO {
             int operationStatus = Constants.FAILED_OPERATION;
             try {
                 using (tripasEntities db = new tripasEntities()) {
-                    // Registrar login del nuevo usuario
                     Login newUserLogin = new Login {
                         correo = newLogin.correo,
                         contrasena = newLogin.contrasena
@@ -39,7 +38,6 @@ namespace DataBaseManager.DAO {
             } catch (Exception generalException) {
                 logger.LogError($"Exception: Unexpected error occurred while registering user {profile.nombre}. Exception: {generalException.Message}", generalException);
             }
-
             return operationStatus;
         }
 
@@ -120,7 +118,6 @@ namespace DataBaseManager.DAO {
             }
             return userProfile;
         }
-
 
         public static int GetProfileIdDAO(string username) {
             LoggerManager logger = new LoggerManager(typeof(UserDAO));
@@ -203,11 +200,14 @@ namespace DataBaseManager.DAO {
                     }
                 }
             } catch (SqlException sqlException) {
-                logger.LogError($"SqlException: Error while checking if email {mail} is already registered. Exception: {sqlException.Message}", sqlException);
+                logger.LogError($"SqlException: Error while checking if email {mail} is already registered. Exception: {sqlException.Message}. Stack Trace: {sqlException.StackTrace}", sqlException);
             } catch (EntityException entityException) {
-                logger.LogError($"EntityException: Error while accessing the database to check email registration for {mail}. Exception: {entityException.Message}", entityException);
+                logger.LogError($"EntityException: Error while accessing the database to check email registration for {mail}. Exception: {entityException.Message}. Stack Trace: {entityException.StackTrace}", entityException);
             } catch (Exception generalException) {
-                logger.LogError($"Exception: Unexpected error while checking email registration for {mail}. Exception: {generalException.Message}", generalException);
+                logger.LogError($"Exception: Unexpected error while checking email registration for {mail}. Exception: {generalException.Message}. Stack Trace: {generalException.StackTrace}", generalException);
+            }
+            if (operationStatus == Constants.FAILED_OPERATION) {
+                logger.LogError($"Failed operation: Unable to check if email {mail} is registered. The operation did not succeed.");
             }
             return operationStatus;
         }
@@ -268,10 +268,10 @@ namespace DataBaseManager.DAO {
                     } else {
                         Perfil userProfile = db.Perfil.FirstOrDefault(perfil => perfil.idPerfil == userLogin.idUsuario);
                         if (userProfile != null) {
-                            db.Perfil.Remove(userProfile);  // Eliminar el perfil
+                            db.Perfil.Remove(userProfile);  
                         }
-                        db.Login.Remove(userLogin);  // Eliminar el login
-                        db.SaveChanges();  // Guardar los cambios en la base de datos
+                        db.Login.Remove(userLogin);  
+                        db.SaveChanges(); 
                         operationStatus = Constants.SUCCESSFUL_OPERATION;
                     }
                 }
@@ -294,10 +294,10 @@ namespace DataBaseManager.DAO {
                     Perfil userProfile = db.Perfil.FirstOrDefault(p => p.nombre == username);
                     if (userProfile != null) {
                         userProfile.puntaje += additionalPoints;
-                        db.SaveChanges();  // Guardar los cambios en la base de datos
+                        db.SaveChanges();  
                         operationStatus = Constants.SUCCESSFUL_OPERATION;
                     } else {
-                        operationStatus = Constants.NO_MATCHES;  // No se encontró el perfil
+                        operationStatus = Constants.NO_MATCHES;  
                     }
                 }
             } catch (SqlException sqlException) {

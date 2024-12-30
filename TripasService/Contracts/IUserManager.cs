@@ -96,4 +96,17 @@ namespace TripasService.Contracts {
         public ProfileNotFoundFault() {
         }
     }
+    [DataContract]
+    public class ServiceNotAvailable {
+        [DataMember]
+        public string ErrorMessage { get; set; }
+
+        public ServiceNotAvailable(string errorMessage) {
+            ErrorMessage = errorMessage;
+        }
+
+        public ServiceNotAvailable() {
+
+        }
+    }
 }

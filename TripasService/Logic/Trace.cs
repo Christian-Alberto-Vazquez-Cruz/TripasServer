@@ -23,6 +23,10 @@ namespace TripasService.Logic {
 
         [DataMember]
         public string Color { get; set; }
+
+        /* This calculus implies that every trace will at least be worth of MIN_POINTS_CRITERIA no matter it's size 
+         * it will increase until MAX_POINTS_CRITERIA is reached, progressively
+         */
         public int Score {
             get {
                 int pointsCount = TracePoints.Count;

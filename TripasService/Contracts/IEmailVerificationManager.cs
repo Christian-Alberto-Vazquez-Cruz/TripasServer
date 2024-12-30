@@ -14,7 +14,7 @@ namespace TripasService.Contracts {
         /// Sends an email with a a needed verification code to register 
         /// </summary>
         /// <param name="email">Given email to register</param>
-        /// <returns>Returns 1 in sucess and -1 if it failed</returns>
+        /// <returns>Returns 1 in success and -1 if it failed</returns>
         [OperationContract]
         int SendVerificationCodeRegister(string email);
 

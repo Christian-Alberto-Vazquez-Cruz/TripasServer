@@ -121,7 +121,7 @@ namespace TripasService.Logic {
         }
 
         public int GetPlayerScore(string player) {
-            return CurrentScores.TryGetValue(player, out var score) ? score : 0;
+            return CurrentScores.TryGetValue(player, out int score) ? score : 0;
         }
 
         public Match(string code, string gameName, int nodeCount, Dictionary<string, Profile> players) {
